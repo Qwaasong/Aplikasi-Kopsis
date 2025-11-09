@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'KopsisApp - Vendor')
+@section('style')
+    <link rel="stylesheet" href="{{ asset('assets/css/fab.css') }}">
+@endsection
 @section('content')
     <div class="px-8 py-6">
         <!-- Header Konten -->

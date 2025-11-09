@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +7,12 @@
     <title>@yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    @yield('style')
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 </head>
 
 <body>
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col min-h-[100dvh]">
         <!-- Header Destop -->
         <header class="hidden md:flex border-b border-gray-200">
             <div class="container py-4 px-10">
@@ -22,7 +22,7 @@
 
         <!-- Header Mobile -->
         <header class="md:hidden flex justify-between items-center p-4 border-b">
-            <button id="menu-btn" class="text-gray-600 focus:outline-none">
+            <button id="menu-btn" class="text-gray-600 focus:outline-none" aria-label="Buka Sidebar">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
@@ -205,7 +205,7 @@
                 <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
                     <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
                         <h1 class="text-xl font-bold text-gray-800">KopsisApp</h1>
-                        <button id="close-btn" class="text-gray-600 focus:outline-none">
+                        <button id="close-btn" class="text-gray-600 focus:outline-none" aria-label="Tutup Sidebar">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 -960 960 960"
                                 fill="currentColor">
                                 <path
@@ -214,7 +214,7 @@
                         </button>
                     </div>
                     <!-- Konten Navigasi Mobile (sama dengan desktop) -->
-                    <nav class="flex-1 px-4 py-4 space-y-2">
+                    <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
                         <a href="/beranda"
                             class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg">
                             <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
