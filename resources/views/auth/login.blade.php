@@ -5,8 +5,8 @@
 @section('content')
     <body class="bg-white">
         <!-- Konten Utama: Form Login -->
-        <main class="flex items-center justify-center" style="min-height: calc(100vh - 65px);">
-            <div class="w-full max-w-sm px-4">
+        <main class="flex items-center justify-center" style="min-height: calc(100dvh - 65px);">
+            <div class="w-full max-w-sm px-6">
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold text-gray-900">Masuk ke KopsisApp</h2>
                 </div>
