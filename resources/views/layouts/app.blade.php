@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div class="flex flex-col min-h-[100dvh]">
+    <div class="flex flex-col min-h-[100dvh] overflow-x-hidden">
         <!-- Header Destop -->
         <header class="hidden md:flex border-b border-gray-200">
             <div class="container py-4 px-10">
