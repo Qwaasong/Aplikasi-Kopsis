@@ -63,7 +63,7 @@
                                     ]" data-url="{{ route('api.vendors.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center">
                     <button id="filter-button"
                         class="p-3 sm:p-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none">
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
