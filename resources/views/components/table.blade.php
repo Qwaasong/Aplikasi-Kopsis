@@ -1,0 +1,431 @@
+<div class="max-w-7xl mx-auto">
+    <div class="flex sm:flex-row items-center sm:justify-between gap-4 mb-6">
+        <div class="sm:w-auto relative">
+            {{-- Slot untuk Tombol Filter Custom (Opsional) --}}
+            {{ $filter ?? '' }}
+        </div>
+        <div class="relative sm:w-64 w-full">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="table-search-input" placeholder="Search"
+                class="w-full pl-10 pr-4 py-3 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div>
+    </div>
+
+    <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl shadow-sm">
+        <div class="hidden sm:table w-full">
+            <table class="w-full text-sm text-left text-gray-600">
+                <thead class="bg-gray-50 border-b border-t border-gray-200">
+                    <tr>
+                        {{-- LOOPING KOLOM HEADER --}}
+                        @foreach (array_keys($dataTable) as $header)
+                            <th scope="col" class="px-6 py-3 font-bold text-gray-900">{{ $header }}</th>
+                        @endforeach
+                        {{-- Kolom Aksi --}}
+                        <th scope="col" class="px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                {{-- ISI TABEL AKAN DI-INJECT OLEH AJAX/JQUERY --}}
+                <tbody id="table-body">
+                    <tr>
+                        <td colspan="{{ count($dataTable) + 1 }}" class="text-center py-4 text-gray-500">
+                            Memuat data...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sm:hidden space-y-4" id="card-view-container">
+            <div class="text-center py-4 text-gray-500">Memuat data...</div>
+        </div>
+    </div>
+
+    {{-- Pagination akan di-inject di sini --}}
+    <div id="pagination-links" class="mt-4 flex justify-end"></div>
+
+</div>
+
+{{-- SCRIPT JAVASCRIPT/JQUERY UNTUK AJAX --}}
+<script>
+    $(document).ready(function () {
+        // Mendapatkan URL data dari properti component PHP
+        const dataUrl = "{{ $dataUrl }}";
+        // Base entity URL (remove /api prefix). Didefinisikan di scope yang lebih luas
+        const entityBaseUrl = dataUrl.replace('/api', '');
+        const tableBody = $('#table-body');
+        const cardContainer = $('#card-view-container');
+
+        // Mendapatkan field/key JSON dan header secara dinamis
+        const fields = {!! json_encode($dataTable) !!};
+        const fieldKeys = Object.values(fields); // Header Tabel
+        const fieldHeaders = Object.keys(fields); // Isi Tabel
+        const totalColumns = fieldKeys.length + 1; // Jumlah kolom data + kolom Aksi
+
+        const paginationLinks = $('#pagination-links');
+        const searchInput = $('#table-search-input');
+
+        let currentPage = 1;
+        let currentSearch = '';
+        let currentFilters = {}; // Menyimpan state filter saat ini
+
+        function fetchData(page = 1, search = '', filters = {}) {
+            tableBody.html(`<tr><td colspan="${totalColumns}" class="text-center py-4 text-gray-500">Memuat data...</td></tr>`);
+            cardContainer.html(`<div class="text-center py-4 text-gray-500">Memuat data...</div>`);
+            paginationLinks.empty();
+
+            // Gabungkan semua parameter untuk request AJAX
+            const requestData = {
+                page: page,
+                search: search,
+                ...filters // Sertakan parameter filter
+            };
+
+            $.ajax({
+                url: dataUrl,
+                type: 'GET',
+                data: requestData,
+                dataType: 'json',
+                success: function (response) {
+                    // Cek apakah response menggunakan Laravel Pagination (data ada di response.data)
+                    const data = response.data.data ? response.data.data : response.data;
+                    const paginationMeta = response.data;
+
+                    // 1. Render Tabel Desktop
+                    let tableRows = '';
+                    if (data.length > 0) {
+                        $.each(data, function (i, item) {
+                            // Membuat tombol aksi yang reusable (gunakan slot untuk isi)
+                            const actionsHtml = `
+                                <div class="inline-block text-left relative">
+                                    <button class="menu-button p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none" data-id="${item.id}">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                                    </button>
+                                    <div id="dropdown-${item.id}" class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
+                                        <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
+                                    </div>
+                                </div>
+                            `;
+
+                            // MEMBUAT BARIS SECARA DINAMIS
+                            let dataCells = '';
+                            $.each(fieldKeys, function (j, key) {
+                                // Mengambil nilai dari objek item menggunakan field key
+                                dataCells += `<td class="px-6 py-4">${item[key] || '-'}</td>`;
+                            });
+
+                            tableRows += `<tr class="bg-white border-b" id="row-${item.id}">`;
+                            tableRows += dataCells;
+                            tableRows += `<td class="px-6 py-4 text-right relative">${actionsHtml}</td>`;
+                            tableRows += `</tr>`;
+
+                        });
+                    } else {
+                        tableRows = `<tr><td colspan="${totalColumns}" class="text-center py-4 text-gray-500">Tidak ada data ditemukan.</td></tr>`;
+                    }
+                    tableBody.html(tableRows);
+
+
+                    // 2. Render Card Mobile
+                    let cardHtml = '';
+                    if (data.length > 0) {
+                        $.each(data, function (i, item) {
+                            // Sama seperti di desktop, gunakan item.id untuk dropdown
+                            const actionsHtml = `
+                                <div class="relative">
+                                    <button class="menu-button p-1 text-gray-500 rounded-full hover:bg-gray-100" data-id="${item.id}">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                                    </button>
+                                    <div id="dropdown-mobile-${item.id}" class="menu-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-xl z-10">
+                                        <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
+                                    </div>
+                                </div>
+                            `;
+
+                            // MEMBUAT BARIS DETAIL CARD SECARA DINAMIS
+                            let cardDetails = '';
+                            $.each(fields, function (header, key) {
+                                cardDetails += `
+                                    <div class="flex justify-between items-center">
+                                        <dt class="font-semibold text-gray-800">${header}</dt>
+                                        <dd class="text-gray-600 text-right">${item[key] || '-'}</dd>
+                                    </div>
+                                `;
+                            });
+
+                            cardHtml += `
+                                <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5" id="card-${item.id}">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="w-8"></div>
+                                        ${actionsHtml}
+                                    </div>
+                                    <dl class="space-y-3 text-sm">
+                                        ${cardDetails}
+                                    </dl>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        cardHtml = `<div class="text-center py-4 text-gray-500">Tidak ada data ditemukan.</div>`;
+                    }
+                    cardContainer.html(cardHtml);
+
+                    // 3. Render Pagination (Jika menggunakan Laravel Pagination)
+                    if (paginationMeta.last_page > 1) {
+                        let paginationHtml = `
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                <button data-page="${paginationMeta.current_page - 1}" ${paginationMeta.current_page === 1 ? 'disabled' : ''} class="pagination-link relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 rounded-l-md hover:text-gray-700 ${paginationMeta.current_page === 1 ? 'cursor-not-allowed opacity-50' : ''}">
+                                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /> </svg> Previous
+                                </button>
+                                
+                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600">
+                                    ${paginationMeta.current_page}
+                                </span>
+                                
+                                <button data-page="${paginationMeta.current_page + 1}" ${paginationMeta.current_page === paginationMeta.last_page ? 'disabled' : ''} class="pagination-link relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 rounded-r-md hover:text-gray-700 ${paginationMeta.current_page === paginationMeta.last_page ? 'cursor-not-allowed opacity-50' : ''}">
+                                    Next <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /> </svg>
+                                </button>
+                            </nav>
+                         `;
+                        paginationLinks.html(paginationHtml);
+                    }
+
+                    // Re-attach event listeners untuk dropdown menu
+                    attachMenuDropdownListeners();
+                },
+                error: function (xhr, status, error) {
+                    // Gunakan totalColumns yang sudah didefinisikan di scope atas
+                    tableBody.html(`<tr><td colspan="${totalColumns}" class="text-center py-4 text-red-500">Gagal memuat data: ${xhr.statusText}</td></tr>`);
+                    cardContainer.html(`<div class="text-center py-4 text-red-500">Gagal memuat data.</div>`);
+                }
+            });
+        }
+
+        // 4. Implementasi Search dengan Debounce
+        let searchTimeout = null;
+        searchInput.on('keyup', function () {
+            clearTimeout(searchTimeout);
+            const query = $(this).val();
+            searchTimeout = setTimeout(function () {
+                currentSearch = query;
+                currentPage = 1;
+                fetchData(currentPage, currentSearch, currentFilters);
+            }, 500); // Tunggu 300ms setelah user berhenti mengetik
+        });
+
+        // 5. Implementasi Pindah Halaman
+        $(document).on('click', '.pagination-link', function (e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (!$(this).prop('disabled')) {
+                currentPage = page;
+                fetchData(currentPage, currentSearch, currentFilters);
+            }
+        });
+
+        // 6. Implementasi Tombol Aksi (Delete Example)
+        $(document).on('click', '.delete-btn', function (e) {
+            e.preventDefault();
+            const itemId = $(this).data('id');
+            // Ambil URL dari atribut tombol jika ada, kalau tidak gunakan entityBaseUrl sebagai fallback
+            const entityUrl = $(this).data('url') || entityBaseUrl; // Mengambil URL entitas dari tombol
+            if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
+                $.ajax({
+                    url: `${entityUrl}/${itemId}`, // Menggunakan URL dinamis
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function () {
+                        $(`#row-${itemId}`).remove();
+                        $(`#card-${itemId}`).remove();
+                        alert('Item berhasil dihapus!');
+                    },
+                    error: function (xhr) {
+                        alert('Gagal menghapus item! ' + (xhr.responseJSON?.message || ''));
+                    }
+                });
+            }
+        });
+
+        // 7. Logika untuk Dropdown Menu dan Filter
+        const filterButton = document.getElementById('filter-button');
+        const filterDropdown = document.getElementById('filter-dropdown');
+        let currentlyOpenMenu = null;
+        let originalParent = null; // Untuk menyimpan parent asli dari dropdown yang di-teleport
+
+        // Fungsi untuk menutup semua dropdown yang terbuka
+
+        function closeAllDropdowns() {
+            // console.log('Closing all dropdowns');
+            if (currentlyOpenMenu && originalParent) {
+                currentlyOpenMenu.classList.add('hidden');
+                currentlyOpenMenu.style = '';
+                originalParent.appendChild(currentlyOpenMenu);
+            }
+
+            // Selalu pastikan filter dropdown ditutup
+            if (filterDropdown) {
+                filterDropdown.classList.add('hidden');
+            }
+            // Reset state
+            currentlyOpenMenu = null;
+            originalParent = null;
+        }
+
+        // Fungsi untuk menangani klik pada tombol filter
+
+        function handleFilterButtonClick(event) {
+            event.stopPropagation();
+            // console.log('Filter button clicked');
+            if (!filterButton || !filterDropdown) return;
+            const isHidden = filterDropdown.classList.contains('hidden');
+            closeAllDropdowns();
+            if (isHidden) {
+                filterDropdown.classList.remove('hidden');
+                currentlyOpenMenu = filterDropdown;
+            } else {
+                filterDropdown.classList.add('hidden');
+                // currentlyOpenMenu = filterDropdown;
+                closeAllDropdowns();
+            }
+        }
+
+        // Fungsi untuk menangani klik pada tombol menu
+        function handleMenuButtonClick(event) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            const dropdown = button.nextElementSibling;
+
+            if (!dropdown) return;
+
+            // Jika menu yang sama diklik lagi, tutup saja
+            if (currentlyOpenMenu === dropdown) {
+                closeAllDropdowns();
+                return;
+            }
+
+            // Tutup semua menu lain sebelum membuka yang baru
+            closeAllDropdowns();
+
+            // --- LOGIKA TELEPORTASI ---
+            // Simpan parent asli dan pindahkan dropdown ke body
+            originalParent = dropdown.parentNode;
+            document.body.appendChild(dropdown);
+
+            // Hitung posisi tombol dan posisikan dropdown relatif terhadapnya
+            const rect = button.getBoundingClientRect();
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = `${rect.bottom + 4}px`; // 4px di bawah tombol
+            dropdown.style.right = `${window.innerWidth - rect.right}px`;
+            dropdown.style.left = 'auto'; // Biarkan browser menentukan posisi kiri
+            dropdown.style.marginTop = '0';
+
+            // Tampilkan dropdown dan tandai sebagai menu yang sedang terbuka
+            dropdown.classList.remove('hidden');
+            currentlyOpenMenu = dropdown;
+        }
+
+
+        // Fungsi untuk memasang event listener ke semua tombol menu
+        function attachMenuDropdownListeners() {
+            const menuButtons = document.querySelectorAll('.menu-button');
+            menuButtons.forEach(button => {
+                // Hapus listener lama untuk menghindari duplikasi
+                button.removeEventListener('click', handleMenuButtonClick);
+                // Tambahkan listener baru
+                button.addEventListener('click', handleMenuButtonClick);
+            });
+
+            // Tambahkan listener untuk tombol filter
+            if (filterButton) {
+                filterButton.addEventListener('click', handleFilterButtonClick);
+            }
+        }
+
+        function throttle(func, limit) {
+            let inThrottle;
+            return function () {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+
+        // Buat fungsi handler yang sudah di-throttle
+        const handleScrollWithThrottle = throttle(() => {
+            // HANYA jalankan logika penutupan jika ada menu atau filter yang terbuka
+            if (currentlyOpenMenu || (filterDropdown && !filterDropdown.classList.contains('hidden'))) {
+                // console.log('Scroll detected (throttled), closing open dropdowns...');
+                closeAllDropdowns();
+            }
+        }, 150); // Jalankan maksimal sekali setiap 150ms
+
+        // Event listener untuk menutup dropdown saat halaman di-scroll
+        window.addEventListener('scroll', handleScrollWithThrottle);
+
+        // Event listener untuk menutup dropdown jika diklik di luar area
+
+        window.addEventListener('click', (event) => {
+            const isClickInsideMenu = currentlyOpenMenu && currentlyOpenMenu.contains(event.target);
+            const isClickInsideFilterDropdown = filterDropdown && filterDropdown.contains(event.target);
+
+
+            if (!event.target.closest('.menu-button') &&
+                !event.target.closest('#filter-button') &&
+                !isClickInsideMenu &&
+                !isClickInsideFilterDropdown) {
+                closeAllDropdowns();
+            }
+        });
+
+        // 8. Implementasi Form Filter
+        const filterForm = $('#filter-form');
+
+        filterForm.on('submit', function (e) {
+            e.preventDefault();
+            const formData = $(this).serializeArray();
+            let filters = {};
+
+            // Mengubah format dari .serializeArray() ke objek yang sesuai
+            formData.forEach(item => {
+                // Pastikan hanya input dengan nilai yang diikutkan
+                if (item.value) {
+                    const key = item.name.match(/\[(.*?)\]/)[1]; // Ekstrak 'nama_vendor'
+                    filters[key] = item.value;
+                }
+            });
+
+            currentFilters = { filter: filters }; // Simpan state filter
+            currentPage = 1;
+            fetchData(currentPage, currentSearch, currentFilters);
+            closeAllDropdowns(); // Tutup dropdown setelah apply
+        });
+
+        // Tombol Reset Filter
+        $('#reset-filter-btn').on('click', function () {
+            filterForm[0].reset(); // Reset form
+            currentFilters = {}; // Hapus state filter
+            currentPage = 1;
+            fetchData(currentPage, currentSearch, currentFilters);
+            closeAllDropdowns(); // Tutup dropdown
+        });
+
+
+        // Muat data awal saat halaman pertama dimuat
+        fetchData(currentPage, currentSearch, currentFilters);
+    });
+</script>
