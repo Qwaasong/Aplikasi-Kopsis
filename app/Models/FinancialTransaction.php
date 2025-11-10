@@ -16,16 +16,16 @@ class FinancialTransaction extends Model
         'purchase_id',
         'stock_out_id',
     ];
-    protected static function booted()
-{
-    static::deleted(function ($transaction) {
-        Notification::make()
-            ->title('Refund Biaya')
-            ->body("Transaksi sebesar Rp " . number_format($transaction->jumlah, 0, ',', '.') . " telah dibatalkan.")
-            ->success()
-            ->send();
-    });
-}
+#    protected static function booted()
+#{
+#    static::deleted(function ($transaction) {
+#        Notification::make()
+#            ->title('Refund Biaya')
+#            ->body("Transaksi sebesar Rp " . number_format($transaction->jumlah, 0, ',', '.') . " telah dibatalkan.")
+#            ->success()
+#            ->send();
+#    });
+#}
     public static function getCurrentBalance(): float
     {
         $pemasukan = static::where('tipe', 'pemasukan')->sum('jumlah');

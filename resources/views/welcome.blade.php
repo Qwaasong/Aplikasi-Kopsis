@@ -700,6 +700,7 @@
             });
         });
 
+        
         // Chart
         const ctx = document.getElementById('financeChart').getContext('2d');
 
