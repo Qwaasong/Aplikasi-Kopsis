@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.navigation')
 
 @section('title', 'Beranda - KopsisApp')
 @section('content')
