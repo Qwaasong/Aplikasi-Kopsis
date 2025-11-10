@@ -1,4 +1,4 @@
-@extends('layouts/app')
+@extends('layouts.navigation')
 @section('title', 'KopsisApp - Vendor')
 @section('content')
     <div class="px-8 py-6">
