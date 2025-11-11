@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 @section('title', 'KopsisApp - Vendor')
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/css/fab.css') }}">

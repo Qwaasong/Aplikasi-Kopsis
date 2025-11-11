@@ -1,4 +1,4 @@
-@extends('layouts/app')
+@extends('layouts/main')
 @section('title', 'KopsisApp - Vendor')
 @section('content')
     <div class="px-8 py-6">
@@ -17,7 +17,7 @@
             {{-- Tambah Vendor --}}
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Vendor</h2>
-                <a href="{{ route('vendor.tambah') }}">
+                <a href="{{ route('vendor.store') }}">
                     <button
                         class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Tambah Vendor

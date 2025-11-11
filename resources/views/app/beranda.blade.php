@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends('layouts.main')
 @section('title', 'Beranda - KopsisApp')
 @section('content')
     <!-- Konten yang bisa di-scroll -->

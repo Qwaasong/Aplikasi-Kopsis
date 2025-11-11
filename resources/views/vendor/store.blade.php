@@ -1,4 +1,4 @@
-@extends('layouts/app')
+@extends('layouts/main')
 @section('title', 'KopsisApp - Vendor')
 @section('content')
 
@@ -204,7 +204,7 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('vendor.store') }}" method="POST">
             @csrf
 
             <div class="form-section">
