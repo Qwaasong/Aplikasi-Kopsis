@@ -45,27 +45,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Menyimpan produk baru.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'isi_per_pack' => 'required|numeric|min:1',
-            'satuan_pack' => 'required|string',
-        ]);
-
-        $product = Product::create($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Produk berhasil ditambahkan',
-            'data' => $product
-        ]);
-    }
-
-    /**
      * Menghapus produk (soft/hard delete sesuai kebutuhan).
      */
     public function destroy(Product $product)

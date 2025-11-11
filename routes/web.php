@@ -15,7 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::get('/dashboard', function () {
-    return view('app.beranda'); // menyesuaikan dengan folder app/
+    return view('app.beranda');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 route::get('/beranda', function () {

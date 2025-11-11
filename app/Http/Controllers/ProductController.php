@@ -12,16 +12,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'harga'       => 'required|numeric|min:0',
-            'stok'        => 'required|integer|min:0',
-            'deskripsi'   => 'nullable|string|max:1000',
-        ]);
+        try {
+            $request->validate([
+                'nama_produk' => 'required|string|max:255',
+                'harga' => 'required|numeric|min:0',
+                'stok' => 'required|integer|min:0',
+                'deskripsi' => 'nullable|string|max:1000',
+            ]);
 
-        Product::create($request->all());
+            Product::create($request->all());
 
-        return redirect()->route('product.index')->with('success', 'Produk berhasil ditambahkan.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil ditambahkan.',
+                'data' => $request
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan produk: ' . $e->getMessage(),
+                'errors' => $request->errors()
+            ], 422);
+        }
     }
 
     /**
@@ -29,8 +42,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
-        return view('product.edit', compact('product'));
+        $produk = Product::findOrFail($id);
+        return view('produk.edit', compact('produk'));
     }
 
     /**
@@ -42,9 +55,9 @@ class ProductController extends Controller
 
         $request->validate([
             'nama_produk' => 'required|string|max:255',
-            'harga'       => 'required|numeric|min:0',
-            'stok'        => 'required|integer|min:0',
-            'deskripsi'   => 'nullable|string|max:1000',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'deskripsi' => 'nullable|string|max:1000',
         ]);
 
         $product->update($request->all());
