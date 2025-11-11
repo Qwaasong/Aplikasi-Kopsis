@@ -43,28 +43,23 @@ class VendorController extends Controller
     }
 
     // Tambahkan method destroy() untuk AJAX Delete (Opsional)
-    public function destroy(Vendor $vendor)
+    public function destroy($id)
     {
-        $vendor->delete();
-        return response()->json(['success' => true]);
+        try {
+            $data = Vendor::findOrFail($id);
+            $data->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data',
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }
-
-
-// public function hapus($id)
-// {
-//     $user = User::findOrFail($id);
-
-//     // Hapus semua booking yang terkait dengan user
-//     foreach ($user->bookings as $booking) {
-//         // Hapus service advisor yang terkait dengan booking
-//         $booking->serviceAdvisors()->delete();
-//         // Hapus booking
-//         $booking->delete();
-//     }
-
-//     // Hapus user
-//     $user->delete();
-
-//     return redirect()->back()->with('success', 'Pengguna dan semua data relasi berhasil dihapus.');
-// }

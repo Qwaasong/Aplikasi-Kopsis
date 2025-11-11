@@ -15,7 +15,7 @@ Route::delete('/vendor/{id}', [VendorController::class, 'destroy']);
 
 // Produk API Routes
 Route::get('/produk', [ProductController::class, 'index'])->name('api.produk.index');
-Route::delete('/produk/{produk}', [ProductController::class, 'destroy'])->name('api.produk.destroy');
+Route::delete('/produk/{id}', [ProductController::class, 'destroy'])->name('api.produk.destroy');
 
 // Stok Terkini API Routes
 Route::get('/stok_terkini', [StockController::class, 'index'])->name('api.stok_terkini.index');
