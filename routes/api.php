@@ -9,8 +9,7 @@ use App\Http\Controllers\Api\UserController;
 
 
 // Vendor API Routes
-Route::apiResource('vendors', VendorController::class)->names('api.vendors');
-Route::get('/vendor', [VendorController::class, 'index']);
+Route::get('/vendor', [VendorController::class, 'index'])->name('api.vendors.index');
 Route::delete('/vendor/{id}', [VendorController::class, 'destroy']);
 
 

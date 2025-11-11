@@ -22,7 +22,7 @@ route::get('/beranda', function () {
 });
 
 // Vendor 
-Route::get('/vendor', function () { // <--- Route yang dituju
+Route::get('/vendor', function () {
     return view('vendor.index');})->name('vendor.index');
 
 //Ke halaman create vendor

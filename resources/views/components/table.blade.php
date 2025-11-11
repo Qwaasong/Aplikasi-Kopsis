@@ -60,7 +60,6 @@
         const dataUrl = "{{ $dataUrl }}";
         // Base entity URL (remove /api prefix). Didefinisikan di scope yang lebih luas
         const entityBaseUrl = dataUrl.replace('/api', '');
-        console.log(entityBaseUrl);
         const tableBody = $('#table-body');
         const cardContainer = $('#card-view-container');
 
