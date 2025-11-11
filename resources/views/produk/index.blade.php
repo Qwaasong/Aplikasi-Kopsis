@@ -1,8 +1,5 @@
 @extends('layouts.main')
 @section('title', 'KopsisApp - Vendor')
-@section('style')
-    <link rel="stylesheet" href="{{ asset('assets/css/fab.css') }}">
-@endsection
 @section('content')
     <div class="px-8 py-6">
         <!-- Header Konten -->
@@ -14,15 +11,17 @@
                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span>Vendor</span>
+                <span>Produk</span>
             </div>
 
             <div class="flex items-center justify-between">
-                <h2 class="text-3xl font-bold text-gray-900 m-0">Vendor</h2>
-                <button
-                    class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Tambah Vendor
-                </button>
+                <h2 class="text-3xl font-bold text-gray-900 m-0">Produk</h2>
+                <a href="###">
+                    <button
+                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Tambah Produk
+                    </button>
+                </a>
             </div>
         </div>
 
@@ -36,7 +35,7 @@
                 <!-- Item 1 -->
                 <button
                     class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-all w-40">
-                    <span class="text-sm font-medium">Tambah Data</span>
+                    <span class="text-sm font-medium">Tambah Produk</span>
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -57,13 +56,14 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama Vendor' => 'nama_vendor', 
-                                    'Alamat' => 'alamat', 
-                                    'No Telpon' => 'no_telp', 
-                                    ]" data-url="{{ route('api.vendors.index') }}">
+            'Nama Vendor' => 'nama_produk',
+            'Kategori' => 'category',
+            'Satuan Pack' => 'satuan',
+            'Isi Per Pack' => 'stock',
+        ]" data-url="{{ route('api.produk.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
-                <div class="flex items-center">
+                <div class="flex items-center space-x-4">
                     <button id="filter-button"
                         class="p-3 sm:p-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none">
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
