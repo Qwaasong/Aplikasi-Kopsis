@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Api\VendorController;
+use App\Http\Controllers\VendorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,25 +21,22 @@ route::get('/beranda', function () {
     return view('app.beranda');
 });
 
-
 // Vendor 
-Route::get('/vendor', function () {
-    return view('vendor.vendor');});
-#Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index');
-Route::get('/vendor/create', [VendorController::class, 'create'])->name('vendor.create');
+Route::get('/vendor', function () { // <--- Route yang dituju
+    return view('vendor.index');})->name('vendor.index');
+
+//Ke halaman create vendor
+Route::get('/vendor/create', function () {
+    return view('vendor.store');})->name('vendor.create');
+
+//Ketika Submit Akan Menjalankan Method Store di VendorController
 Route::post('/vendor', [VendorController::class, 'store'])->name('vendor.store');
+
+//Ke halaman edit vendor
 Route::get('/vendor/{id}/edit', [VendorController::class, 'edit'])->name('vendor.edit');
+
+//Ketika Submit Akan Menjalankan Method Update di VendorController
 Route::put('/vendor/{id}', [VendorController::class, 'update'])->name('vendor.update');
-
-#Route::get('/vendor/tambah', function () {
-#    return view('vendor.tambah');
-#})->name('vendor.tambah');
-#
-#Route::get('/vendor/edit', function () {
-#    return view('vendor.edit');
-#})->name('vendor.edit');
-
-
 
 
 // Produk 
@@ -86,5 +83,3 @@ Route::get('/pengguna', function () {
     return view('app.pengguna');
 });
 require __DIR__.'/auth.php';
-
-

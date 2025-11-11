@@ -14,7 +14,6 @@ Route::get('/vendor', [VendorController::class, 'index']);
 Route::delete('/vendor/{id}', [VendorController::class, 'destroy']);
 
 
-
 // Produk API Routes
 Route::apiResource('products', ProductController::class)->names('api.products');
 
