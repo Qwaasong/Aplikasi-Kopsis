@@ -49,3 +49,22 @@ class VendorController extends Controller
         return response()->json(['success' => true]);
     }
 }
+
+
+// public function hapus($id)
+// {
+//     $user = User::findOrFail($id);
+
+//     // Hapus semua booking yang terkait dengan user
+//     foreach ($user->bookings as $booking) {
+//         // Hapus service advisor yang terkait dengan booking
+//         $booking->serviceAdvisors()->delete();
+//         // Hapus booking
+//         $booking->delete();
+//     }
+
+//     // Hapus user
+//     $user->delete();
+
+//     return redirect()->back()->with('success', 'Pengguna dan semua data relasi berhasil dihapus.');
+// }

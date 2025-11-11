@@ -8,16 +8,17 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    // server: {
-    //     host: '0.0.0.0',
-    //     port: 5173,
-    //     hmr: {
-    //         host: '192.168.0.101'
-    //     },
 
-    //     cors: {
-    //         origin: 'http://192.168.0.101:8000',
-    //         credentials: true
-    //     }
-    // },
+    // server: {
+    //     host: '192.168.10.250',
+    //     port: 5173,
+    //     cors: true,
+    //     proxy: {
+    //       '/api': {
+    //         target: 'http://192.168.10.250:8000',
+    //         changeOrigin: true,
+    //         secure: false,
+    //       },
+    //     },
+    //   }
 });
