@@ -204,7 +204,7 @@
     </div>
 
     <div class="block">
-        <form action="{{ route('vendor.store') }}" method="POST">
+        <form action="##" method="POST">
             @csrf
 
             <div class="form-section">
