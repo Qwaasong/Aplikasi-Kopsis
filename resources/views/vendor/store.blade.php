@@ -216,7 +216,7 @@
 
                     <div class="form-column">
                         <label class="form-label" for="telepon">No Telepon</label>
-                        <input type="text" id="telepon" name="telepon" class="form-input" placeholder="No Telepon...">
+                        <input type="text" id="telepon" name="no_telp" class="form-input" placeholder="No Telepon...">
                     </div>
                 </div>
 
