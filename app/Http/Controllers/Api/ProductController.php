@@ -66,38 +66,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Menampilkan detail produk tertentu.
-     */
-    public function show(Product $product)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => $product
-        ]);
-    }
-
-    /**
-     * Memperbarui data produk.
-     */
-    public function update(Request $request, Product $product)
-    {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'isi_per_pack' => 'required|numeric|min:1',
-            'satuan_pack' => 'required|string',
-        ]);
-
-        $product->update($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Produk berhasil diperbarui',
-            'data' => $product
-        ]);
-    }
-
-    /**
      * Menghapus produk (soft/hard delete sesuai kebutuhan).
      */
     public function destroy(Product $product)

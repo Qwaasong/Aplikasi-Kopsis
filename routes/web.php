@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,9 +41,11 @@ Route::put('/vendor/{id}', [VendorController::class, 'update'])->name('vendor.up
 
 
 // Produk 
-Route::get('/produk', function () {
-    return view('app.produk');
-});
+Route::get('/product', function () { // <--- Route yang dituju
+    return view('product.index');})->name('product.index');
+Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
+Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 
 Route::get('/produk/tambah', function () {
     return view('produk.tambah');

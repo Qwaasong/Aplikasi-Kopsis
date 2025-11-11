@@ -14,20 +14,19 @@ Route::delete('/vendor/{id}', [VendorController::class, 'destroy']);
 
 
 // Produk API Routes
-Route::get('/produk', [VendorController::class, 'index'])->name('api.produk.index');
-Route::delete('/produk/{produk}', [VendorController::class, 'destroy'])->name('api.vendor.destroy');
+Route::apiResource('products', ProductController::class)->names('api.products');
+Route::get('/products', [VendorController::class, 'index']);
+Route::delete('/products/{id}', [VendorController::class, 'destroy']);
 
-// Stok Terkini API Routes
-Route::get('/stok_terkini', [VendorController::class, 'index'])->name('api.vendors.index');
-Route::delete('/stok_terkini/{stok_terkini}', [VendorController::class, 'destroy'])->name('api.vendors.destroy');
 
-// Barang Masuk API Routes
-Route::get('/barang_masuk', [VendorController::class, 'index'])->name('api.vendors.index');
-Route::delete('/barang_masuk/{barang_masuk}', [VendorController::class, 'destroy'])->name('api.vendors.destroy');
+// Stok Terkini (misalnya daftar stok aktif)
+Route::get('/stocks', [StockController::class, 'index'])->name('api.stocks.index');
 
-// Barang Keluar API Routes
-Route::get('/barang_keluar', [VendorController::class, 'index'])->name('api.vendors.index');
-Route::delete('/barang_keluar/{barang_keluar}', [VendorController::class, 'destroy'])->name('api.vendors.destroy');
+
+// Barang Masuk & Keluar (opsional bisa dipisah controller-nya nanti)
+Route::get('/barang_masuk', [TransactionController::class, 'incoming'])->name('api.barang_masuk.index');
+Route::get('/barang_keluar', [TransactionController::class, 'outgoing'])->name('api.barang_keluar.index');
+
 
 // Riwayat Transaksi API Routes
 Route::get('/riwayat_transaksi', [VendorController::class, 'index'])->name('api.vendors.index');
