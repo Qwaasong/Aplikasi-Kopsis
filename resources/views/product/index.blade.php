@@ -60,7 +60,7 @@
             'Kategori' => 'category',
             'Satuan Pack' => 'satuan',
             'Isi Per Pack' => 'stock',
-        ]" data-url="{{ route('api.produk.index') }}">
+        ]" data-url="{{ route('api.products.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
