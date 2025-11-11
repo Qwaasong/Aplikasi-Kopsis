@@ -58,8 +58,10 @@
     $(document).ready(function() {
         // Mendapatkan URL data dari properti component PHP
         const dataUrl = "{{ $dataUrl }}";
+        console.log(dataUrl);
         // Base entity URL (remove /api prefix). Didefinisikan di scope yang lebih luas
         const entityBaseUrl = dataUrl.replace('/api', '');
+        console.log(entityBaseUrl);
         const tableBody = $('#table-body');
         const cardContainer = $('#card-view-container');
 

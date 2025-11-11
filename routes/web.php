@@ -31,7 +31,7 @@ Route::get('/vendor/create', function () {
     return view('vendor.store');})->name('vendor.create');
 
 //Ketika Submit Akan Menjalankan Method Store di VendorController
-Route::post('/vendor', [VendorController::class, 'store'])->name('vendor.store');
+Route::post('/vendor/create', [VendorController::class, 'store'])->name('vendor.store');
 
 //Ke halaman edit vendor
 Route::get('/vendor/{id}/edit', [VendorController::class, 'edit'])->name('vendor.edit');
@@ -39,50 +39,99 @@ Route::get('/vendor/{id}/edit', [VendorController::class, 'edit'])->name('vendor
 //Ketika Submit Akan Menjalankan Method Update di VendorController
 Route::put('/vendor/{id}', [VendorController::class, 'update'])->name('vendor.update');
 
-
+//=========================================================================================================
 // Produk 
-Route::get('/product', function () { // <--- Route yang dituju
-    return view('product.index');})->name('product.index');
-Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
-Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
-Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+Route::get('/produk', function () {
+    return view('produk.index');})->name('produk.index');
 
-Route::get('/produk/tambah', function () {
-    return view('produk.tambah');
-});
+//Ke halaman create Produk
+Route::get('/produk/create', function () {
+    return view('produk.store');})->name('produk.create');
 
+//Ketika Submit Akan Menjalankan Method Store di ProdukController
+Route::post('/produk/create', [VendorController::class, 'store'])->name('produk.store');
 
+//Ke halaman edit Produk
+Route::get('/produk/{id}/edit', [VendorController::class, 'edit'])->name('produk.edit');
 
+//Ketika Submit Akan Menjalankan Method Update di ProdukController
+Route::put('/produk/{id}', [VendorController::class, 'update'])->name('produk.update');
+
+//=========================================================================================================
 // Stok Terkini 
 Route::get('/stok_terkini', function () {
-    return view('app.stok_terkini');
-});
+    return view('stok_terkini.index');})->name('stok_terkini.index');
 
-
-
+//=========================================================================================================
 // Barang Masuk 
 Route::get('/barang_masuk', function () {
-    return view('app.barang_masuk');
-});
+    return view('barang_masuk.index');})->name('barang_masuk.index');
 
+//Ke halaman create Barang Masuk
+Route::get('/barang_masuk/create', function () {
+    return view('barang_masuk.store');})->name('barang_masuk.create');
 
+//Ketika Submit Akan Menjalankan Method Store di BarangMasukController
+Route::post('/barang_masuk/create', [VendorController::class, 'store'])->name('vendor.store');
 
-// =============== Barang Keluar 
+//Ke halaman edit Barang Masuk
+Route::get('/barang_masuk/{id}/edit', [VendorController::class, 'edit'])->name('vendor.edit');
+
+//Ketika Submit Akan Menjalankan Method Update di BarangMasukController
+Route::put('/barang_masuk/{id}', [VendorController::class, 'update'])->name('vendor.update');
+
+//=========================================================================================================
+// Barang Keluar 
 Route::get('/barang_keluar', function () {
-    return view('app.barang_keluar');
-});
+    return view('barang_keluar.index');})->name('barang_keluar.index');
 
+//Ke halaman create Barang Keluar
+Route::get('/barang_keluar/create', function () {
+    return view('barang_keluar.store');})->name('barang_keluar.create');
 
+//Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
+Route::post('/barang_keluar/create', [VendorController::class, 'store'])->name('barang_keluar.store');
 
-// =============== Riwayat Transaksi 
+//Ke halaman edit Barang Keluar
+Route::get('/barang_keluar/{id}/edit', [VendorController::class, 'edit'])->name('barang_keluar.edit');
+
+//Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
+Route::put('/barang_keluar/{id}', [VendorController::class, 'update'])->name('barang_keluar.update');
+
+//=========================================================================================================
+// Riwayat Transaksi 
 Route::get('/riwayat_transaksi', function () {
-    return view('app.riwayat_transaksi');
-});
+    return view('riwayat_transaksi.index');})->name('riwayat_transaksi.index');
 
+//Ke halaman create Barang Keluar
+Route::get('/riwayat_transaksi/create', function () {
+    return view('riwayat_transaksi.store');})->name('riwayat_transaksi.create');
 
+//Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
+Route::post('/riwayat_transaksi/create', [VendorController::class, 'store'])->name('riwayat_transaksi.store');
 
+//Ke halaman edit Barang Keluar
+Route::get('/riwayat_transaksi/{id}/edit', [VendorController::class, 'edit'])->name('riwayat_transaksi.edit');
+
+//Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
+Route::put('/riwayat_transaksi/{id}', [VendorController::class, 'update'])->name('riwayat_transaksi.update');
+
+//=========================================================================================================
 // Pengguna 
 Route::get('/pengguna', function () {
-    return view('app.pengguna');
-});
+    return view('pengguna.index');})->name('pengguna.index');
+
+//Ke halaman create Barang Keluar
+Route::get('/pengguna/create', function () {
+    return view('pengguna.store');})->name('pengguna.create');
+
+//Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
+Route::post('/pengguna/create', [VendorController::class, 'store'])->name('pengguna.store');
+
+//Ke halaman edit Barang Keluar
+Route::get('/pengguna/{id}/edit', [VendorController::class, 'edit'])->name('pengguna.edit');
+
+//Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
+Route::put('/pengguna/{id}', [VendorController::class, 'update'])->name('pengguna.update');
+
 require __DIR__.'/auth.php';

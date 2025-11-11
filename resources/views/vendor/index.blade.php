@@ -60,7 +60,7 @@
             'Nama Vendor' => 'nama_vendor',
             'Alamat' => 'alamat',
             'No Telpon' => 'no_telp',
-        ]" data-url="{{ route('api.vendors.index') }}">
+        ]" data-url="{{ route('api.vendor.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

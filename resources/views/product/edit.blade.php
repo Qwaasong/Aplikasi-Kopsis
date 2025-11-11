@@ -233,7 +233,7 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('produk.update', ['id' => $produk->id]) }}" method="POST">
             @csrf
 
             <div class="form-section">
@@ -241,13 +241,13 @@
                 <div class="form-row-top">
                     <div class="vendor-column">
                         <label class="form-label" for="nama_vendor">Nama Produk</label>
-                        <input type="text" id="nama_vendor" name="nama_vendor" class="form-input"
+                        <input type="text" value="{{ $produk->nama_vendor }}" id="nama_vendor" name="nama_vendor" class="form-input"
                             placeholder="Nama Vendor..." required>
                     </div>
 
                     <div class="satuan-column">
                         <label class="form-label" for="satuan_pack">Satuan Pack</label>
-                        <input type="text" id="satuan_pack" name="satuan_pack" class="form-input"
+                        <input type="text" value="{{ $produk->satuan_pack }}" id="satuan_pack" name="satuan_pack" class="form-input"
                             placeholder="Satuan Pack...">
                     </div>
                 </div>
@@ -255,12 +255,12 @@
                 <div class="form-row-bottom">
                     <div class="kategori-column">
                         <label class="form-label" for="kategori">Kategori</label>
-                        <input type="text" id="kategori" name="kategori" class="form-input" placeholder="Kategori...">
+                        <input type="text" value="{{ $produk->kategori }}" id="kategori" name="kategori" class="form-input" placeholder="Kategori...">
                     </div>
 
                     <div class="isi-column">
                         <label class="form-label" for="isi_per_pack">Isi Per-Pack</label>
-                        <input type="text" id="isi_per_pack" name="isi_per_pack" class="form-input"
+                        <input type="text" value="{{ $produk->isi_per_pack }}"" id="isi_per_pack" name="isi_per_pack" class="form-input"
                             placeholder="Isi Per-Pack...">
                     </div>
                 </div>
