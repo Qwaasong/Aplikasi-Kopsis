@@ -9,12 +9,13 @@ use App\Http\Controllers\Api\UserController;
 
 
 // Vendor API Routes
-Route::get('/vendors', [VendorController::class, 'index'])->name('api.vendors.index');
-Route::delete('/vendors/{vendor}', [VendorController::class, 'destroy'])->name('api.vendors.destroy');
+Route::get('/vendor', [VendorController::class, 'index'])->name('api.vendors.index');
+Route::delete('/vendor/{id}', [VendorController::class, 'destroy']);
+
 
 // Produk API Routes
-Route::get('/produk', [VendorController::class, 'index'])->name('api.vendors.index');
-Route::delete('/produk/{produk}', [VendorController::class, 'destroy'])->name('api.vendors.destroy');
+Route::get('/produk', [VendorController::class, 'index'])->name('api.produk.index');
+Route::delete('/produk/{produk}', [VendorController::class, 'destroy'])->name('api.vendor.destroy');
 
 // Stok Terkini API Routes
 Route::get('/stok_terkini', [VendorController::class, 'index'])->name('api.vendors.index');

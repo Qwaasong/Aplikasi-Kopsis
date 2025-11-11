@@ -204,9 +204,8 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('vendor.store') }}" method="POST">
             @csrf
-
             <div class="form-section">
                 <div class="form-row">
                     <div class="form-column">
@@ -217,7 +216,7 @@
 
                     <div class="form-column">
                         <label class="form-label" for="telepon">No Telepon</label>
-                        <input type="text" id="telepon" name="telepon" class="form-input" placeholder="No Telepon...">
+                        <input type="text" id="telepon" name="no_telp" class="form-input" placeholder="No Telepon...">
                     </div>
                 </div>
 

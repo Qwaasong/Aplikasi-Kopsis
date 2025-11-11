@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
-    #
-
-    public function create()
-    {
-        return view('vendor.create');
-    }
 
     public function store(Request $request)
     {

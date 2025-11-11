@@ -204,33 +204,33 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('vendor.update', ['id' => $vendor->id]) }}" method="POST">
             @csrf
 
             <div class="form-section">
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="nama_vendor">Nama Vendor</label>
-                        <input type="text" id="nama_vendor" name="nama_vendor" class="form-input"
+                        <input type="text" value="{{ $vendor->nama_vendor }} }}" id="nama_vendor" name="nama_vendor" class="form-input"
                             placeholder="Nama Vendor..." required>
                     </div>
 
                     <div class="form-column">
                         <label class="form-label" for="telepon">No Telepon</label>
-                        <input type="text" id="telepon" name="telepon" class="form-input" placeholder="No Telepon...">
+                        <input type="text" value="{{ $vendor->no_telp }}" id="telepon" name="no_telp" class="form-input" placeholder="No Telepon...">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="alamat">Alamat</label>
-                        <textarea id="alamat" name="alamat" class="form-input" rows="3" placeholder="Alamat..."></textarea>
+                        <textarea id="alamat" name="alamat" class="form-input" rows="3" placeholder="Alamat...">{{ $vendor->alamat }}</textarea>
                     </div>
                 </div>
             </div>
 
             <div class="button-container">
-                <button type="button" class="btn btn-cancel">Batal</button>
+                <button type="button" class="btn btn-cancel" onclick="window.location.href = '{{ route('vendor.index') }}';">Batal</button>
                 <button type="submit" class="btn btn-save">Simpan</button>
                 <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
                     Lagi</button>
