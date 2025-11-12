@@ -15,11 +15,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::get('/dashboard', function () {
-    return view('app.beranda');
+    return view('beranda.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 route::get('/beranda', function () {
-    return view('app.beranda');
+    return view('beranda.index');
 });
 
 // Vendor 
