@@ -54,9 +54,9 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Product' => 'nama_vendor', 
-                                    'Jumlah Pack' => 'category', 
-                                    'Tanggal' => 'satuan',    
+                                    'Product' => 'product.nama', 
+                                    'Jumlah Pack' => 'jumlah_pack', 
+                                    'Tanggal' => 'tanggal',    
                                     ]" data-url="{{ route('api.barang_keluar.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>

@@ -19,7 +19,7 @@
 
     <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl shadow-sm">
         <div class="hidden sm:table w-full">
-            <table class="w-full text-sm text-left text-gray-600">
+            <table class="w-full text-sm text-left text-gray-60">
                 <thead class="bg-gray-50 border-b border-t border-gray-200">
                     <tr>
                         {{-- LOOPING KOLOM HEADER --}}
@@ -27,15 +27,17 @@
                             <th scope="col" class="px-6 py-3 font-bold text-gray-900">{{ $header }}</th>
                         @endforeach
                         {{-- Kolom Aksi --}}
+                        @if($showAction)
                         <th scope="col" class="px-6 py-3">
                             <span class="sr-only">Actions</span>
                         </th>
+                        @endif
                     </tr>
                 </thead>
                 {{-- ISI TABEL AKAN DI-INJECT OLEH AJAX/JQUERY --}}
                 <tbody id="table-body">
                     <tr>
-                        <td colspan="{{ count($dataTable) + 1 }}" class="text-center py-4 text-gray-500">
+                        <td colspan="{{ count($dataTable) + ($showAction ? 1 : 0) }}" class="text-center py-4 text-gray-500">
                             Memuat data...
                         </td>
                     </tr>
@@ -69,7 +71,8 @@
         const fields = {!! json_encode($dataTable) !!};
         const fieldKeys = Object.values(fields); // Header Tabel
         const fieldHeaders = Object.keys(fields); // Isi Tabel
-        const totalColumns = fieldKeys.length + 1; // Jumlah kolom data + kolom Aksi
+        const showAction = {!! $showAction ? 'true' : 'false' !!}; // Menentukan apakah kolom aksi ditampilkan
+        const totalColumns = fieldKeys.length + (showAction ? 1 : 0); // Jumlah kolom data + kolom Aksi jika ditampilkan
 
         const paginationLinks = $('#pagination-links');
         const searchInput = $('#table-search-input');
@@ -77,6 +80,34 @@
         let currentPage = 1;
         let currentSearch = '';
         let currentFilters = {}; // Menyimpan state filter saat ini
+
+        // Fungsi untuk mengakses nilai bersarang
+        function getNestedValue(obj, path) {
+            return path.split('.').reduce((current, key) => {
+                return current && current[key] !== undefined ? current[key] : null;
+            }, obj);
+        }
+
+        // Fungsi untuk memformat tanggal
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            // Jika format sudah dalam format Y-m-d H:i:s, tampilkan langsung
+            if (dateString.length === 19 && dateString.includes(' ')) {
+                return dateString;
+            }
+            // Jika format adalah ISO 8601, ubah ke format yang diinginkan
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; // Jika bukan tanggal valid, kembalikan aslinya
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
 
         function fetchData(page = 1, search = '', filters = {}) {
             tableBody.html(
@@ -107,31 +138,41 @@
                     if (data.length > 0) {
                         $.each(data, function(i, item) {
                             // Membuat tombol aksi yang reusable (gunakan slot untuk isi)
-                            const actionsHtml = `
-                                <div class="inline-block text-left relative">
-                                    <button class="menu-button p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none" data-id="${item.id}">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
-                                    </button>
-                                    <div id="dropdown-${item.id}" class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-                                        <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
-                                        <a href="" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
+                            let actionsHtml = '';
+                            if(showAction) {
+                                actionsHtml = `
+                                    <div class="inline-block text-left relative">
+                                        <button class="menu-button p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none" data-id="${item.id}">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                                        </button>
+                                        <div id="dropdown-${item.id}" class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border border-gray-20 rounded-lg shadow-xl z-50">
+                                            <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                                            <a href="" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-10 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
+                            }
 
                             // MEMBUAT BARIS SECARA DINAMIS
                             let dataCells = '';
+                            // Di dalam fungsi fetchData, ubah bagian ini:
                             $.each(fieldKeys, function(j, key) {
-                                // Mengambil nilai dari objek item menggunakan field key
-                                dataCells +=
-                                    `<td class="px-6 py-4">${item[key] || '-'}</td>`;
+                                let value = getNestedValue(item, key);
+                                // Format tanggal jika field adalah created_at atau updated_at
+                                if (key === 'created_at' || key === 'updated_at' || key === 'email_verified_at' || key.endsWith('.created_at') || key.endsWith('.updated_at') || key.endsWith('.email_verified_at')) {
+                                    value = formatDate(value);
+                                }
+                                dataCells += `<td class="px-6 py-4">${value || '-'}</td>`;
                             });
 
                             tableRows +=
                                 `<tr class="bg-white border-b" id="row-${item.id}">`;
                             tableRows += dataCells;
-                            tableRows +=
-                                `<td class="px-6 py-4 text-right relative">${actionsHtml}</td>`;
+                            // Tambahkan kolom aksi hanya jika showAction adalah true
+                            if(showAction) {
+                                tableRows +=
+                                    `<td class="px-6 py-4 text-right relative">${actionsHtml}</td>`;
+                            }
                             tableRows += `</tr>`;
 
                         });
@@ -147,25 +188,34 @@
                     if (data.length > 0) {
                         $.each(data, function(i, item) {
                             // Sama seperti di desktop, gunakan item.id untuk dropdown
-                            const actionsHtml = `
-                                <div class="relative">
-                                    <button class="menu-button p-1 text-gray-500 rounded-full hover:bg-gray-100" data-id="${item.id}">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
-                                    </button>
-                                    <div id="dropdown-mobile-${item.id}" class="menu-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-xl z-10">
-                                        <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
-                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
+                            let actionsHtml = '';
+                            if(showAction) {
+                                actionsHtml = `
+                                    <div class="relative">
+                                        <button class="menu-button p-1 text-gray-500 rounded-full hover:bg-gray-100" data-id="${item.id}">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                                        </button>
+                                        <div id="dropdown-mobile-${item.id}" class="menu-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-xl z-10">
+                                            <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
+                            }
 
                             // MEMBUAT BARIS DETAIL CARD SECARA DINAMIS
                             let cardDetails = '';
+                            // Dan di bagian card view:
                             $.each(fields, function(header, key) {
+                                let value = getNestedValue(item, key);
+                                // Format tanggal jika field adalah created_at atau updated_at
+                                if (key === 'created_at' || key === 'updated_at' || key.endsWith('.created_at') || key.endsWith('.updated_at')) {
+                                    value = formatDate(value);
+                                }
                                 cardDetails += `
                                     <div class="flex justify-between items-center">
                                         <dt class="font-semibold text-gray-800">${header}</dt>
-                                        <dd class="text-gray-600 text-right">${item[key] || '-'}</dd>
+                                        <dd class="text-gray-600 text-right">${value || '-'}</dd>
                                     </div>
                                 `;
                             });
@@ -174,7 +224,7 @@
                                 <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5" id="card-${item.id}">
                                     <div class="flex justify-between items-start mb-4">
                                         <div class="w-8"></div>
-                                        ${actionsHtml}
+                                        ${showAction ? actionsHtml : ''}
                                     </div>
                                     <dl class="space-y-3 text-sm">
                                         ${cardDetails}

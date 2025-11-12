@@ -54,11 +54,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama' => 'nama_vendor', 
-                                    'Email' => 'category', 
-                                    'Diverivikasi' => 'satuan', 
-                                    'Dibuat Pada' => 'stock',    
-                                    ]" data-url="{{ route('api.barang_masuk.index') }}">
+                                    'Nama' => 'name', 
+                                    'Email' => 'email', 
+                                    'Diverifikasi' => 'email_verified_at', 
+                                    'Dibuat Pada' => 'created_at',    
+                                    ]" data-url="{{ route('api.pengguna.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

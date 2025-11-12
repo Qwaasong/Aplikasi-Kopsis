@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\FinancialTransaction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Purchase extends Model
 {
@@ -50,5 +51,21 @@ class Purchase extends Model
     public function financialTransaction()
     {
         return $this->hasOne(FinancialTransaction::class);
+    }
+
+    // Accessor untuk created_at agar menampilkan format tanggal dan waktu saja
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null,
+        );
+    }
+    
+    // Accessor untuk updated_at agar menampilkan format tanggal dan waktu saja
+    protected function updatedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null,
+        );
     }
 }

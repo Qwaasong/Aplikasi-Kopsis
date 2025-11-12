@@ -19,7 +19,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 route::get('/beranda', function () {
-    return view('app.beranda');
+    return view('beranda.index');
 });
 
 // Vendor 

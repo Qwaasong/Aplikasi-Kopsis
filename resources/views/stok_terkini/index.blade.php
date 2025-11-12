@@ -16,49 +16,17 @@
 
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Stok Terkini</h2>
-                <button
-                    class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Tambah Stok Terkini
-                </button>
             </div>
-        </div>
-
-        <!-- FAB Container -->
-        <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-50">
-
-            <!-- Speed Dial Menu -->
-            <div id="fab-menu"
-                class="absolute bottom-full right-1 mb-4 flex flex-col items-end gap-3 opacity-0 translate-y-3 scale-95 pointer-events-none transition-all duration-300">
-
-                <!-- Item 1 -->
-                <button
-                    class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-all w-40">
-                    <span class="text-sm font-medium">Tambah Stok Terkini</span>
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Tombol FAB -->
-            <button id="fab-btn"
-                class="flex items-center justify-center w-14 h-14 bg-blue-600 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.3)] text-white cursor-pointer hover:bg-blue-700 transition-transform duration-300">
-                <svg id="fab-icon" xmlns="http://www.w3.org/2000/svg" class="icon-rotate w-6 h-6" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-            </button>
         </div>
 
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama Produk' => 'nama_vendor', 
-                                    'Kategori' => 'category', 
-                                    'Satuan' => 'satuan', 
-                                    'Stok' => 'stock',    
-                                    ]" data-url="{{ route('api.stok_terkini.index') }}">
+                                    'Nama Produk' => 'nama', 
+                                    'Kategori' => 'kategori', 
+                                    'Satuan' => 'satuan_pack', 
+                                    'Stok' => 'stok_tersedia',    
+                                    ]" data-url="{{ route('api.stok_terkini.index') }}" :showAction="false">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
@@ -110,8 +78,4 @@
             </x-slot:filter>
         </x-table>
     </div>
-@endsection
-
-@section('script')
-    <script src="{{ asset('assets/js/fab.js') }}"></script>
 @endsection

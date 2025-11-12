@@ -21,13 +21,22 @@ class table extends Component
      * @var string
      */
     public string $dataUrl;
+    
+    /**
+     * Whether to show action column or not.
+     *
+     * @var bool
+     */
+    public bool $showAction;
+    
     /**
      * Create a new component instance.
      */
-    public function __construct(array $dataTable, string $dataUrl)
+    public function __construct(array $dataTable, string $dataUrl, bool $showAction = true)
     {
         $this->dataTable = $dataTable;
         $this->dataUrl = $dataUrl;
+        $this->showAction = $showAction;
     }
 
     /**

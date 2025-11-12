@@ -44,6 +44,8 @@ class StockController extends Controller
             ];
         });
 
+        $data = $query->latest()->select(['id', 'nama', 'kategori', 'satuan_pack', 'isi_per_pack'])->paginate(10);
+
         return response()->json([
             'success' => true,
             'count' => $data->count(),

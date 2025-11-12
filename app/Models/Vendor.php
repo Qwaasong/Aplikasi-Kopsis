@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Purchase;
 
 class Vendor extends Model
 {
@@ -39,4 +41,10 @@ class Vendor extends Model
 
         return $query;
     }
+
+        public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
 }
