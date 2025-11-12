@@ -406,6 +406,8 @@
                 valueField: 'value',
                 labelField: 'text',
                 searchField: ['text'],
+
+                // Tambah data dari database disini
                 options: [{
                         value: '1',
                         text: 'Ichi Oca'
