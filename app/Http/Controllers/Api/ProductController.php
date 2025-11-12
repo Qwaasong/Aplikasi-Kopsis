@@ -35,8 +35,8 @@ class ProductController extends Controller
             }
         }
 
-        // 🔢 Pagination (10 per halaman)
-        $products = $query->latest()->paginate(10);
+        // 🔢 Pagination (10 per halaman) - PASTIKAN field yang diperlukan di-select
+        $products = $query->latest()->select(['id', 'nama', 'kategori', 'satuan_pack', 'isi_per_pack'])->paginate(10);
 
         return response()->json([
             'success' => true,

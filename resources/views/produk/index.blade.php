@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'KopsisApp - Vendor')
+@section('title', 'KopsisApp - Produk')
 @section('content')
     <div class="px-8 py-6">
         <!-- Header Konten -->
@@ -16,11 +16,12 @@
 
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Produk</h2>
-                <button
-                    class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    onclick="window.location.href = '{{ route('produk.create') }}'">
-                    Tambah Produk
-                </button>
+                <a href="{{ route('produk.create') }}">
+                    <button
+                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Tambah Produk
+                    </button>
+                </a>
             </div>
         </div>
 
@@ -55,11 +56,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                'Nama Produk' => 'nama_produk',
-                'Kategori' => 'category',
-                'Satuan Pack' => 'satuan',
-                'Isi Per Pack' => 'stock',
-            ]" data-url="{{ route('api.produk.index') }}">
+            'Nama Produk' => 'nama',
+            'Kategori' => 'kategori',
+            'Satuan Pack' => 'satuan_pack',
+            'Isi Per Pack' => 'isi_per_pack',
+        ]" data-url="{{ route('api.produk.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
@@ -77,9 +78,9 @@
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
                             <div>
-                                <label for="filter_nama_vendor" class="block text-sm font-medium text-gray-700">Nama
-                                    Vendor</label>
-                                <input type="text" name="filter[nama_vendor]" id="filter_nama_vendor"
+                                <label for="filter_nama_Produk" class="block text-sm font-medium text-gray-700">Nama
+                                    Produk</label>
+                                <input type="text" name="filter[nama_Produk]" id="filter_nama_Produk"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </div>
                             <div>
