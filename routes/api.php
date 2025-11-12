@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\StockController;
+use App\Http\Controllers\Api\Barang_KeluarController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\Barang_MasukController;
@@ -26,3 +27,13 @@ Route::get('/stok_terkini', [StockController::class, 'index'])->name('api.stok_t
     Route::get('purchase', [Barang_MasukController::class, 'index'])->name('api.barang_masuk.index'); // <-- PERUBAHAN
     Route::get('purchase/{id}', [Barang_MasukController::class, 'show']); // <-- PERUBAHAN
     Route::delete('purchase/{id}', [Barang_MasukController::class, 'destroy']); // <-- PERUBAHAN
+#Route::get('/stok_terkini', [StockController::class, 'index'])->name('api.stok_terkini.index');
+
+// Barang masuk API Routes
+
+
+// Barang keluar API Routes
+
+Route::get('/barang_keluar', [Barang_KeluarController::class, 'index'])->name('api.barang_keluar.index');
+Route::delete('/barang_keluar/{id}', [Barang_KeluarController::class, 'destroy'])->name('api.barang_keluar.destroy');
+

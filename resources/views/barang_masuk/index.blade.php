@@ -54,11 +54,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Vendor' => 'vendor_id', // <-- PERBAIKAN 4: Menggunakan relasi 'vendor.nama'
-                                    'Tanggal' => 'tanggal', // <-- PERBAIKAN 5: Menggunakan kolom 'tanggal'
-                                    'No Faktur' => 'no_faktur', // <-- PERBAIKAN 6: Menggunakan kolom 'no_faktur'
-                                    'Tanggal Input' => 'created_at', // <-- PERBAIKAN 7: Menggunakan kolom 'created_at'   
-                                    ]" data-url="{{ route('api.barang_masuk.index') }}">
+            'Vendor' => 'nama_vendor', 
+            'Tanggal' => 'category', 
+            'No Faktur' => 'satuan', 
+            'Tanggal Input' => 'stock',    
+            ]" data-url="{{ route('api.barang_masuk.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
