@@ -8,33 +8,36 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
+     * Tampilkan halaman index produk (jika ada)
+     */
+    public function index()
+    {
+        return view('produk.index');
+    }
+
+    /**
+     * Tampilkan halaman create produk
+     */
+    public function create()
+    {
+        return view('produk.create');
+    }
+
+    /**
      * Simpan produk baru ke database.
      */
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'nama_produk' => 'required|string|max:255',
-                'harga' => 'required|numeric|min:0',
-                'stok' => 'required|integer|min:0',
-                'deskripsi' => 'nullable|string|max:1000',
-            ]);
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:1000',
+            'isi_per_pack' => 'required|integer|min:1',
+            'satuan_pack' => 'required|string|max:50',
+        ]);
 
             Product::create($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Produk berhasil ditambahkan.',
-                'data' => $request
-            ], 200);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan produk: ' . $e->getMessage(),
-                'errors' => $request->errors()
-            ], 422);
-        }
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
     /**
@@ -42,8 +45,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $produk = Product::findOrFail($id);
-        return view('produk.edit', compact('produk'));
+        $product = Product::findOrFail($id);
+        return view('produk.edit', compact('product'));
     }
 
     /**
@@ -54,14 +57,14 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
-            'stok' => 'required|integer|min:0',
-            'deskripsi' => 'nullable|string|max:1000',
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:1000',
+            'isi_per_pack' => 'required|integer|min:1',
+            'satuan_pack' => 'required|string|max:50',
         ]);
 
         $product->update($request->all());
 
-        return redirect()->route('product.index')->with('success', 'Produk berhasil diperbarui.');
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
 }
