@@ -5,6 +5,8 @@
     <style>
         .judul {
             padding: 4% 6% 5%;
+            font-size: 25px;
+            text-align: center;
         }
 
         .block {
@@ -65,7 +67,8 @@
 
         .button-container {
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
             gap: 12px;
             margin-top: 24px;
         }
@@ -77,6 +80,7 @@
             font-size: 15px;
             cursor: pointer;
             transition: background-color 0.3s;
+            align-items: center;
             min-width: 10px;
             display: inline-flex;
             align-items: center;
@@ -122,34 +126,49 @@
                 margin: 0 4%;
             }
 
-            .form-row {
+            .form-row-top,
+            .form-row-bottom {
                 flex-direction: column;
                 gap: 0;
                 margin-bottom: 0;
             }
 
-            .form-column {
+            .form-column,
+            .vendor-column,
+            .satuan-column,
+            .kategori-column,
+            .isi-column {
                 margin-bottom: 16px;
             }
 
-            .form-input {
+            .form-input,
+            .form-select {
                 font-size: 16px;
-                /* Prevent zoom on iOS */
                 padding: 14px 12px;
             }
 
+            .form-select {
+                background-position: right 12px center;
+                padding-right: 40px;
+            }
+
+            /* PERBAIKAN DI SINI: */
             .button-container {
+                padding: 12px;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
+                /* <- TAMBAHKAN INI */
                 gap: 12px;
             }
 
             .btn {
                 width: 100%;
+                max-width: 300px;
+                /* Optional: agar button tidak terlalu lebar */
                 padding: 14px 24px;
                 font-size: 16px;
                 min-height: 44px;
-                /* Better touch target for mobile */
             }
 
             textarea.form-input {
@@ -167,7 +186,8 @@
                 margin: 0 2%;
             }
 
-            .form-input {
+            .form-input,
+            .form-select {
                 padding: 16px 12px;
             }
 
@@ -229,10 +249,10 @@
             </div>
 
             <div class="button-container">
-                <button type="button" class="btn btn-cancel">Batal</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
                 <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
                     Lagi</button>
+                <button type="submit" class="btn btn-save">Simpan</button>
+                <button type="button" class="btn btn-cancel">Batal</button>
             </div>
         </form>
     </div>

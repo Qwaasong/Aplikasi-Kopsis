@@ -5,6 +5,8 @@
     <style>
         .judul {
             padding: 4% 6% 5%;
+            font-size: 25px;
+            text-align: center;
         }
 
         .block {
@@ -65,7 +67,8 @@
 
         .button-container {
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
             gap: 12px;
             margin-top: 24px;
         }
@@ -77,6 +80,7 @@
             font-size: 15px;
             cursor: pointer;
             transition: background-color 0.3s;
+            align-items: center;
             min-width: 10px;
             display: inline-flex;
             align-items: center;
@@ -112,6 +116,7 @@
             background-color: #3a7bc8;
         }
 
+
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .judul {
@@ -139,13 +144,18 @@
             }
 
             .button-container {
+                padding: 12px;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
+                /* <- TAMBAHKAN INI */
                 gap: 12px;
             }
 
             .btn {
                 width: 100%;
+                max-width: 300px;
+                /* Optional: agar button tidak terlalu lebar */
                 padding: 14px 24px;
                 font-size: 16px;
                 min-height: 44px;
@@ -211,13 +221,14 @@
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="nama_vendor">Nama Vendor</label>
-                        <input type="text" value="{{ $vendor->nama_vendor }} }}" id="nama_vendor" name="nama_vendor" class="form-input"
-                            placeholder="Nama Vendor..." required>
+                        <input type="text" value="{{ $vendor->nama_vendor }}" id="nama_vendor" name="nama_vendor"
+                            class="form-input" placeholder="Nama Vendor..." required>
                     </div>
 
                     <div class="form-column">
                         <label class="form-label" for="telepon">No Telepon</label>
-                        <input type="text" value="{{ $vendor->no_telp }}" id="telepon" name="no_telp" class="form-input" placeholder="No Telepon...">
+                        <input type="text" value="{{ $vendor->no_telp }}" id="telepon" name="no_telp"
+                            class="form-input" placeholder="No Telepon...">
                     </div>
                 </div>
 
@@ -230,10 +241,9 @@
             </div>
 
             <div class="button-container">
-                <button type="button" class="btn btn-cancel" onclick="window.location.href = '{{ route('vendor.index') }}';">Batal</button>
                 <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
-                    Lagi</button>
+                <button type="button" class="btn btn-cancel"
+                    onclick="window.location.href = '{{ route('vendor.index') }}';">Batal</button>
             </div>
         </form>
     </div>

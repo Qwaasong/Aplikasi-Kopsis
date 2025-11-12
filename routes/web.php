@@ -89,14 +89,17 @@ Route::get('/barang_keluar', function () {
 Route::get('/barang_keluar/create', function () {
     return view('barang_keluar.store');})->name('barang_keluar.create');
 
+Route::get('/barang_keluar/edit', function () {
+    return view('barang_keluar.edit');});
+
 //Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
-Route::post('/barang_keluar/create', [Barang_KeluarController::class, 'store'])->name('barang_keluar.store');
+// Route::post('/barang_keluar/create', [Barang_KeluarController::class, 'store'])->name('barang_keluar.store');
 
 //Ke halaman edit Barang Keluar
-Route::get('/barang_keluar/{id}/edit', [Barang_KeluarController::class, 'edit'])->name('barang_keluar.edit');
+// Route::get('/barang_keluar/{id}/edit', [Barang_KeluarController::class, 'edit'])->name('barang_keluar.edit');
 
 //Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
-Route::put('/barang_keluar/{id}', [Barang_KeluarController::class, 'update'])->name('barang_keluar.update');
+// Route::put('/barang_keluar/{id}', [Barang_KeluarController::class, 'update'])->name('barang_keluar.update');
 
 //=========================================================================================================
 // Riwayat Transaksi 

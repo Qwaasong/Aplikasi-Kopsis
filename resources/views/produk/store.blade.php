@@ -6,7 +6,7 @@
         .judul {
             padding: 4% 6% 5%;
             font-size: 25px;
-
+            text-align: center;
         }
 
         .block {
@@ -37,7 +37,8 @@
             font-size: 14px;
         }
 
-        .form-input {
+        .form-input,
+        .form-select {
             width: 100%;
             padding: 12px;
             border: 1px solid #e0e0e0;
@@ -45,6 +46,8 @@
             font-size: 16px;
             transition: border-color 0.3s;
             background-color: #fafafa;
+            box-sizing: border-box;
+            font-family: inherit;
         }
 
         .form-input::placeholder {
@@ -52,16 +55,42 @@
             font-style: italic;
         }
 
-        .form-input:focus {
+        .form-input:focus,
+        .form-select:focus {
             outline: none;
             border-color: #4a90e2;
             background-color: white;
             box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
         }
 
+        /* Styling khusus untuk select element */
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .form-select option {
+            padding: 8px;
+            background-color: white;
+            color: #333;
+        }
+
+        .form-select option:first-child {
+            color: #999;
+            font-style: italic;
+        }
+
         .button-container {
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
             gap: 12px;
             margin-top: 24px;
         }
@@ -73,6 +102,7 @@
             font-size: 15px;
             cursor: pointer;
             transition: background-color 0.3s;
+            align-items: center;
             min-width: 10px;
             display: inline-flex;
             align-items: center;
@@ -137,6 +167,7 @@
         }
 
         /* Mobile Responsive Styles */
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .judul {
                 padding: 8% 5% 6%;
@@ -161,24 +192,34 @@
                 margin-bottom: 16px;
             }
 
-            .form-input {
+            .form-input,
+            .form-select {
                 font-size: 16px;
-                /* Prevent zoom on iOS */
                 padding: 14px 12px;
             }
 
+            .form-select {
+                background-position: right 12px center;
+                padding-right: 40px;
+            }
+
+            /* PERBAIKAN DI SINI: */
             .button-container {
+                padding: 12px;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
+                /* <- TAMBAHKAN INI */
                 gap: 12px;
             }
 
             .btn {
                 width: 100%;
+                max-width: 300px;
+                /* Optional: agar button tidak terlalu lebar */
                 padding: 14px 24px;
                 font-size: 16px;
                 min-height: 44px;
-                /* Better touch target for mobile */
             }
 
             textarea.form-input {
@@ -196,7 +237,8 @@
                 margin: 0 2%;
             }
 
-            .form-input {
+            .form-input,
+            .form-select {
                 padding: 16px 12px;
             }
 
@@ -239,14 +281,14 @@
             <div class="form-section">
                 <div class="form-row-top">
                     <div class="vendor-column">
-                        <label class="form-label" for="nama_vendor">Nama Produk</label>
-                        <input type="text" id="nama_vendor" name="nama_vendor" class="form-input"
-                            placeholder="Nama Vendor..." required>
+                        <label class="form-label" for="nama_produk">Nama Produk</label>
+                        <input type="text" id="nama_produk" name="nama_produk" class="form-input"
+                            placeholder="Nama Produk..." required>
                     </div>
 
                     <div class="satuan-column">
                         <label class="form-label" for="satuan_pack">Satuan Pack</label>
-                        <input type="text" id="satuan_pack" name="satuan_pack" class="form-input"
+                        <input type="number" id="satuan_pack" name="satuan_pack" class="form-input"
                             placeholder="Satuan Pack...">
                     </div>
                 </div>
@@ -254,23 +296,32 @@
                 <div class="form-row-bottom">
                     <div class="kategori-column">
                         <label class="form-label" for="kategori">Kategori</label>
-                        <input type="text" id="kategori" name="kategori" class="form-input" placeholder="Kategori...">
+                        {{-- <input type="text" id="kategori" name="kategori" class="form-input" placeholder="Kategori..."> --}}
+                        <select name="kategori" id="kategori" class="form-select">
+                            <option value="">Kategori...</option>
+                            <option value="dus">Dus</option>
+                            <option value="makanan_ringan">Makanan Ringan</option>
+                            <option value="rencengan">Rencengan</option>
+                            <option value="Kiloan">Kiloan</option>
+                            <option value="kaleng">Kaleng</option>
+                            <option value="wadah">Wadah</option>
+                        </select>
                     </div>
 
                     <div class="isi-column">
                         <label class="form-label" for="isi_per_pack">Isi Per-Pack</label>
-                        <input type="text" id="isi_per_pack" name="isi_per_pack" class="form-input"
+                        <input type="number" id="isi_per_pack" name="isi_per_pack" class="form-input"
                             placeholder="Isi Per-Pack...">
                     </div>
                 </div>
             </div>
 
             <div class="button-container">
-                <button type="button" class="btn btn-cancel"
-                    onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
                 <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
                     Lagi</button>
+                <button type="submit" class="btn btn-save">Simpan</button>
+                <button type="button" class="btn btn-cancel"
+                    onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
             </div>
         </form>
     </div>
