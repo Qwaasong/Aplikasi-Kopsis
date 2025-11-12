@@ -9,16 +9,16 @@ export default defineConfig({
         }),
     ],
 
-    server: {
-        host: '192.168.10.250',
-        port: 5173,
-        cors: true,
-        proxy: {
-          '/api': {
-            target: 'http://192.168.10.250:8000',
-            changeOrigin: true,
-            secure: false,
-          },
-        },
-      }
+    // server: {
+    //     host: '192.168.10.250',
+    //     port: 5173,
+    //     cors: true,
+    //     proxy: {
+    //       '/api': {
+    //         target: 'http://192.168.10.250:8000',
+    //         changeOrigin: true,
+    //         secure: false,
+    //       },
+    //     },
+    //   }
 });
