@@ -1,29 +1,31 @@
-<<<<<<< HEAD
 @extends('layouts.main')
-=======
-@extends('layouts.navigation')
->>>>>>> 0c2daac3f68591484a100ee67add28d94a94a04f
 @section('title', 'KopsisApp - Vendor')
 @section('content')
     <div class="px-8 py-6">
         <!-- Header Konten -->
         <div class="flex flex-col space-y-4">
             <div class="flex items-center text-sm text-gray-500">
-                <span>Data Master</span>
+                <span>Keuangan</span>
                 <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span>Produk</span>
+                <span>Riwayat Transaksi</span>
             </div>
 
             <div class="flex items-center justify-between">
-                <h2 class="text-3xl font-bold text-gray-900 m-0">Produk</h2>
-                <button
-                    class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Tambah Produk
-                </button>
+                <h2 class="text-3xl font-bold text-gray-900 m-0">Riwayat Transaksi</h2>
+                <div>
+                    <button
+                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Export PDF
+                    </button>
+                    <button
+                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Tambah Transaksi
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -37,7 +39,17 @@
                 <!-- Item 1 -->
                 <button
                     class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-all w-40">
-                    <span class="text-sm font-medium">Tambah Produk</span>
+                    <span class="text-sm font-medium">Tambah Transaksi</span>
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+
+                <!-- Item 2 -->
+                <button
+                    class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-all w-40">
+                    <span class="text-sm font-medium">Export PDF</span>
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -58,11 +70,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama Produk' => 'nama_vendor', 
-                                    'Kategori' => 'category', 
-                                    'Satuan Pack' => 'satuan', 
-                                    'Isi Per Pack' => 'stock',    
-                                    ]" data-url="{{ route('api.stok_terkini.index') }}">
+                                    'Tipe' => 'nama_vendor', 
+                                    'Jumlah' => 'category', 
+                                    'Tanggal' => 'satuan', 
+                                    'Keterangan' => 'stock',    
+                                    ]" data-url="{{ route('api.barang_masuk.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

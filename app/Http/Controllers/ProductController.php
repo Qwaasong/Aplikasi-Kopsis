@@ -35,7 +35,7 @@ class ProductController extends Controller
             'satuan_pack' => 'required|string|max:50',
         ]);
 
-        Product::create($request->all());
+            Product::create($request->all());
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }

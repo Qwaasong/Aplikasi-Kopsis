@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 @extends('layouts.main')
-=======
-@extends('layouts.navigation')
->>>>>>> 0c2daac3f68591484a100ee67add28d94a94a04f
 @section('title', 'KopsisApp - Vendor')
 @section('content')
     <div class="px-8 py-6">
@@ -15,14 +11,14 @@
                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span>Stok Terkini</span>
+                <span>Barang Masuk</span>
             </div>
 
             <div class="flex items-center justify-between">
-                <h2 class="text-3xl font-bold text-gray-900 m-0">Stok Terkini</h2>
+                <h2 class="text-3xl font-bold text-gray-900 m-0">Barang Keluar</h2>
                 <button
                     class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Tambah Stok Terkini
+                    Tambah Barang Masuk
                 </button>
             </div>
         </div>
@@ -37,7 +33,7 @@
                 <!-- Item 1 -->
                 <button
                     class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-all w-40">
-                    <span class="text-sm font-medium">Tambah Stok Terkini</span>
+                    <span class="text-sm font-medium">Tambah Barang Keluar</span>
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -58,11 +54,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama Produk' => 'nama_vendor', 
-                                    'Kategori' => 'category', 
-                                    'Satuan' => 'satuan', 
-                                    'Stok' => 'stock',    
-                                    ]" data-url="{{ route('api.stok_terkini.index') }}">
+                                    'Vendor' => 'nama_vendor', 
+                                    'Tanggal' => 'category', 
+                                    'No Faktur' => 'satuan', 
+                                    'Tanggal Input' => 'stock',    
+                                    ]" data-url="{{ route('api.barang_masuk.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

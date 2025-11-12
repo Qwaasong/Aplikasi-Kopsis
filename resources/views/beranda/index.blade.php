@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 @extends('layouts.main')
-=======
-@extends('layouts.navigation')
-
->>>>>>> 0c2daac3f68591484a100ee67add28d94a94a04f
 @section('title', 'Beranda - KopsisApp')
 @section('content')
     <!-- Konten yang bisa di-scroll -->

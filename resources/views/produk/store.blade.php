@@ -233,7 +233,7 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('produk.store') }}" method="POST">
             @csrf
 
             <div class="form-section">
@@ -266,7 +266,8 @@
             </div>
 
             <div class="button-container">
-                <button type="button" class="btn btn-cancel">Batal</button>
+                <button type="button" class="btn btn-cancel"
+                    onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
                 <button type="submit" class="btn btn-save">Simpan</button>
                 <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
                     Lagi</button>
