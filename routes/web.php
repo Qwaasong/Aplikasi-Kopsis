@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Barang_MasukController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -79,6 +80,9 @@ Route::get('/barang_masuk/{id}/edit', [Barang_MasukController::class, 'edit'])->
 
 //Ketika Submit Akan Menjalankan Method Update di BarangMasukController
 Route::put('/barang_masuk/{id}', [Barang_MasukController::class, 'update'])->name('barang_masuk.update');
+
+//Ketika Menjalankan Metode Delete di BarangMasukController  <-- TAMBAHKAN INI
+Route::delete('/barang_masuk/{id}', [Barang_MasukController::class, 'destroy'])->name('barang_masuk.destroy'); // <-- TAMBAHKAN INI
 
 //=========================================================================================================
 // Barang Keluar 
