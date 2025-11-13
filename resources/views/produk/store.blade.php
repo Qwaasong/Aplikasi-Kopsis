@@ -288,7 +288,7 @@
 
                     <div class="satuan-column">
                         <label class="form-label" for="satuan_pack">Satuan Pack</label>
-                        <input type="number" id="satuan_pack" name="satuan_pack" class="form-input"
+                        <input type="text" id="satuan_pack" name="satuan_pack" class="form-input"
                             placeholder="Satuan Pack...">
                     </div>
                 </div>
