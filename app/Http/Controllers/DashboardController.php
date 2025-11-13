@@ -46,7 +46,7 @@ class DashboardController extends Controller
             ->orderBy('tanggal', 'asc')
             ->get();
 
-        return view('dashboard', [
+        return view('beranda.index', [
             'filter' => $filter,
             'pemasukan' => $pemasukan,
             'pengeluaran' => $pengeluaran,
