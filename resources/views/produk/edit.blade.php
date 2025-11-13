@@ -275,54 +275,61 @@
     </div>
 
     <div class="block">
-        <form action="{{ route('produk.update', ['id' => $product->id]) }}" method="POST">
+        <form action="{{ route('produk.update', $product->id) }}" method="POST">
             @csrf
-
+            @method('PUT')
+    
             <div class="form-section">
-                <!-- Baris atas: Nama Vendor (kiri) dan Satuan Pack (kanan) -->
                 <div class="form-row-top">
                     <div class="vendor-column">
-                        <label class="form-label" for="nama_vendor">Nama Produk</label>
-                        <input type="text" value="{{ $product->nama }}" id="nama_produk" name="nama_produk"
+                        <label class="form-label" for="nama">Nama Produk</label>
+                        <input type="text" id="nama" name="nama" value="{{ old('nama', $product->nama) }}"
                             class="form-input" placeholder="Nama Produk..." required>
                     </div>
-
+    
                     <div class="satuan-column">
                         <label class="form-label" for="satuan_pack">Satuan Pack</label>
-                        <input type="text" value="{{ $product->satuan_pack }}" id="satuan_pack" name="satuan_pack"
-                            class="form-input" placeholder="Satuan Pack...">
+                        <select id="satuan_pack" name="satuan_pack" class="form-select" required>
+                            <option value="">Pilih Satuan Pack...</option>
+                            @foreach ($satuanPackOptions as $key => $label)
+                                <option value="{{ $key }}" {{ $product->satuan_pack === $key ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-
+    
                 <div class="form-row-bottom">
                     <div class="kategori-column">
                         <label class="form-label" for="kategori">Kategori</label>
-                        {{-- <input type="text" id="kategori" name="kategori" class="form-input" placeholder="Kategori..."> --}}
-                        <select name="kategori" id="kategori" class="form-select">
-                            <option value="{{ $product->kategori }}">{{ $product->kategori }}</option>
-                            <option value="dus">Dus</option>
-                            <option value="rencengan">Rencengan</option>
-                            <option value="Kiloan">Kiloan</option>
-                            <option value="kaleng">Kaleng</option>
-                            <option value="wadah">Wadah</option>
+                        <select name="kategori" id="kategori" class="form-select" required>
+                            <option value="">Pilih Kategori...</option>
+                            @foreach ($kategoriOptions as $key => $label)
+                                <option value="{{ $key }}" {{ $product->kategori === $key ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
-
+    
                     <div class="isi-column">
                         <label class="form-label" for="isi_per_pack">Isi Per-Pack</label>
-                        <input type="number" id="isi_per_pack" value="{{ $product->isi_per_pack }}" name="isi_per_pack" class="form-input"
+                        <input type="number" id="isi_per_pack" name="isi_per_pack"
+                            value="{{ old('isi_per_pack', $product->isi_per_pack) }}" class="form-input"
                             placeholder="Isi Per-Pack...">
                     </div>
                 </div>
             </div>
+    
+            <div class="button-container">
+                <button type="submit" class="btn btn-save">Simpan Perubahan</button>
+                <button type="button" class="btn btn-cancel"
+                    onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
+            </div>
+        </form>
     </div>
-
-    <div class="button-container">
-        <button type="submit" class="btn btn-save">Simpan</button>
-        <button type="button" class="btn btn-cancel">Batal</button>
-    </div>
-    </form>
-    </div>
+    
 
 @endsection
 

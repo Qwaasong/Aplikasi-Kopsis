@@ -5,49 +5,56 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
+
 class ProductController extends Controller
 {
-    /**
-     * Tampilkan halaman index produk (jika ada)
-     */
     public function index()
-    {
-        return view('produk.index');
-    }
+{
+    return view('produk.index');
+}
 
-    /**
-     * Tampilkan halaman create produk
-     */
+
     public function create()
     {
-        return view('produk.create');
-    }
+        $kategoriOptions = Product::$kategoriOptions;
+        $satuanPackOptions = Product::$satuanPackOptions;
 
+        return view('produk.store', compact('kategoriOptions', 'satuanPackOptions'));
+    }
     /**
      * Simpan produk baru ke database.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'kategori' => 'required|string|max:1000',
-            'isi_per_pack' => 'required|integer|min:1',
-            'satuan_pack' => 'required|string|max:50',
-        ]);
+{
+    $validated = $request->validate([
+        'nama' => 'required|string|max:255',
+        'satuan_pack' => 'required|string',
+        'kategori' => 'required|string',
+        'isi_per_pack' => 'nullable|integer',
+    ]);
 
-            Product::create($request->all());
+    Product::create($validated);
 
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
+    if ($request->has('save_and_create')) {
+        return redirect()->route('produk.create')->with('success', 'Produk berhasil disimpan!');
     }
+
+    return redirect()->route('produk.index')->with('success', 'Produk berhasil disimpan!');
+}
+
 
     /**
      * Tampilkan halaman edit produk.
      */
     public function edit($id)
-    {
-        $product = Product::findOrFail($id);
-        return view('produk.edit', compact('product'));
-    }
+{
+    $product = Product::findOrFail($id);
+    $kategoriOptions = Product::$kategoriOptions;
+    $satuanPackOptions = Product::$satuanPackOptions;
+
+    return view('produk.edit', compact('product', 'kategoriOptions', 'satuanPackOptions'));
+}
+
 
     /**
      * Update data produk yang sudah ada.

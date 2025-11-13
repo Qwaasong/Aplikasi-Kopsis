@@ -45,8 +45,6 @@ Route::put('/vendor/{id}', [VendorController::class, 'update'])->name('vendor.up
 
 //=========================================================================================================
 // Produk 
-Route::get('/produk', function () {
-    return view('produk.index');})->name('produk.index');
 
 //Ke halaman create Produk
 Route::get('/produk/create', function () {
@@ -60,6 +58,9 @@ Route::get('/produk/{id}/edit', [ProductController::class, 'edit'])->name('produ
 
 //Ketika Submit Akan Menjalankan Method Update di ProdukController
 Route::put('/produk/{id}', [ProductController::class, 'update'])->name('produk.update');
+
+//memanggil resource controller untuk produk
+Route::resource('produk', ProductController::class);
 
 //=========================================================================================================
 // Stok Terkini 

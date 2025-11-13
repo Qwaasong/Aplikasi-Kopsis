@@ -270,61 +270,63 @@
         }
     </style>
 
-    <div class="judul">
-        <h2 class="font-bold">Tambah Produk</h2>
-    </div>
+<div class="judul">
+    <h2 class="font-bold">Tambah Produk</h2>
+</div>
 
-    <div class="block">
-        <form action="{{ route('produk.store') }}" method="POST">
-            @csrf
+<div class="block">
+    <form action="{{ route('produk.store') }}" method="POST">
+        @csrf
 
-            <div class="form-section">
-                <div class="form-row-top">
-                    <div class="vendor-column">
-                        <label class="form-label" for="nama_produk">Nama Produk</label>
-                        <input type="text" id="nama_produk" name="nama_produk" class="form-input"
-                            placeholder="Nama Produk..." required>
-                    </div>
-
-                    <div class="satuan-column">
-                        <label class="form-label" for="satuan_pack">Satuan Pack</label>
-                        <input type="text" id="satuan_pack" name="satuan_pack" class="form-input"
-                            placeholder="Satuan Pack...">
-                    </div>
+        <div class="form-section">
+            <div class="form-row-top">
+                <div class="vendor-column">
+                    <label class="form-label" for="nama_produk">Nama Produk</label>
+                    <input type="text" id="nama" name="nama" class="form-input"
+                        placeholder="Nama Produk..." required>
                 </div>
 
-                <div class="form-row-bottom">
-                    <div class="kategori-column">
-                        <label class="form-label" for="kategori">Kategori</label>
-                        {{-- <input type="text" id="kategori" name="kategori" class="form-input" placeholder="Kategori..."> --}}
-                        <select name="kategori" id="kategori" class="form-select">
-                            <option value="">Kategori...</option>
-                            <option value="dus">Dus</option>
-                            <option value="makanan_ringan">Makanan Ringan</option>
-                            <option value="rencengan">Rencengan</option>
-                            <option value="Kiloan">Kiloan</option>
-                            <option value="kaleng">Kaleng</option>
-                            <option value="wadah">Wadah</option>
-                        </select>
-                    </div>
-
-                    <div class="isi-column">
-                        <label class="form-label" for="isi_per_pack">Isi Per-Pack</label>
-                        <input type="number" id="isi_per_pack" name="isi_per_pack" class="form-input"
-                            placeholder="Isi Per-Pack...">
-                    </div>
+                <div class="satuan-column">
+                    <label class="form-label" for="satuan_pack">Satuan Pack</label>
+                    <select name="satuan_pack" id="satuan_pack" class="form-select" required>
+                        <option value="">Pilih Satuan Pack...</option>
+                        @foreach ($satuanPackOptions as $key => $label)
+                            <option value="{{ $key }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
-            <div class="button-container">
-                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
-                    Lagi</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel"
-                    onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
+            <div class="form-row-bottom">
+                <div class="kategori-column">
+                    <label class="form-label" for="kategori">Kategori</label>
+                    <select name="kategori" id="kategori" class="form-select" required>
+                        <option value="">Pilih Kategori...</option>
+                        @foreach ($kategoriOptions as $key => $label)
+                            <option value="{{ $key }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="isi-column">
+                    <label class="form-label" for="isi_per_pack">Isi Per-Pack</label>
+                    <input type="number" id="isi_per_pack" name="isi_per_pack" class="form-input"
+                        placeholder="Isi Per-Pack...">
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="button-container">
+            <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">
+                Simpan Data dan Buat Lagi
+            </button>
+            <button type="submit" class="btn btn-save">Simpan</button>
+            <button type="button" class="btn btn-cancel"
+                onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
+        </div>
+    </form>
+</div>
+
 
 @endsection
 
