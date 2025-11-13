@@ -54,7 +54,7 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Vendor' => 'vendor.nama', // <-- PERBAIKAN 4: Menggunakan relasi 'vendor.nama'
+                                    'Vendor' => 'vendor_id', // <-- PERBAIKAN 4: Menggunakan relasi 'vendor.nama'
                                     'Tanggal' => 'tanggal', // <-- PERBAIKAN 5: Menggunakan kolom 'tanggal'
                                     'No Faktur' => 'no_faktur', // <-- PERBAIKAN 6: Menggunakan kolom 'no_faktur'
                                     'Tanggal Input' => 'created_at', // <-- PERBAIKAN 7: Menggunakan kolom 'created_at'   
