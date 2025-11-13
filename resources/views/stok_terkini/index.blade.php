@@ -16,10 +16,10 @@
 
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Stok Terkini</h2>
-                <button
+                {{-- <button
                     class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     Tambah Stok Terkini
-                </button>
+                </button> --}}
             </div>
         </div>
 
@@ -54,10 +54,10 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama Produk' => 'nama_vendor', 
-                                    'Kategori' => 'category', 
+                                    'Nama Produk' => 'nama', 
+                                    'Kategori' => 'kategori', 
                                     'Satuan' => 'satuan', 
-                                    'Stok' => 'stock',    
+                                    'Stok' => 'stok_terkini',    
                                     ]" data-url="{{ route('api.stok_terkini.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
