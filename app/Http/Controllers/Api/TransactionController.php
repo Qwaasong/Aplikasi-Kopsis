@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Transaction;
+use App\Models\FinancialTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +15,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Transaction::with('product');
+        $query = FinancialTransaction::with('purchase', 'stockOut');
 
         // Filter berdasarkan jenis transaksi: masuk / keluar
         if ($type = $request->input('type')) {
@@ -24,22 +24,31 @@ class TransactionController extends Controller
 
         // Filter waktu (mingguan, bulanan, tahunan)
         if ($filter = $request->input('filter')) {
-            $query->when($filter === 'minggu', fn($q) => 
+            $query->when(
+                $filter === 'minggu',
+                fn($q) =>
                 $q->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
             );
-            $query->when($filter === 'bulan', fn($q) => 
+            $query->when(
+                $filter === 'bulan',
+                fn($q) =>
                 $q->whereMonth('created_at', now()->month)
             );
-            $query->when($filter === 'tahun', fn($q) => 
+            $query->when(
+                $filter === 'tahun',
+                fn($q) =>
                 $q->whereYear('created_at', now()->year)
             );
         }
 
-        // Pencarian berdasarkan nama produk
+        // Pencarian berdasarkan field-field yang relevan
         if ($search = $request->input('search')) {
-            $query->whereHas('product', fn($q) => 
-                $q->where('nama', 'like', "%{$search}%")
-            );
+            $query->where(function ($q) use ($search) {
+                $q->where('tipe', 'like', "%{$search}%")
+                    ->orWhere('keterangan', 'like', "%{$search}%")
+                    ->orWhere('tanggal', 'like', "%{$search}%")
+                    ->orWhere('jumlah', 'like', "%{$search}%");
+            });
         }
 
         $transactions = $query->latest()->paginate(10);
@@ -51,58 +60,10 @@ class TransactionController extends Controller
     }
 
     /**
-     * Menambahkan transaksi baru (barang masuk / keluar).
-     * type = masuk | keluar
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'jumlah' => 'required|integer|min:1',
-            'type' => 'required|in:masuk,keluar',
-            'keterangan' => 'nullable|string',
-        ]);
-
-        DB::beginTransaction();
-
-        try {
-            // Simpan transaksi
-            $transaction = Transaction::create($validated);
-
-            // Update stok produk
-            $product = Product::find($validated['product_id']);
-            if ($validated['type'] === 'masuk') {
-                $product->stok += $validated['jumlah'];
-            } else {
-                $product->stok -= $validated['jumlah'];
-                if ($product->stok < 0) {
-                    throw new \Exception("Stok produk tidak mencukupi untuk transaksi keluar!");
-                }
-            }
-
-            $product->save();
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Transaksi berhasil disimpan',
-                'data' => $transaction,
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menyimpan transaksi: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
      * Menghapus transaksi (opsional).
      * Jika dihapus, stok dikembalikan seperti semula.
      */
-    public function destroy(Transaction $transaction)
+    public function destroy(FinancialTransaction $transaction)
     {
         DB::beginTransaction();
 
@@ -137,9 +98,9 @@ class TransactionController extends Controller
     public function summary()
     {
         $data = [
-            'minggu' => Transaction::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
-            'bulan' => Transaction::whereMonth('created_at', now()->month)->count(),
-            'tahun' => Transaction::whereYear('created_at', now()->year)->count(),
+            'minggu' => FinancialTransaction::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'bulan' => FinancialTransaction::whereMonth('created_at', now()->month)->count(),
+            'tahun' => FinancialTransaction::whereYear('created_at', now()->year)->count(),
         ];
 
         return response()->json(['success' => true, 'data' => $data]);

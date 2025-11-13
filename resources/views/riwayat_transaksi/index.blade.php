@@ -16,13 +16,14 @@
 
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Riwayat Transaksi</h2>
-                <div>
+                <div class="flex gap-4">
                     <button
                         class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Export PDF
                     </button>
                     <button
-                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        onclick="window.location.href='{{ route('riwayat_transaksi.create') }}'">
                         Tambah Transaksi
                     </button>
                 </div>
@@ -70,11 +71,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Tipe' => 'nama_vendor', 
-                                    'Jumlah' => 'category', 
-                                    'Tanggal' => 'satuan', 
-                                    'Keterangan' => 'stock',    
-                                    ]" data-url="{{ route('api.barang_masuk.index') }}">
+                                    'Tipe' => 'tipe', 
+                                    'Jumlah' => 'jumlah', 
+                                    'Tanggal' => 'tanggal', 
+                                    'Keterangan' => 'keterangan',    
+                                    ]" data-url="{{ route('api.riwayat_transaksi.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

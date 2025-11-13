@@ -17,7 +17,8 @@
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Barang Keluar</h2>
                 <button
-                    class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    onclick="window.location.href='{{ route('barang_keluar.create') }}'">
                     Tambah Barang Keluar
                 </button>
             </div>
@@ -54,7 +55,7 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-            'Produk' => 'nama_produk', 
+            'Produk' => 'product.nama', 
             'Jumlah Pack' => 'jumlah_pack', 
             'Tanggal' => 'tanggal',    
             ]" data-url="{{ route('api.barang_keluar.index') }}">

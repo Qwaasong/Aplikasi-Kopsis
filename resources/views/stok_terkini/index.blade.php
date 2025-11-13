@@ -58,7 +58,7 @@
                                     'Kategori' => 'kategori', 
                                     'Satuan' => 'satuan', 
                                     'Stok' => 'stok_terkini',    
-                                    ]" data-url="{{ route('api.stok_terkini.index') }}">
+                                    ]" data-url="{{ route('api.stok_terkini.index') }}" :showAction="false">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

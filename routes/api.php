@@ -32,6 +32,10 @@ Route::get('/stok_terkini', [StockController::class, 'index'])->name('api.stok_t
 Route::get('/barang_keluar', [Barang_KeluarController::class, 'index'])->name('api.barang_keluar.index');
 Route::delete('/barang_keluar/{id}', [Barang_KeluarController::class, 'destroy'])->name('api.barang_keluar.destroy');
 
+// Riwayat Transaksi API Routes
+Route::get('/riwayat_transaksi', [TransactionController::class, 'index'])->name('api.riwayat_transaksi.index');
+Route::delete('/riwayat_transaksi/{id}', [TransactionController::class, 'destroy'])->name('api.riwayat_transaksi.destroy');
+
 // Pengguna API Routes
 Route::get('/pengguna', [UserController::class, 'index'])->name('api.pengguna.index');
 Route::delete('/pengguna/{id}', [UserController::class, 'destroy'])->name('api.pengguna.destroy');
