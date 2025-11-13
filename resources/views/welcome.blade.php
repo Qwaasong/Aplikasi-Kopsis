@@ -521,7 +521,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="/" class="logo">
                 <div class="logo-icon">
                     <img src="{{ asset('/assets/images/logo.jpg') }}" width="30" height="50">
                 </div>
@@ -539,7 +539,7 @@
             </ul>
 
             <div class="nav-actions" id="#">
-                <a href="#" class="btn-login">Masuk</a>
+                <a href="/login" class="btn-login">Masuk</a>
             </div>
 
             {{-- Chart button --}}
