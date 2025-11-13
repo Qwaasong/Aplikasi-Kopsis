@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Barang_KeluarController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Barang_MasukController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,27 +60,30 @@ Route::get('/produk/{id}/edit', [ProductController::class, 'edit'])->name('produ
 Route::put('/produk/{id}', [ProductController::class, 'update'])->name('produk.update');
 
 //=========================================================================================================
-// Stok Terkini 
-Route::get('/stok_terkini', function () {
-    return view('stok_terkini.index');})->name('stok_terkini.index');
+#// Stok Terkini 
+#Route::get('/stok_terkini', function () {
+#    return view('stok_terkini.index');})->name('stok_terkini.index');
 
 //=========================================================================================================
-// Barang Masuk 
-Route::get('/barang_masuk', function () {
-    return view('barang_masuk.index');})->name('barang_masuk.index');
+#// Barang Masuk 
+#Route::get('/barang_masuk', function () {
+#    return view('barang_masuk.index');})->name('barang_masuk.index');
+#
+#//Ke halaman create Barang Masuk
+#Route::get('/barang_masuk/create', function () {
+#    return view('barang_masuk.store');})->name('barang_masuk.create');
+#
+#//Ketika Submit Akan Menjalankan Method Store di BarangMasukController
+#Route::post('/barang_masuk/create', [Barang_MasukController::class, 'store'])->name('barang_masuk.store');
+#
+#//Ke halaman edit Barang Masuk
+#Route::get('/barang_masuk/{id}/edit', [Barang_MasukController::class, 'edit'])->name('barang_masuk.edit');
+#
+#//Ketika Submit Akan Menjalankan Method Update di BarangMasukController
+#Route::put('/barang_masuk/{id}', [Barang_MasukController::class, 'update'])->name('barang_masuk.update');
 
-//Ke halaman create Barang Masuk
-Route::get('/barang_masuk/create', function () {
-    return view('barang_masuk.store');})->name('barang_masuk.create');
-
-//Ketika Submit Akan Menjalankan Method Store di BarangMasukController
-Route::post('/barang_masuk/create', [Barang_MasukController::class, 'store'])->name('barang_masuk.store');
-
-//Ke halaman edit Barang Masuk
-Route::get('/barang_masuk/{id}/edit', [Barang_MasukController::class, 'edit'])->name('barang_masuk.edit');
-
-//Ketika Submit Akan Menjalankan Method Update di BarangMasukController
-Route::put('/barang_masuk/{id}', [Barang_MasukController::class, 'update'])->name('barang_masuk.update');
+//Ketika Menjalankan Metode Delete di BarangMasukController  <-- TAMBAHKAN INI
+Route::delete('/barang_masuk/{id}', [Barang_MasukController::class, 'destroy'])->name('barang_masuk.destroy'); // <-- TAMBAHKAN INI
 
 //=========================================================================================================
 // Barang Keluar 
