@@ -275,7 +275,7 @@
     </div>
 
     <div class="block">
-        <form action="{{ route('produk.update', ['id' => $produk->id]) }}" method="POST">
+        <form action="{{ route('produk.update', ['id' => $product->id]) }}" method="POST">
             @csrf
 
             <div class="form-section">
@@ -283,13 +283,13 @@
                 <div class="form-row-top">
                     <div class="vendor-column">
                         <label class="form-label" for="nama_vendor">Nama Produk</label>
-                        <input type="text" value="{{ $produk->nama_vendor }}" id="nama_produk" name="nama_produk"
+                        <input type="text" value="{{ $product->nama }}" id="nama_produk" name="nama_produk"
                             class="form-input" placeholder="Nama Produk..." required>
                     </div>
 
                     <div class="satuan-column">
                         <label class="form-label" for="satuan_pack">Satuan Pack</label>
-                        <input type="text" value="{{ $produk->satuan_pack }}" id="satuan_pack" name="satuan_pack"
+                        <input type="text" value="{{ $product->satuan_pack }}" id="satuan_pack" name="satuan_pack"
                             class="form-input" placeholder="Satuan Pack...">
                     </div>
                 </div>
@@ -299,7 +299,7 @@
                         <label class="form-label" for="kategori">Kategori</label>
                         {{-- <input type="text" id="kategori" name="kategori" class="form-input" placeholder="Kategori..."> --}}
                         <select name="kategori" id="kategori" class="form-select">
-                            <option value="{{ $produk->kategori }}">{{ $produk->kategori }}</option>
+                            <option value="{{ $product->kategori }}">{{ $product->kategori }}</option>
                             <option value="dus">Dus</option>
                             <option value="rencengan">Rencengan</option>
                             <option value="Kiloan">Kiloan</option>
@@ -310,7 +310,7 @@
 
                     <div class="isi-column">
                         <label class="form-label" for="isi_per_pack">Isi Per-Pack</label>
-                        <input type="number" id="isi_per_pack" value="{{ $produk->isi_per_pack }}" name="isi_per_pack" class="form-input"
+                        <input type="number" id="isi_per_pack" value="{{ $product->isi_per_pack }}" name="isi_per_pack" class="form-input"
                             placeholder="Isi Per-Pack...">
                     </div>
                 </div>
@@ -319,7 +319,7 @@
 
     <div class="button-container">
         <button type="submit" class="btn btn-save">Simpan</button>
-        <button type="button" class="btn btn-cancel">Batal</button>
+        <button type="button" class="btn btn-cancel" onclick="window.location.href='{{ route('produk.index') }}'">Batal</button>
     </div>
     </form>
     </div>

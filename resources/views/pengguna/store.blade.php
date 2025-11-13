@@ -1,5 +1,5 @@
 @extends('layouts/main')
-@section('title', 'KopsisApp - Tambah Barang Keluar')
+@section('title', 'KopsisApp - Tambah Pengguna')
 @section('content')
 
     <style>
@@ -37,7 +37,7 @@
             font-size: 14px;
         }
 
-        .form-input, .form-select {
+        .form-input {
             width: 100%;
             padding: 12px;
             border: 1px solid #e0e0e0;
@@ -52,19 +52,13 @@
             font-style: italic;
         }
 
-        .form-input:focus, .form-select:focus {
+        .form-input:focus {
             outline: none;
             border-color: #4a90e2;
             background-color: white;
             box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
         }
         
-        textarea.form-input {
-            resize: vertical;
-            min-height: 80px;
-            width: 100%;
-        }
-
         .button-container {
             display: flex;
             justify-content: center;
@@ -145,7 +139,7 @@
     </style>
 
     <div class="judul">
-        <h2 class="font-bold">Tambah Barang Keluar</h2>
+        <h2 class="font-bold">Tambah Pengguna</h2>
     </div>
 
     <div class="block">
@@ -154,37 +148,29 @@
             <div class="form-section">
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal" name="tanggal" class="form-input" required>
-                    </div>
-
-                    <div class="form-column">
-                        <label class="form-label" for="product_id">Produk</label>
-                        <select id="product_id" name="product_id" class="form-select" required>
-                            <option value="" disabled selected>Pilih Produk...</option>
-                            {{-- Product options will be populated from the database --}}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-column">
-                        <label class="form-label" for="jumlah_pack">Jumlah Pack</label>
-                        <input type="number" id="jumlah_pack" name="jumlah_pack" class="form-input" placeholder="Jumlah pack..." required>
+                        <label class="form-label" for="name">Nama</label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="Nama Pengguna..." required>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" class="form-input" rows="3" placeholder="Keterangan (opsional)..."></textarea>
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="Email Pengguna..." required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-column">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Password..." required>
                     </div>
                 </div>
             </div>
 
             <div class="button-container">
                 <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel" onclick="window.location.href='{{ route('barang_keluar.index') }}'">Batal</button>
+                <button type="button" class="btn btn-cancel" onclick="window.location.href='{{ route('pengguna.index') }}'">Batal</button>
             </div>
         </form>
     </div>

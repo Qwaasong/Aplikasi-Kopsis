@@ -1,5 +1,5 @@
 @extends('layouts/main')
-@section('title', 'KopsisApp - Tambah Barang Keluar')
+@section('title', 'KopsisApp - Tambah Barang Masuk')
 @section('content')
 
     <style>
@@ -59,12 +59,6 @@
             box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
         }
         
-        textarea.form-input {
-            resize: vertical;
-            min-height: 80px;
-            width: 100%;
-        }
-
         .button-container {
             display: flex;
             justify-content: center;
@@ -145,7 +139,7 @@
     </style>
 
     <div class="judul">
-        <h2 class="font-bold">Tambah Barang Keluar</h2>
+        <h2 class="font-bold">Tambah Barang Masuk</h2>
     </div>
 
     <div class="block">
@@ -159,32 +153,25 @@
                     </div>
 
                     <div class="form-column">
-                        <label class="form-label" for="product_id">Produk</label>
-                        <select id="product_id" name="product_id" class="form-select" required>
-                            <option value="" disabled selected>Pilih Produk...</option>
-                            {{-- Product options will be populated from the database --}}
-                        </select>
+                        <label class="form-label" for="no_faktur">No Faktur</label>
+                        <input type="text" id="no_faktur" name="no_faktur" class="form-input" placeholder="Nomor Faktur..." required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="jumlah_pack">Jumlah Pack</label>
-                        <input type="number" id="jumlah_pack" name="jumlah_pack" class="form-input" placeholder="Jumlah pack..." required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-column">
-                        <label class="form-label" for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" class="form-input" rows="3" placeholder="Keterangan (opsional)..."></textarea>
+                        <label class="form-label" for="vendor_id">Vendor</label>
+                        <select id="vendor_id" name="vendor_id" class="form-select" required>
+                            <option value="" disabled selected>Pilih Vendor...</option>
+                            {{-- Vendor options will be populated from the database --}}
+                        </select>
                     </div>
                 </div>
             </div>
 
             <div class="button-container">
                 <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel" onclick="window.location.href='{{ route('barang_keluar.index') }}'">Batal</button>
+                <button type="button" class="btn btn-cancel" onclick="window.location.href='{{ route('barang_masuk.index') }}'">Batal</button>
             </div>
         </form>
     </div>
