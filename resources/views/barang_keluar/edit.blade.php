@@ -333,48 +333,52 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('barang_keluar.update', $stockOut->id) }}" method="POST">
             @csrf
-
+            @method('PUT') <!-- Tambahkan ini untuk method PUT -->
+    
             <div class="form-section">
                 <div class="form-row-top">
                     <div class="produk-column">
-                        <label class="form-label" for="produk">Produk</label>                               {{-- Data Dari Database --}}
-                        <input type="text" id="produk" name="produk" placeholder="Cari produk..." autocomplete="off" value="##">
+                        <label class="form-label" for="product_display">Produk</label>
+                        <input type="text" id="product_display" class="form-input" 
+                               value="{{ $stockOut->product->nama }}" readonly 
+                               style="background-color: #f5f5f5;">
+                        <input type="hidden" name="product_id" value="{{ $stockOut->product_id }}">
                     </div>
-
+    
                     <div class="tanggal-column">
                         <label class="form-label" for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal" name="tanggal" class="form-input" value="{{ date('Y-m-d') }}"
-                            required>
+                        <input type="date" id="tanggal" name="tanggal" class="form-input" 
+                            value="{{ \Carbon\Carbon::parse($stockOut->tanggal)->format('Y-m-d') }}" required>
                     </div>
                 </div>
-
+    
                 <div class="form-row-middle">
                     <div class="jumlah-column">
                         <label class="form-label" for="jumlah_pack">Jumlah Pack</label>
                         <div class="input-with-suffix">
                             <input type="number" id="jumlah_pack" name="jumlah_pack" class="form-input"
                                 placeholder="Masukkan jumlah pack..." min="1" required 
-                                
-                                {{-- Data Dari Database --}} 
-                                value="####">
+                                value="{{ $stockOut->jumlah_pack }}">
                             <span class="input-suffix">Pack</span>
                         </div>
                     </div>
                 </div>
-
+    
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" class="form-textarea"  placeholder="Keterangan tambahan..."></textarea>
+                        <textarea id="keterangan" name="keterangan" class="form-textarea" 
+                            placeholder="Keterangan tambahan...">{{ $stockOut->keterangan }}</textarea>
                     </div>
                 </div>
             </div>
-
+    
             <div class="button-container">
                 <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel">Batal</button>
+                <button type="button" class="btn btn-cancel" 
+                    onclick="window.location.href='{{ route('barang_keluar.index') }}'">Batal</button>
             </div>
         </form>
     </div>
@@ -387,59 +391,59 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            new TomSelect('#produk', {
-                create: false,
-                maxItems: 1,
-                removeButton: true,
-                plugins: {
-                    'remove_button': {
-                        title: 'Hapus produk'
-                    }
-                },
-                sortField: {
-                    field: 'text',
-                    direction: 'asc'
-                },
-                openOnFocus: true,
-                loadThrottle: 300,
-                valueField: 'value',
-                labelField: 'text',
-                searchField: ['text'],
-
-                // Tambah data dari database disini
-                options: [{
-                        value: '1',
-                        text: 'Ichi Oca'
-                    },
-                    {
-                        value: '2',
-                        text: 'Teh Sisri'
-                    },
-                    {
-                        value: '3',
-                        text: 'Boba - Milk Tea'
-                    },
-                    {
-                        value: '4',
-                        text: 'Pocari Sweat'
-                    },
-                    {
-                        value: '5',
-                        text: 'Es Krim'
-                    }
-                ],
-                render: {
-                    option: function(data, escape) {
-                        return '<div class="option">' + escape(data.text) + '</div>';
-                    },
-                    item: function(data, escape) {
-                        return '<div class="item">' + escape(data.text) + '</div>';
-                    }
-                }
-            });
-
-            document.getElementById('produk').focus();
-        });
+        //document.addEventListener('DOMContentLoaded', function() {
+        //    new TomSelect('#produk', {
+        //        create: false,
+        //        maxItems: 1,
+        //        removeButton: true,
+        //        plugins: {
+        //            'remove_button': {
+        //                title: 'Hapus produk'
+        //            }
+        //        },
+        //        sortField: {
+        //            field: 'text',
+        //            direction: 'asc'
+        //        },
+        //        openOnFocus: true,
+        //        loadThrottle: 300,
+        //        valueField: 'value',
+        //        labelField: 'text',
+        //        searchField: ['text'],
+//
+        //        // Tambah data dari database disini
+        //        options: [{
+        //                value: '1',
+        //                text: 'Ichi Oca'
+        //            },
+        //            {
+        //                value: '2',
+        //                text: 'Teh Sisri'
+        //            },
+        //            {
+        //                value: '3',
+        //                text: 'Boba - Milk Tea'
+        //            },
+        //            {
+        //                value: '4',
+        //                text: 'Pocari Sweat'
+        //            },
+        //            {
+        //                value: '5',
+        //                text: 'Es Krim'
+        //            }
+        //        ],
+        //        render: {
+        //            option: function(data, escape) {
+        //                return '<div class="option">' + escape(data.text) + '</div>';
+        //            },
+        //            item: function(data, escape) {
+        //                return '<div class="item">' + escape(data.text) + '</div>';
+        //            }
+        //        }
+        //    });
+//
+        //    document.getElementById('produk').focus();
+        //});
     </script>
 @endsection

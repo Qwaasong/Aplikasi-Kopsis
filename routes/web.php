@@ -99,8 +99,10 @@ Route::resource('produk', ProductController::class);
         return view('barang_keluar.index');})->name('barang_keluar.index');
 
     //Ke halaman create Barang Keluar
-    Route::get('/barang_keluar/create', function () {
-        return view('barang_keluar.store');})->name('barang_keluar.create');
+    Route::get('/barang_keluar/create', [Barang_KeluarController::class, 'create'])
+    ->name('barang_keluar.create');   // ✔ BENAR
+
+        
 
     Route::get('/barang_keluar/edit', function () {
         return view('barang_keluar.edit');});

@@ -333,49 +333,55 @@
     </div>
 
     <div class="block">
-        <form action="##" method="POST">
+        <form action="{{ route('barang_keluar.store') }}" method="POST">
             @csrf
-
+    
             <div class="form-section">
                 <div class="form-row-top">
+                    <!-- Input Produk dengan fitur pencarian -->
                     <div class="produk-column">
-                        <label class="form-label" for="produk">Produk</label>
-                        <input type="text" id="produk" name="produk" placeholder="Cari produk..."
-                            autocomplete="off">
+                        <label class="form-label" for="product_id">Produk</label>
+                        <select id="product_id" name="product_id" class="form-input" required>
+                            <option value="" disabled selected>Pilih produk...</option>
+                            @foreach($products as $p)
+                                <option value="{{ $p->id }}">{{ $p->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
-
+    
                     <div class="tanggal-column">
-                        <label class="form-label" for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal" name="tanggal" class="form-input" value="{{ date('Y-m-d') }}"
-                            required>
+                        <label class="form-label" for="tanggal_keluar">Tanggal</label>
+                        <input type="date" id="tanggal_keluar" name="tanggal" class="form-input"
+                            value="{{ date('Y-m-d') }}" required>
                     </div>
                 </div>
-
+    
                 <div class="form-row-middle">
                     <div class="jumlah-column">
-                        <label class="form-label" for="jumlah_pack">Jumlah Pack</label>
+                        <label class="form-label" for="jumlah">Jumlah Pack</label>
                         <div class="input-with-suffix">
-                            <input type="number" id="jumlah_pack" name="jumlah_pack" class="form-input"
+                            <input type="number" id="jumlah" name="jumlah_pack" class="form-input"
                                 placeholder="Masukkan jumlah pack..." min="1" required>
                             <span class="input-suffix">Pack</span>
                         </div>
                     </div>
                 </div>
-
+    
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" class="form-textarea" rows="3" placeholder="Keterangan tambahan..."></textarea>
+                        <textarea id="keterangan" name="keterangan" class="form-textarea" rows="3"
+                            placeholder="Keterangan tambahan..."></textarea>
                     </div>
                 </div>
             </div>
-
+    
             <div class="button-container">
                 <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">
                     Simpan Data Dan Buat Lagi
                 </button>
                 <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel">Batal</button>
+                <button type="button" class="btn btn-cancel" onclick="window.location.href='{{ route('barang_keluar.index') }}'">Batal</button>
             </div>
         </form>
     </div>
@@ -383,64 +389,8 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('assets/js/fab.js') }}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/css/tom-select.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            new TomSelect('#produk', {
-                create: false,
-                maxItems: 1,
-                removeButton: true,
-                plugins: {
-                    'remove_button': {
-                        title: 'Hapus produk'
-                    }
-                },
-                sortField: {
-                    field: 'text',
-                    direction: 'asc'
-                },
-                openOnFocus: true,
-                loadThrottle: 300,
-                valueField: 'value',
-                labelField: 'text',
-                searchField: ['text'],
-                
-                // Tambah Data dari Database disini
-                options: [{
-                        value: '1',
-                        text: 'Ichi Oca'
-                    },
-                    {
-                        value: '2',
-                        text: 'Teh Sisri'
-                    },
-                    {
-                        value: '3',
-                        text: 'Boba - Milk Tea'
-                    },
-                    {
-                        value: '4',
-                        text: 'Pocari Sweat'
-                    },
-                    {
-                        value: '5',
-                        text: 'Es Krim'
-                    }
-                ],
-                render: {
-                    option: function(data, escape) {
-                        return '<div class="option">' + escape(data.text) + '</div>';
-                    },
-                    item: function(data, escape) {
-                        return '<div class="item">' + escape(data.text) + '</div>';
-                    }
-                }
-            });
-
-            document.getElementById('produk').focus();
-        });
+<script>
+   
     </script>
+    
 @endsection
