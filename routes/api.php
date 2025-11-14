@@ -23,9 +23,8 @@ Route::delete('/produk/{id}', [ProductController::class, 'destroy'])->name('api.
 Route::get('/stok_terkini', [StockController::class, 'index'])->name('api.stok_terkini.index');
 
 // Barang Masuk API Routes
-    Route::get('purchase', [Barang_MasukController::class, 'index'])->name('api.barang_masuk.index'); // <-- PERUBAHAN
-    Route::get('purchase/{id}', [Barang_MasukController::class, 'show']); // <-- PERUBAHAN
-    Route::delete('purchase/{id}', [Barang_MasukController::class, 'destroy']); // <-- PERUBAHAN
+Route::get('/barang_masuk', [Barang_MasukController::class, 'index'])->name('api.barang_masuk.index'); // <-- PERUBAHAN
+Route::delete('/barang_masuk/{id}', [Barang_MasukController::class, 'destroy']); // <-- PERUBAHAN
 
 
 // Barang keluar API Routes

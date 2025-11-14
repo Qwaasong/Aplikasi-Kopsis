@@ -73,7 +73,10 @@ class Barang_MasukController extends Controller
 
             return redirect()->route('barang_masuk.index')->with('success', 'Barang Masuk dan detail item berhasil dicatat. Stok diperbarui.');
 
-        } 
+        }catch (\Exception $e) {
+            DB::rollBack(); // Membatalkan transaksi jika ada error
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan Barang Masuk: ' . $e->getMessage()])->withInput();
+        }
     }
 
     /**
