@@ -1,8 +1,7 @@
 @extends('layouts.main')
-@section('title', 'KopsisApp - Vendor')
+@section('title', 'KopsisApp - Pengguna')
 @section('content')
     <div class="px-8 py-6">
-        <!-- Header Konten -->
         <div class="flex flex-col space-y-4">
             <div class="flex items-center text-sm text-gray-500">
                 <span>Manajemen Pengguna</span>
@@ -13,7 +12,6 @@
                 </svg>
                 <span>Pengguna</span>
             </div>
-
             <div class="flex items-center justify-between">
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Pengguna</h2>
                 <button
@@ -42,7 +40,7 @@
                 </button>
             </div>
 
-            <!-- Tombol FAB -->
+            <!-- FAB -->
             <button id="fab-btn"
                 class="flex items-center justify-center w-14 h-14 bg-blue-600 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.3)] text-white cursor-pointer hover:bg-blue-700 transition-transform duration-300">
                 <svg id="fab-icon" xmlns="http://www.w3.org/2000/svg" class="icon-rotate w-6 h-6" fill="none"
@@ -53,14 +51,12 @@
         </div>
 
         <hr class="my-6 border-gray-200">
-        {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
                                     'Nama' => 'name', 
                                     'Email' => 'email', 
                                     'Diverifikasi' => 'email_verified_at', 
                                     'Dibuat Pada' => 'created_at',    
                                     ]" data-url="{{ route('api.pengguna.index') }}">
-            {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
                     <button id="filter-button"
