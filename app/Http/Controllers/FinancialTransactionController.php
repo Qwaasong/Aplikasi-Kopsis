@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FinancialTransaction;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class FinancialTransactionController extends Controller
 {
@@ -52,5 +53,43 @@ class FinancialTransactionController extends Controller
             ->with('success', 'Transaksi berhasil diperbarui.');
     }
 
-    
+    public function generatePDF(Request $request)
+    {
+
+        // Ambil data transaksi keuangan
+        $startDate = $request->input('start_date', now()->startOfMonth());
+        $endDate = $request->input('end_date', now()->endOfMonth());
+
+        if (!$startDate || !$endDate) {
+            return redirect()->back()->with('error', 'Tanggal awal dan akhir harus diisi.');
+        }
+        
+        $transactions = FinancialTransaction::whereBetween('tanggal', [$startDate, $endDate])
+            ->with('purchase', 'stockOut')
+            ->get();
+            
+        $totalPemasukan = FinancialTransaction::where('tipe', 'pemasukan')
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->sum('jumlah');
+            
+        $totalPengeluaran = FinancialTransaction::where('tipe', 'pengeluaran')
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->sum('jumlah');
+            
+        $saldo = $totalPemasukan - $totalPengeluaran;
+
+        // Data yang akan dikirim ke view
+        $data = [
+            'transactions' => $transactions,
+            'totalPemasukan' => $totalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran,
+            'saldo' => $saldo,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ];
+
+        // Generate PDF
+        $pdf = Pdf::loadView('riwayat_transaksi.laporan_keuangan', $data);
+        return $pdf->download('laporan-keuangan-' . date('Y-m-d') . '.pdf');
+    }
 }

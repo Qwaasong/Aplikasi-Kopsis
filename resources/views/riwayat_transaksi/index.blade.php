@@ -18,7 +18,8 @@
                 <h2 class="text-3xl font-bold text-gray-900 m-0">Riwayat Transaksi</h2>
                 <div class="flex gap-4">
                     <button
-                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        onclick="openModal()">
                         Export PDF
                     </button>
                     <button
@@ -30,8 +31,34 @@
             </div>
         </div>
 
+        <!-- Modal Background -->
+        <div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-start justify-center p-4 z-50">
+
+            <!-- Modal Card -->
+            <div class="bg-white w-full max-w-sm rounded-xl shadow-lg p-6">
+                <form action="{{ route('laporan.keuangan.pdf') }}" method="GET">
+                    <h2 class="text-xl font-semibold mb-4">Pilih Tanggal</h2>
+
+                    <!-- Input Tanggal -->
+                    <label class="block mb-2 text-sm font-medium">Tanggal:</label>
+                    <div id="myDatePickerContainer" class="max-w-md">
+                        <!-- DatePicker akan diinisialisasi di sini -->
+                    </div>
+
+                    <input type="hidden" name="start_date" id="start_date_input">
+                    <input type="hidden" name="end_date" id="end_date_input">
+
+                    <!-- Buttons -->
+                    <div class="flex justify-end gap-2">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Batal</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- FAB Container -->
-        <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-50">
+        <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-40">
 
             <!-- Speed Dial Menu -->
             <div id="fab-menu"
@@ -71,14 +98,14 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                    'Tipe' => 'tipe', 
-                                    'Jumlah' => 'jumlah', 
-                                    'Tanggal' => 'tanggal', 
-                                    'Keterangan' => 'keterangan',    
-                                    ]" data-url="{{ route('api.riwayat_transaksi.index') }}">
+                                                    'Tipe' => 'tipe', 
+                                                    'Jumlah' => 'jumlah', 
+                                                    'Tanggal' => 'tanggal', 
+                                                    'Keterangan' => 'keterangan',    
+                                                    ]" data-url="{{ route('api.riwayat_transaksi.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 relative">
                     <button id="filter-button"
                         class="p-3 sm:p-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none">
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -131,4 +158,43 @@
 
 @section('script')
     <script src="{{ asset('assets/js/fab.js') }}"></script>
+    <script src="{{ asset('assets/js/DatePicker.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('myDatePickerContainer');
+            const resultDisplay = document.getElementById('resultDisplay');
+            const startDateInput = document.getElementById('start_date_input');
+            const endDateInput = document.getElementById('end_date_input');
+
+            const normalizeDate = (d) => {
+                const date = new Date(d);
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${date.getFullYear()}-${m}-${day}`;
+            };
+
+            const myDatePicker = new DatePicker(container, {
+                type: 'dateRange', // Tipe picker
+                data: {
+                    startDate: null, // Inisialisasi tanpa tanggal awal
+                    endDate: null    // Inisialisasi tanpa tanggal akhir
+                },
+                options: {
+                    onApply: function (dates) {
+                        console.log(normalizeDate(dates.startDate), normalizeDate(dates.endDate));
+                        startDateInput.value = normalizeDate(dates.startDate);
+                        endDateInput.value = normalizeDate(dates.endDate);
+                    }
+                }
+            });
+        });
+
+        function openModal() {
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
 @endsection

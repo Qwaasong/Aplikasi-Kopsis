@@ -134,6 +134,9 @@ Route::resource('produk', ProductController::class);
     //Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
     Route::put('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'update'])->name('riwayat_transaksi.update');
 
+    //Export PDF Riwayat Transaksi
+    Route::get('/laporan-keuangan-pdf', [FinancialTransactionController::class, 'generatePDF'])->name('laporan.keuangan.pdf');
+
     //=========================================================================================================
     // Pengguna
     Route::get('/pengguna', function () {
