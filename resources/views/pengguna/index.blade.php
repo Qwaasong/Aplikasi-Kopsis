@@ -23,7 +23,7 @@
         </div>
 
         <!-- FAB Container -->
-        <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-50">
+        <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-40">
 
             <!-- Speed Dial Menu -->
             <div id="fab-menu"

@@ -204,7 +204,7 @@
 
             <!-- Sidebar untuk Mobile (Off-canvas) -->
             <div id="mobile-menu"
-                class="md:hidden fixed inset-0 flex z-40 transform -translate-x-full transition-transform duration-300 ease-in-out">
+                class="md:hidden fixed inset-0 flex z-40 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
                 <!-- Konten Sidebar -->
                 <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
                     <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
