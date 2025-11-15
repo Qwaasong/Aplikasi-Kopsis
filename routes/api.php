@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\Barang_KeluarController;
-use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\FinancialTransactionController;
 use App\Http\Controllers\Api\Barang_MasukController;
 
 
@@ -32,8 +32,8 @@ Route::get('/barang_keluar', [Barang_KeluarController::class, 'index'])->name('a
 Route::delete('/barang_keluar/{id}', [Barang_KeluarController::class, 'destroy'])->name('api.barang_keluar.destroy');
 
 // Riwayat Transaksi API Routes
-Route::get('/riwayat_transaksi', [TransactionController::class, 'index'])->name('api.riwayat_transaksi.index');
-Route::delete('/riwayat_transaksi/{id}', [TransactionController::class, 'destroy'])->name('api.riwayat_transaksi.destroy');
+Route::get('/riwayat_transaksi', [FinancialTransactionController::class, 'index'])->name('api.riwayat_transaksi.index');
+Route::delete('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'destroy'])->name('api.riwayat_transaksi.destroy');
 
 // Pengguna API Routes
 Route::get('/pengguna', [UserController::class, 'index'])->name('api.pengguna.index');

@@ -10,10 +10,12 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'jumlah',
-        'type',
+        'tanggal',
+        'tipe',
         'keterangan',
+        'jumlah',
+        'purchase_id',
+        'stock_out_id',
     ];
 
     public function product()

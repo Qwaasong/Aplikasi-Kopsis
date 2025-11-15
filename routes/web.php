@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\FinancialTransactionController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Barang_KeluarController;
@@ -126,13 +126,13 @@ Route::resource('produk', ProductController::class);
         return view('riwayat_transaksi.store');})->name('riwayat_transaksi.create');
 
     //Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
-    Route::post('/riwayat_transaksi/create', [TransactionController::class, 'store'])->name('riwayat_transaksi.store');
+    Route::post('/riwayat_transaksi/create', [FinancialTransactionController::class, 'store'])->name('riwayat_transaksi.store');
 
     //Ke halaman edit Barang Keluar
-    Route::get('/riwayat_transaksi/{id}/edit', [TransactionController::class, 'edit'])->name('riwayat_transaksi.edit');
+    Route::get('/riwayat_transaksi/{id}/edit', [FinancialTransactionController::class, 'edit'])->name('riwayat_transaksi.edit');
 
     //Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
-    Route::put('/riwayat_transaksi/{id}', [TransactionController::class, 'update'])->name('riwayat_transaksi.update');
+    Route::put('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'update'])->name('riwayat_transaksi.update');
 
     //=========================================================================================================
     // Pengguna
