@@ -135,23 +135,6 @@
             background: var(--blue-600);
         }
 
-        .menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .menu-btn span {
-            display: block;
-            width: 20px;
-            height: 2px;
-            background: var(--gray-700);
-            margin: 4px 0;
-            transition: 0.3s;
-        }
-
         /* Hero */
         .hero {
             max-width: 1280px;
@@ -467,13 +450,8 @@
         /* Responsive */
         @media (max-width: 768px) {
 
-            .nav-links,
-            .nav-actions {
+            .nav-links{
                 display: none;
-            }
-
-            .menu-btn {
-                display: block;
             }
 
             .nav-links.mobile-open {
@@ -542,12 +520,6 @@
                 <a href="/login" class="btn-login">Masuk</a>
             </div>
 
-            {{-- Chart button --}}
-            <button class="menu-btn" id="menuBtn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </nav>
 
@@ -662,13 +634,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- ================= FILTER MINGGU BULAN TAHUN TIDAK BISA  ======================= --}}
     <script>
-        // Mobile menu
-        const menuBtn = document.getElementById('menuBtn');
-        const navLinks = document.querySelector('.nav-links');
-
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('mobile-open');
-        });
 
         // Modal
         const modal = document.getElementById('modal');
