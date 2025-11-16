@@ -37,8 +37,8 @@
             <!-- Sidebar untuk Desktop -->
             <aside class="hidden md:flex md:flex-col md:w-64 bg-white border-r border-gray-200">
                 <nav class="flex-1 px-4 py-4 space-y-2">
-                    <a href="/beranda"
-                        class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg">
+                    <a href="{{ route('beranda.index') }}"
+                        class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('beranda.index') || request()->is('beranda*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                         <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                             width="24" viewBox="0 -960 960 960" fill="currentColor">
                             <path
@@ -50,7 +50,7 @@
                     <!-- Menu Dropdown -->
                     <details open class="group">
                         <summary
-                            class="flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-600 rounded-lg cursor-pointer hover:bg-gray-50">
+                            class="flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-600 rounded-lg cursor-pointer text-gray-600">
                             <div class="flex items-center">
                                 Data Master
                             </div>
@@ -61,8 +61,8 @@
                             </svg>
                         </summary>
                         <div class="pl-6 mt-1 space-y-1">
-                            <a href="/vendor"
-                                class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('vendor.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('vendor.index') || request()->is('vendor*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -70,8 +70,8 @@
                                 </svg>
                                 Vendor
                             </a>
-                            <a href="/produk"
-                                class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('produk.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('produk.index') || request()->is('produk*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -96,8 +96,8 @@
                             </svg>
                         </summary>
                         <div class="pl-6 mt-1 space-y-1">
-                            <a href="/stok_terkini"
-                                class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('stok_terkini.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('stok_terkini.index') || request()->is('stok_terkini*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -105,8 +105,8 @@
                                 </svg>
                                 Stok Terkini
                             </a>
-                            <a href="/barang_masuk"
-                                class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('barang_masuk.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('barang_masuk.index') || request()->is('barang_masuk*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -114,8 +114,8 @@
                                 </svg>
                                 Barang Masuk
                             </a>
-                            <a href="/barang_keluar"
-                                class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('barang_keluar.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('barang_keluar.index') || request()->is('barang_keluar*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -139,8 +139,8 @@
                             </svg>
                         </summary>
                         <div class="pl-6 mt-1 space-y-1">
-                            <a href="/riwayat_transaksi"
-                                class="flex items-center     px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('riwayat_transaksi.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ request()->routeIs('riwayat_transaksi.index') ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -164,8 +164,8 @@
                             </svg>
                         </summary>
                         <div class="pl-6 mt-1 space-y-1">
-                            <a href="/pengguna"
-                                class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                            <a href="{{ route('pengguna.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ request()->routeIs('pengguna.index') ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                     width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
@@ -179,11 +179,10 @@
                 <div class="mt-auto p-4 space-y-2 border-t border-gray-200">
                     <a href="#"
                         class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">
-                        <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                            </path>
+                        <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 640 640" height="24" width="24">
+                            <path
+                                d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                         </svg>
                         Bantuan
                     </a>
@@ -203,13 +202,17 @@
             </aside>
 
             <!-- Sidebar untuk Mobile (Off-canvas) -->
-            <div id="mobile-menu"
-                class="md:hidden fixed inset-0 flex z-40 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+            <div id="mobile-menu" class="fixed inset-0 flex z-50 md:hidden hidden">
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black opacity-0 transition-opacity duration-500 ease-in-out "></div>
+
                 <!-- Konten Sidebar -->
-                <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+                <div
+                    class="relative flex flex-col w-64 h-full bg-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out will-change-transform backface-hidden perspective-1000 lg:translate-x-0 lg:static lg:inset-0">
                     <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
                         <h1 class="text-xl font-bold text-gray-800">KopsisApp</h1>
-                        <button id="close-btn" class="text-gray-600 focus:outline-none" aria-label="Tutup Sidebar">
+                        <button id="close-btn" class="text-gray-600 p-1 rounded-md hover:bg-gray-200 focus:outline-none"
+                            aria-label="Tutup Sidebar">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 -960 960 960"
                                 fill="currentColor">
                                 <path
@@ -219,8 +222,8 @@
                     </div>
                     <!-- Konten Navigasi Mobile (sama dengan desktop) -->
                     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
-                        <a href="/beranda"
-                            class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg">
+                        <a href="{{ route('beranda.index') }}"
+                            class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('beranda.index') || request()->is('beranda*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                             <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
                                 width="24" viewBox="0 -960 960 960" fill="currentColor">
                                 <path
@@ -243,8 +246,8 @@
                                 </svg>
                             </summary>
                             <div class="pl-6 mt-1 space-y-1">
-                                <a href="/vendor"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('vendor.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('vendor.index') || request()->is('vendor*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -252,8 +255,8 @@
                                     </svg>
                                     Vendor
                                 </a>
-                                <a href="/produk"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('produk.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('produk.index') || request()->is('produk*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -278,8 +281,8 @@
                                 </svg>
                             </summary>
                             <div class="pl-6 mt-1 space-y-1">
-                                <a href="/stok_terkini"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('stok_terkini.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('stok_terkini.index') || request()->is('stok_terkini*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -287,8 +290,8 @@
                                     </svg>
                                     Stok Terkini
                                 </a>
-                                <a href="/barang_masuk"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('barang_masuk.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('barang_masuk.index') || request()->is('barang_masuk*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -296,8 +299,8 @@
                                     </svg>
                                     Barang Masuk
                                 </a>
-                                <a href="/barang_keluar"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('barang_keluar.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('barang_keluar.index') || request()->is('barang_keluar*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -321,8 +324,8 @@
                                 </svg>
                             </summary>
                             <div class="pl-6 mt-1 space-y-1">
-                                <a href="/riwayat_transaksi"
-                                    class="flex items-center     px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('riwayat_transaksi.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('riwayat_transaksi.index') || request()->is('riwayat_transaksi*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -346,8 +349,8 @@
                                 </svg>
                             </summary>
                             <div class="pl-6 mt-1 space-y-1">
-                                <a href="/prngguna"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                                <a href="{{ route('pengguna.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ (request()->routeIs('pengguna.index') || request()->is('pengguna*')) ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
@@ -361,27 +364,27 @@
                     <div class="mt-auto p-4 space-y-2 border-t border-gray-200">
                         <a href="#"
                             class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">
-                            <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                </path>
+                            <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 640 640" height="24" width="24">
+                                <path
+                                    d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                             </svg>
                             Bantuan
                         </a>
-                        <a href="#"
-                            class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">
-                            <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
-                                width="24" viewBox="0 0 640 640" fill="currentColor">
-                                <path
-                                    d="M569 337C578.4 327.6 578.4 312.4 569 303.1L425 159C418.1 152.1 407.8 150.1 398.8 153.8C389.8 157.5 384 166.3 384 176L384 256L272 256C245.5 256 224 277.5 224 304L224 336C224 362.5 245.5 384 272 384L384 384L384 464C384 473.7 389.8 482.5 398.8 486.2C407.8 489.9 418.1 487.9 425 481L569 337zM224 160C241.7 160 256 145.7 256 128C256 110.3 241.7 96 224 96L160 96C107 96 64 139 64 192L64 448C64 501 107 544 160 544L224 544C241.7 544 256 529.7 256 512C256 494.3 241.7 480 224 480L160 480C142.3 480 128 465.7 128 448L128 192C128 174.3 142.3 160 160 160L224 160z" />
-                            </svg>
-                            Logout
-                        </a>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 w-full text-left">
+                                <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" height="24"
+                                    width="24" viewBox="0 0 640 640" fill="currentColor">
+                                    <path
+                                        d="M569 337C578.4 327.6 578.4 312.4 569 303.1L425 159C418.1 152.1 407.8 150.1 398.8 153.8C389.8 157.5 384 166.3 384 176L384 256L272 256C245.5 256 224 277.5 224 304L224 336C224 362.5 245.5 384 272 384L384 384L384 464C384 473.7 389.8 482.5 398.8 486.2C407.8 489.9 418.1 487.9 425 481L569 337zM224 160C241.7 160 256 145.7 256 128C256 110.3 241.7 96 224 96L160 96C107 96 64 139 64 192L64 448C64 501 107 544 160 544L224 544C241.7 544 256 529.7 256 512C256 494.3 241.7 480 224 480L160 480C142.3 480 128 465.7 128 448L128 192C128 174.3 142.3 160 160 160L224 160z" />
+                                </svg>
+                                Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
-                <!-- Overlay -->
-                <div id="overlay" class="flex-1 bg-black bg-opacity-50"></div>
             </div>
 
             <!-- Main Content Area -->

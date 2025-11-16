@@ -28,40 +28,42 @@
         </div>
 
         <!-- FAB Container -->
-        <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-40">
-
-            <!-- Speed Dial Menu -->
-            <div id="fab-menu"
-                class="absolute bottom-full right-1 mb-4 flex flex-col items-end gap-3 opacity-0 translate-y-3 scale-95 pointer-events-none transition-all duration-300">
-
-                <!-- Item 1 -->
-                <button
-                    class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-all w-40">
-                    <span class="text-sm font-medium">Tambah Data</span>
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                </button>
+        <div class="md:hidden fab fixed bottom-6 right-6 flex flex-col items-end gap-3">
+            <div class="fab-items flex flex-col-reverse items-end gap-3">
+                <div class="fab-item-wrapper hidden-space" data-idx="0">
+                    <span class="fab-label" onclick="window.location.href='{{ route('vendor.create') }}'">Tambah
+                        Vendor</span>
+                    <button
+                        class="fab-item w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold shadow-lg bg-gradient-to-br from-purple-500 to-pink-500"
+                        onclick="window.location.href='{{ route('vendor.create') }}'">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640" class="w-6 h-6">
+                            <path
+                                d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <!-- Tombol FAB -->
-            <button id="fab-btn"
-                class="flex items-center justify-center w-14 h-14 bg-blue-600 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.3)] text-white cursor-pointer hover:bg-blue-700 transition-transform duration-300">
-                <svg id="fab-icon" xmlns="http://www.w3.org/2000/svg" class="icon-rotate w-6 h-6" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
+            <!-- FAB Button-->
+            <button id="fabMain"
+                class="fab-main w-14 h-14 rounded-full btn-lg shadow-lg flex items-center justify-center transition-all bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white"
+                aria-expanded="false" aria-label="Open FAB" title="Open FAB">
+                <span id="iconX" class="fab-icon text-xl visible" role="img" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640" class="w-6 h-6">
+                        <path
+                            d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
+                    </svg>
+                </span>
             </button>
         </div>
 
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-            'Nama Vendor' => 'nama_vendor',
-            'Alamat' => 'alamat',
-            'No Telpon' => 'no_telp',
-        ]" data-url="{{ route('api.vendor.index') }}">
+                'Nama Vendor' => 'nama_vendor',
+                'Alamat' => 'alamat',
+                'No Telpon' => 'no_telp',
+            ]" data-url="{{ route('api.vendor.index') }}">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">

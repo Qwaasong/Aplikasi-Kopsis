@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl shadow-sm">
+    <div class="overflow-x-auto bg-white rounded-xl shadow-sm">
         <div class="hidden sm:table w-full">
             <table class="w-full text-sm text-left text-gray-60">
                 <thead class="bg-gray-50 border-b border-t border-gray-200">
@@ -209,7 +209,7 @@
                             $.each(fields, function(header, key) {
                                 let value = getNestedValue(item, key);
                                 // Format tanggal jika field adalah created_at atau updated_at
-                                if (key === 'created_at' || key === 'updated_at' || key.endsWith('.created_at') || key.endsWith('.updated_at')) {
+                                if (key === 'created_at' || key === 'updated_at' || key === 'email_verified_at' || key.endsWith('.created_at') || key.endsWith('.updated_at') || key.endsWith('.email_verified_at')) {
                                     value = formatDate(value);
                                 }
                                 cardDetails += `
