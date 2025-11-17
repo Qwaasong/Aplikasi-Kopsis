@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\StockController;
+use App\Http\Controllers\Api\LedgerEntryController;
+use App\Http\Controllers\Api\Barang_MasukController;
 use App\Http\Controllers\Api\Barang_KeluarController;
 use App\Http\Controllers\Api\FinancialTransactionController;
-use App\Http\Controllers\Api\Barang_MasukController;
 
 
 // Vendor API Routes
@@ -34,6 +35,11 @@ Route::delete('/barang_keluar/{id}', [Barang_KeluarController::class, 'destroy']
 // Riwayat Transaksi API Routes
 Route::get('/riwayat_transaksi', [FinancialTransactionController::class, 'index'])->name('api.riwayat_transaksi.index');
 Route::delete('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'destroy'])->name('api.riwayat_transaksi.destroy');
+
+// Hutang Piutang API Routes
+Route::get('/ledger_entries', [LedgerEntryController::class, 'index'])->name('api.ledger_entries.index');
+Route::delete('/ledger_entries/{id}', [LedgerEntryController::class, 'destroy'])->name('api.ledger_entries.destroy');
+Route::get('/ledger_entries/summary', [LedgerEntryController::class, 'summary'])->name('api.ledger_entries.summary');
 
 // Pengguna API Routes
 Route::get('/pengguna', [UserController::class, 'index'])->name('api.pengguna.index');

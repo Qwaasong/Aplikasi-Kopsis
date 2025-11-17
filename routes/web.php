@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FinancialTransactionController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\Barang_KeluarController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Barang_MasukController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LedgerEntryController;
+use App\Http\Controllers\Barang_MasukController;
+use App\Http\Controllers\Barang_KeluarController;
+use App\Http\Controllers\FinancialTransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -141,14 +142,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/laporan-keuangan-pdf', [FinancialTransactionController::class, 'generatePDF'])->name('laporan.keuangan.pdf');
 
     //=========================================================================================================
-    // Hutang
-    route::get('/hutang', function () {
-        return view('ledger_entries.index');
-    })->name('ledger_entries.index');
+   // Hutang Piutang Routes
+Route::get('/ledger_entries', function () {
+    return view('ledger_entries.index');
+})->name('ledger_entries.index');
 
-    Route::get('/hutang/create', function () {
-        return view('ledger_entries.store');
-    });
+Route::get('/ledger_entries/create', [LedgerEntryController::class, 'create'])->name('ledger_entries.create');
+Route::post('/ledger_entries', [LedgerEntryController::class, 'store'])->name('ledger_entries.store');
+Route::get('/ledger_entries/{id}/edit', [LedgerEntryController::class, 'edit'])->name('ledger_entries.edit');
+Route::put('/ledger_entries/{id}', [LedgerEntryController::class, 'update'])->name('ledger_entries.update');
+Route::post('/ledger_entries/{id}/lunaskan', [LedgerEntryController::class, 'lunaskan'])->name('ledger_entries.lunaskan');
+
 
     //=========================================================================================================
     // Pengguna
