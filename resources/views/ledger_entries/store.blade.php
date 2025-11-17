@@ -133,11 +133,7 @@
                 margin-bottom: 0;
             }
 
-            .form-column,
-            .vendor-column,
-            .satuan-column,
-            .kategori-column,
-            .isi-column {
+            .form-column {
                 margin-bottom: 16px;
             }
 
@@ -152,20 +148,17 @@
                 padding-right: 40px;
             }
 
-            /* PERBAIKAN DI SINI: */
             .button-container {
                 padding: 12px;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                /* <- TAMBAHKAN INI */
                 gap: 12px;
             }
 
             .btn {
                 width: 100%;
                 max-width: 300px;
-                /* Optional: agar button tidak terlalu lebar */
                 padding: 14px 24px;
                 font-size: 16px;
                 min-height: 44px;
@@ -227,6 +220,7 @@
         <form action="{{ route('vendor.store') }}" method="POST">
             @csrf
             <div class="form-section">
+                <!-- Baris Atas: Nama Penghutang, Tipe, Nominal Utang -->
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="nama_penghutang">Nama Penghutang</label>
@@ -235,15 +229,44 @@
                     </div>
 
                     <div class="form-column">
-                        <label class="form-label" for="utang_sebesar">Utang Sebesar</label>
-                        <input type="text" id="utang_sebesar" name="utang_sebesar" class="form-input">
+                        <label class="form-label" for="tipe">Tipe</label>
+                        <select name="tipe" class="form-input">
+                            <option value="utang">Utang</option>
+                            <option value="piutang">Piutang</option>
+                        </select>
+                    </div>
+
+                    <div class="form-column">
+                        <label class="form-label" for="nominal_utang">Nominal Utang</label>
+                        <input type="text" id="nominal_utang" name="nominal_utang" class="form-input"
+                            placeholder="Rp. 0">
                     </div>
                 </div>
 
+                <!-- Baris Bawah: Tanggal dan Jatuh Tempo -->
+                <div class="form-row">
+                    {{-- <div class="form-column">
+                        <label class="form-label" for="no_telepon">No Telepon</label>
+                        <input type="text" id="no_telepon" name="no_telepon" class="form-input" placeholder="+62.." required>
+                    </div> --}}
+
+                    <div class="form-column">
+                        <label class="form-label" for="tanggal">Tanggal</label>
+                        <input type="date" id="tanggal" name="tanggal" class="form-input" value="{{ date('Y-m-d') }}"
+                            required>
+                    </div>
+
+                    <div class="form-column">
+                        <label class="form-label" for="jatuh_tempo">Jatuh Tempo</label>
+                        <input type="date" id="jatuh_tempo" name="jatuh_tempo" class="form-input">
+                    </div>
+                </div>
+
+                <!-- Keterangan (tetap seperti semula) -->
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="alamat">Alamat</label>
-                        <textarea id="alamat" name="alamat" class="form-input" rows="3" placeholder="Alamat..."></textarea>
+                        <label class="form-label" for="keterangan">Keterangan</label>
+                        <textarea id="keterangan" name="keterangan" class="form-input" rows="3" placeholder="Keterangan..."></textarea>
                     </div>
                 </div>
             </div>
@@ -262,7 +285,7 @@
 @section('script')
     <script src="{{ asset('assets/js/fab.js') }}"></script>
     <script>
-        var utang_sebesar = document.getElementById('utang_sebesar');
+        var utang_sebesar = document.getElementById('nominal_utang');
         utang_sebesar.addEventListener('keyup', function(e) {
             utang_sebesar.value = formatRupiah(this.value, 'Rp. ');
         });
