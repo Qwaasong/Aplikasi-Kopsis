@@ -22,11 +22,11 @@
         <hr class="my-6 border-gray-200">
         {{-- PANGGIL COMPONENT --}}
         <x-table :data-table="[
-                                'Nama Produk' => 'nama', 
-                                'Kategori' => 'kategori', 
-                                'Satuan' => 'satuan', 
-                                'Stok' => 'stok_terkini',    
-                                ]" data-url="{{ route('api.stok_terkini.index') }}" :showAction="false">
+                                    'Nama Produk' => 'nama', 
+                                    'Kategori' => 'kategori', 
+                                    'Satuan' => 'satuan', 
+                                    'Stok' => 'stok_terkini',    
+                                    ]" data-url="{{ route('api.stok_terkini.index') }}" :showAction="false">
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
@@ -43,34 +43,32 @@
                     <div id="filter-dropdown"
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
+
+                            <!-- Kategori -->
                             <div>
-                                <label for="filter_nama_vendor" class="block text-sm font-medium text-gray-700">Nama
-                                    Vendor</label>
-                                <input type="text" name="filter[nama_vendor]" id="filter_nama_vendor"
+                                <label for="filter_kategori"
+                                    class="block text-sm font-medium text-gray-700">Kategori</label>
+                                <input type="text" name="filter[kategori]" id="filter_kategori"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </div>
+
+                            <!-- Stock -->
                             <div>
-                                <label for="filter_alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-                                <input type="text" name="filter[alamat]" id="filter_alamat"
+                                <label for="filter_stock" class="block text-sm font-medium text-gray-700">Stock</label>
+                                <input type="number" name="filter[stock]" id="filter_stock" min="0"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </div>
-                            <div>
-                                <label for="filter_start_date" class="block text-sm font-medium text-gray-700">Tanggal
-                                    Mulai</label>
-                                <input type="date" name="filter[start_date]" id="filter_start_date"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="filter_end_date" class="block text-sm font-medium text-gray-700">Tanggal
-                                    Akhir</label>
-                                <input type="date" name="filter[end_date]" id="filter_end_date"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            </div>
+
+                            <!-- Tombol aksi -->
                             <div class="flex justify-end space-x-2 pt-4">
                                 <button type="button" id="reset-filter-btn"
-                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Reset</button>
+                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                                    Reset
+                                </button>
                                 <button type="submit"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">Apply</button>
+                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">
+                                    Apply
+                                </button>
                             </div>
                         </form>
                     </div>
