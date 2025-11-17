@@ -9,7 +9,13 @@ use App\Http\Controllers\Api\LedgerEntryController;
 use App\Http\Controllers\Api\Barang_MasukController;
 use App\Http\Controllers\Api\Barang_KeluarController;
 use App\Http\Controllers\Api\FinancialTransactionController;
+use App\Http\Controllers\Api\BerandaController;
 
+// Beranda API Routes
+Route::get('/beranda', [BerandaController::class, 'index'])->name('api.beranda.index');
+Route::get('/beranda/persentase', [BerandaController::class, 'persentase'])->name('api.beranda.persentase');
+Route::get('/beranda/chart', [BerandaController::class, 'chart'])->name('api.beranda.chart');
+Route::get('/beranda/distribusi-produk', [BerandaController::class, 'distribusiProduk'])->name('api.beranda.distribusi-produk');
 
 // Vendor API Routes
 Route::get('/vendor', [VendorController::class, 'index'])->name('api.vendor.index');

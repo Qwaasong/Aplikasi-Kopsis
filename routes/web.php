@@ -143,15 +143,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //=========================================================================================================
    // Hutang Piutang Routes
-Route::get('/ledger_entries', function () {
-    return view('ledger_entries.index');
-})->name('ledger_entries.index');
+    Route::get('/ledger_entries', function () {
+        return view('ledger_entries.index');
+    })->name('ledger_entries.index');
 
-Route::get('/ledger_entries/create', [LedgerEntryController::class, 'create'])->name('ledger_entries.create');
-Route::post('/ledger_entries', [LedgerEntryController::class, 'store'])->name('ledger_entries.store');
-Route::get('/ledger_entries/{id}/edit', [LedgerEntryController::class, 'edit'])->name('ledger_entries.edit');
-Route::put('/ledger_entries/{id}', [LedgerEntryController::class, 'update'])->name('ledger_entries.update');
-Route::post('/ledger_entries/{id}/lunaskan', [LedgerEntryController::class, 'lunaskan'])->name('ledger_entries.lunaskan');
+    Route::post('/ledger_entries', [LedgerEntryController::class, 'store'])->name('ledger_entries.store');
+    Route::get('/ledger_entries/create', [LedgerEntryController::class, 'create'])->name('ledger_entries.create');
+    Route::get('/ledger_entries/{id}/edit', [LedgerEntryController::class, 'edit'])->name('ledger_entries.edit');
+    Route::put('/ledger_entries/{id}', [LedgerEntryController::class, 'update'])->name('ledger_entries.update');
+    Route::post('/ledger_entries/{id}/lunaskan', [LedgerEntryController::class, 'lunaskan'])->name('ledger_entries.lunaskan');
 
 
     //=========================================================================================================
