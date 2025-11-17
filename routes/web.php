@@ -10,6 +10,11 @@ use App\Http\Controllers\Barang_MasukController;
 use App\Http\Controllers\Barang_KeluarController;
 use App\Http\Controllers\FinancialTransactionController;
 
+// Route untuk redirect default ketika user sudah login
+Route::get('/home', function () {
+    return redirect()->route('beranda.index');
+})->name('home');
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -44,7 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/vendor/{id}', [VendorController::class, 'update'])->name('vendor.update');
 
     //=========================================================================================================
-    // Produk 
+    // Produk
 
     //Ke halaman create Produk
     Route::get('/produk/create', function () {
@@ -152,7 +157,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/ledger_entries/{id}/edit', [LedgerEntryController::class, 'edit'])->name('ledger_entries.edit');
     Route::put('/ledger_entries/{id}', [LedgerEntryController::class, 'update'])->name('ledger_entries.update');
     Route::post('/ledger_entries/{id}/lunaskan', [LedgerEntryController::class, 'lunaskan'])->name('ledger_entries.lunaskan');
-
 
     //=========================================================================================================
     // Pengguna
