@@ -42,40 +42,61 @@ class Barang_MasukController extends Controller
             // Validasi array item
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|integer|exists:products,id',
-            'items.*.jumlah_pack' => 'required|integer|min:1',
+            'items.*.jumlah_pack' => 'required|integer|min:1', // Hanya pack, tidak perlu satuan
             'items.*.harga_beli' => 'required|numeric|min:0',
+            'items.*.harga_jual' => 'required|numeric|min:0', // Simpan harga jual baru
         ]);
-
-        DB::beginTransaction(); // Memulai transaksi database
+        
+        // Memastikan semua operasi database berjalan sukses (atomik)
+        DB::beginTransaction();
 
         try {
-            // 2. Buat Entri Purchase Utama
-            $purchase = Purchase::create([
-                'tanggal' => $request->tanggal,
-                'vendor_id' => $request->vendor_id,
-                'no_faktur' => $request->no_faktur,
-                'keterangan' => $request->keterangan ?? null,
-            ]);
-            // Catatan: Model Purchase akan otomatis membuat FinancialTransaction (pengeluaran)
+            // 2. Simpan Header Pembelian (Purchase)
+            $purchase = Purchase::create($request->only(['tanggal', 'vendor_id', 'no_faktur', 'keterangan']));
 
-            // 3. Proses Item Pembelian dan Update Stok
-            foreach ($request->items as $itemData) {
-                // Simpan PurchaseItem
-                $purchaseItem = new PurchaseItem($itemData);
-                $purchase->items()->save($purchaseItem); // Menyimpan item terkait Purchase
+            // 3. Simpan Detail Item Pembelian (PurchaseItem)
+            // Model Event di PurchaseItem akan otomatis mengupdate stok (increment)
+            // Model Event di Purchase akan otomatis membuat FinancialTransaction
+            
+            // Siapkan data item, hapus kunci yang tidak perlu dari input request
+            $itemsData = collect($request->items)->map(function ($item) use ($purchase) {
+                return [
+                    'purchase_id' => $purchase->id, // Tambahkan foreign key
+                    'product_id' => $item['product_id'],
+                    'jumlah_pack' => $item['jumlah_pack'],
+                    'harga_beli' => $item['harga_beli'],
+                    'harga_jual' => $item['harga_jual'],
+                    'created_at' => now(), // Tambahkan timestamp
+                    'updated_at' => now(), // Tambahkan timestamp
+                ];
+            })->toArray();
+            
+            // Insert semua item sekaligus untuk efisiensi. 
+            // NOTE: Batch insert tidak memicu Model Event, jadi harus diubah ke createMany.
+            // Pilihan A: Menggunakan createMany (Memicu Model Event per item)
+            $purchase->items()->createMany($request->items);
 
-                // Update Stok Produk (Asumsi: kolom stok di model Product adalah 'stock')
-                Product::where('id', $itemData['product_id'])
-                    ->increment('stock', $itemData['jumlah_pack']); 
+            // Pilihan B: Menggunakan batch insert (Lebih cepat, TAPI HARUS memanggil update stok secara manual)
+            // $purchase->items()->insert($itemsData); 
+            // foreach ($itemsData as $item) {
+            //      Product::where('id', $item['product_id'])->increment('stok', $item['jumlah_pack']);
+            // }
+
+            DB::commit();
+
+            $message = 'Barang Masuk berhasil disimpan.';
+            
+            // Logika Simpan dan Buat Lagi
+            if ($request->has('save_and_create')) {
+                return redirect()->route('barang_masuk.create')->with('success', $message);
             }
 
-            DB::commit(); // Menyelesaikan transaksi
+            return redirect()->route('barang_masuk.index')->with('success', $message);
 
-            return redirect()->route('barang_masuk.index')->with('success', 'Barang Masuk dan detail item berhasil dicatat. Stok diperbarui.');
-
-        }catch (\Exception $e) {
-            DB::rollBack(); // Membatalkan transaksi jika ada error
-            return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan Barang Masuk: ' . $e->getMessage()])->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Anda bisa log $e->getMessage() untuk debugging
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan Barang Masuk: ' . $e->getMessage());
         }
     }
 
