@@ -67,12 +67,11 @@ const weeklyChart = new Chart(ctx, {
         plugins: {
             legend: {
                 position: 'bottom',
-                align: 'start',
                 labels: {
                     usePointStyle: true,
-                    boxWidth: 8,
+                    boxWidth: 20,
                     padding: 20,
-                    color: '#374151'
+                    color: '#374151',
                 }
             },
             tooltip: {
