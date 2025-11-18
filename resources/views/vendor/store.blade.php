@@ -224,7 +224,7 @@
     </div>
 
     <div class="block">
-        <form action="{{ route('vendor.store') }}" method="POST">
+        <form id="vendor-form" action="{{ route('vendor.store') }}" method="POST">
             @csrf
             <div class="form-section">
                 <div class="form-row">
@@ -236,7 +236,7 @@
 
                     <div class="form-column">
                         <label class="form-label" for="telepon">No Telepon</label>
-                        <input type="text" id="telepon" name="no_telp" class="form-input" placeholder="No Telepon...">
+                        <input type="number" id="telepon" name="no_telp" class="form-input" placeholder="No Telepon...">
                     </div>
                 </div>
 
@@ -249,10 +249,9 @@
             </div>
 
             <div class="button-container">
-                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
-                    Lagi</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel">Batal</button>
+                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again" id="save-and-create-btn">Simpan Data Dan Buat Lagi</button>
+                <button type="submit" class="btn btn-save" id="save-btn">Simpan</button>
+                <button type="button" class="btn btn-cancel" id="cancel-btn">Batal</button>
             </div>
         </form>
     </div>
@@ -261,4 +260,26 @@
 
 @section('script')
     <script src="{{ asset('assets/js/fab.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Handle save and create button
+            $('#save-and-create-btn').click(function(e) {
+                e.preventDefault();
+                $('#vendor-form').append('<input type="hidden" name="save_and_create" value="1">');
+                $('#vendor-form')[0].submit();
+            });
+            
+            // Handle save button
+            $('#save-btn').click(function(e) {
+                e.preventDefault();
+                $('#vendor-form').find('input[name="save_and_create"]').remove();
+                $('#vendor-form')[0].submit();
+            });
+            
+            // Handle cancel button
+            $('#cancel-btn').click(function() {
+                window.location.href = '{{ route("vendor.index") }}';
+            });
+        });
+    </script>
 @endsection

@@ -20,13 +20,20 @@
         </div>
 
         <hr class="my-6 border-gray-200">
-        {{-- PANGGIL COMPONENT --}}
+        {{-- PANGGEL COMPONENT --}}
         <x-table :data-table="[
-                                    'Nama Produk' => 'nama', 
-                                    'Kategori' => 'kategori', 
-                                    'Satuan' => 'satuan', 
-                                    'Stok' => 'stok_terkini',    
+                                    'Nama Produk' => 'nama',
+                                    'Kategori' => 'kategori',
+                                    'Satuan' => 'satuan',
+                                    'Stok' => 'stok_tersedia',
                                     ]" data-url="{{ route('api.stok_terkini.index') }}" :showAction="false">
+            {{-- Debug info --}}
+            <x-slot:debug>
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">Debug Info: </strong>
+                    <span class="block sm:inline">Check browser console for API response details</span>
+                </div>
+            </x-slot:debug>
             {{-- Slot untuk filter --}}
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
