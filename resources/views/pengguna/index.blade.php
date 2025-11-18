@@ -59,54 +59,6 @@
                                             'Diverifikasi' => 'email_verified_at', 
                                             'Dibuat Pada' => 'created_at',    
                                             ]" data-url="{{ route('api.pengguna.index') }}">
-            <x-slot:filter>
-                <div class="flex items-center space-x-4">
-                    <button id="filter-button"
-                        class="p-3 sm:p-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                        </svg>
-                    </button>
-
-                    <!-- Dropdown Filter -->
-                    <div id="filter-dropdown"
-                        class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
-                        <form id="filter-form" class="p-6 space-y-4">
-                            <div>
-                                <label for="filter_nama_vendor" class="block text-sm font-medium text-gray-700">Nama
-                                    Vendor</label>
-                                <input type="text" name="filter[nama_vendor]" id="filter_nama_vendor"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="filter_alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-                                <input type="text" name="filter[alamat]" id="filter_alamat"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="filter_start_date" class="block text-sm font-medium text-gray-700">Tanggal
-                                    Mulai</label>
-                                <input type="date" name="filter[start_date]" id="filter_start_date"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="filter_end_date" class="block text-sm font-medium text-gray-700">Tanggal
-                                    Akhir</label>
-                                <input type="date" name="filter[end_date]" id="filter_end_date"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            </div>
-                            <div class="flex justify-end space-x-2 pt-4">
-                                <button type="button" id="reset-filter-btn"
-                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Reset</button>
-                                <button type="submit"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">Apply</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </x-slot:filter>
         </x-table>
     </div>
 @endsection

@@ -88,7 +88,7 @@
 
             <div class="button-container">
                 <button type="submit" class="btn btn-save">Update Data</button>
-                <a href="{{ route('barang_masuk.index') }}}" class="btn btn-cancel">Batal</a>
+                <button onclick="window.location.href='{{ route('barang_masuk.index') }}'" class="btn btn-cancel">Batal</button>
             </div>
         </form>
     </div>

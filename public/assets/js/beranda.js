@@ -4,16 +4,16 @@ function fetchBerandaData() {
         method: 'GET',
         success: function (response) {
             if (response.success) {
-                console.table('Data beranda:', response.data);
+                // console.table('Data beranda:', response.data);
                 if (response.data.statistik) {
                     tampilkanStatistik(response.data.statistik);
                 }
             } else {
-                console.error('Error:', response.message);
+                // console.error('Error:', response.message);
             }
         },
         error: function (error) {
-            console.error('Ajax error:', error);
+            // console.error('Ajax error:', error);
         }
     });
 }
@@ -24,16 +24,16 @@ function fetchBerandaChartData() {
         method: 'GET',
         success: function (response) {
             if (response.success) {
-                console.table('Data Chart:', response.data);
+                // console.table('Data Chart:', response.data);
                 if (response.data.chart) {
                     tampilkanChartPemasukanPengeluaran(response.data.chart);
                 }
             } else {
-                console.error('Error:', response.message);
+                // console.error('Error:', response.message);
             }
         },
         error: function (error) {
-            console.error('Ajax error:', error);
+            // console.error('Ajax error:', error);
         }
     });
 }
@@ -44,16 +44,16 @@ function fetchBerandaChartDistribusiData() {
         method: 'GET',
         success: function (response) {
             if (response.success) {
-                console.log(response.data);
+                // console.log(response.data);
                 if (response.data) {
                     tampilkanChartDistribusiProduk(response.data);
                 }
             } else {
-                console.error('Error:', response.message);
+                // console.error('Error:', response.message);
             }
         },
         error: function (error) {
-            console.error('Ajax error:', error);
+            // console.error('Ajax error:', error);
         }
     });
 }
@@ -64,16 +64,16 @@ function fetchBerandaPersentaseData() {
         method: 'GET',
         success: function (response) {
             if (response.success) {
-                console.table(response.data);
+                // console.table(response.data);
                 if (response.data) {
                     tampilkanPersentase(response.data);
                 }
             } else {
-                console.error('Error:', response.message);
+                // console.error('Error:', response.message);
             }
         },
         error: function (error) {
-            console.error('Ajax error:', error);
+            // console.error('Ajax error:', error);
         }
     });
 }
@@ -192,7 +192,7 @@ function tampilkanChartPemasukanPengeluaran(chart) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 50,
+                        maxTicksLimit: 10 ,
                         color: '#9CA3AF'
                     },
                     grid: {
