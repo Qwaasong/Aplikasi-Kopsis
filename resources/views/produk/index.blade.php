@@ -93,7 +93,7 @@
                             <div>
                                 <label for="filter_satuan_pack"
                                     class="block text-sm font-medium text-gray-700">Satuan Pack</label>
-                                <input type="text" name="filter[stock]" id="filter_satuan_pack"
+                                <input type="text" name="filter[satuan_pack]" id="filter_satuan_pack"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </div>
 
