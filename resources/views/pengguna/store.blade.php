@@ -71,18 +71,7 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-column">
-                        <label class="form-label" for="role">Role <span style="color: #D20D24;">*</span></label>
-                        <select id="role" name="role" class="form-select" required>
-                            <option value="">Pilih Role</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </select>
-                    </div>
-                    <div class="form-column">
-                    </div>
-                </div>
+                
             </div>
 
             <div class="button-container">

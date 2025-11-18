@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     /**
-     * Menampilkan semua pengguna dengan pagination & pencarian.
+     * Mengambil data pengguna dengan pagination dan pencarian.
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
         $query = User::query();
 
-        // 🔍 Pencarian berdasarkan nama atau email
+        // Implementasi Pencarian Global
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -24,85 +26,81 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->latest()->paginate(10);
-
-        return response()->json([
-            'success' => true,
-            'data' => $users,
-        ]);
-    }
-
-    /**
-     * Tambah pengguna baru.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role' => 'nullable|string|in:admin,kasir,anggota',
-        ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-
-        $user = User::create($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Pengguna berhasil ditambahkan',
-            'data' => $user,
-        ]);
-    }
-
-    /**
-     * Menampilkan detail pengguna.
-     */
-    public function show(User $user)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => $user,
-        ]);
-    }
-
-    /**
-     * Update data pengguna.
-     */
-    public function update(Request $request, User $user)
-    {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:6',
-            'role' => 'nullable|string|in:admin,kasir,anggota',
-        ]);
-
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
+        // Implementasi Filter berdasarkan status verifikasi email
+        if ($request->has('email_verified')) {
+            $emailVerified = $request->input('email_verified');
+            if ($emailVerified === 'verified') {
+                $query->whereNotNull('email_verified_at');
+            } elseif ($emailVerified === 'not_verified') {
+                $query->whereNull('email_verified_at');
+            }
         }
 
-        $user->update($validated);
+        // Menggunakan paginate() untuk mendapatkan data dengan struktur pagination
+        $users = $query->latest()->paginate(10); // 10 data per halaman
 
+        // Format data untuk response
+        $users->getCollection()->transform(function ($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at 
+                    ? $user->email_verified_at->format('d-m-Y H:i')
+                    : 'Belum diverifikasi',
+                'created_at' => $user->created_at->format('d-m-Y H:i'),
+                // 'actions' => view('components.user-actions', ['user' => $user])->render()
+            ];
+        });
+
+        // Kembalikan data dalam format JSON
         return response()->json([
             'success' => true,
-            'message' => 'Data pengguna berhasil diperbarui',
-            'data' => $user,
+            'data' => $users
         ]);
     }
 
     /**
-     * Hapus pengguna.
+     * Hapus data pengguna
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
+        try {
+            // Cari user berdasarkan ID
+            $user = User::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pengguna berhasil dihapus',
-        ]);
+            // Prevent deleting yourself
+            if ($user->id === Auth::id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat menghapus akun sendiri'
+                ], 422);
+            }
+
+            // Prevent deleting if this is the only admin
+            $adminCount = User::count();
+            if ($adminCount <= 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat menghapus satu-satunya admin'
+                ], 422);
+            }
+
+            $user->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengguna berhasil dihapus'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus pengguna',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

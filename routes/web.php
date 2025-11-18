@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\Barang_MasukController;
@@ -18,9 +18,9 @@ Route::get('/home', function () {
 Route::get('/', [DashboardController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    //Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
+    //Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
+    //Route::delete('/profile', [UserController::class, 'destroy'])->name('profile.destroy');
 });
 
 
@@ -167,20 +167,20 @@ Route::post('/ledger_entries/{id}/bayar-utang', [LedgerEntryController::class, '
     Route::get('/pengguna', function () {
         return view('pengguna.index');
     })->name('pengguna.index');
-
-    //Ke halaman create Barang Keluar
+    
+    //Ke halaman create Pengguna
     Route::get('/pengguna/create', function () {
         return view('pengguna.store');
     })->name('pengguna.create');
-
-    //Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
-    Route::post('/pengguna/create', [ProfileController::class, 'store'])->name('pengguna.store');
-
-    //Ke halaman edit Barang Keluar
-    Route::get('/pengguna/{id}/edit', [ProfileController::class, 'edit'])->name('pengguna.edit');
-
-    //Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
-    Route::put('/pengguna/{id}', [ProfileController::class, 'update'])->name('pengguna.update');
+    
+    //Ketika Submit Akan Menjalankan Method Store di UserController
+    Route::post('/pengguna/create', [UserController::class, 'store'])->name('pengguna.store');
+    
+    //Ke halaman edit Pengguna
+    Route::get('/pengguna/{id}/edit', [UserController::class, 'edit'])->name('pengguna.edit');
+    
+    //Ketika Submit Akan Menjalankan Method Update di UserController
+    Route::put('/pengguna/{id}', [UserController::class, 'update'])->name('pengguna.update');
 });
 
 require __DIR__ . '/auth.php';
