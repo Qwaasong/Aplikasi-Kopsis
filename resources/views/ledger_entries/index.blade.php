@@ -55,7 +55,6 @@
         <hr class="my-6 border-gray-200">
         <x-table :data-table="[
             'Nama' => 'nama', 
-             
             'Tipe' => 'tipe', 
             'Nominal' => 'nominal',
             'Keterangan' => 'keterangan',

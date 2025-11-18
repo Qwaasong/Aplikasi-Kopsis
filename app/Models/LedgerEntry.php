@@ -23,6 +23,11 @@ class LedgerEntry extends Model
         'nominal' => 'decimal:2',
     ];
 
+    public function financialTransaction()
+    {
+        return $this->hasOne(FinancialTransaction::class);
+    }
+
     // Scope untuk hutang
     public function scopeHutang($query)
     {

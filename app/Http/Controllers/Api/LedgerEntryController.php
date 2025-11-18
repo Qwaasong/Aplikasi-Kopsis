@@ -34,9 +34,21 @@ class LedgerEntryController extends Controller
                 $query->where('jatuh_tempo', '>', now())->whereNotNull('jatuh_tempo');
             }
         }
+        
 
         $entries = $query->latest()->paginate(10);
 
+        $entries->getCollection()->transform(function ($entry) {
+            return [
+                'id'             => $entry->id,
+                'nama'           => $entry->nama, 
+                'tipe'           => $entry->tipe,
+                'nominal'        => 'Rp ' . number_format($entry->nominal, 0, ',', '.'),
+                'keterangan'     => $entry->keterangan,
+                'telepon'        => $entry->telepon,
+                
+            ];
+        });
         return response()->json([
             'success' => true,
             'data' => $entries

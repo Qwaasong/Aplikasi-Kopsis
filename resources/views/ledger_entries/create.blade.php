@@ -240,7 +240,6 @@
                 </div>
 
                 <div class="form-column">
-                    <!-- PERBAIKAN: name="nominal" -->
                     <label class="form-label" for="nominal">Nominal</label>
                     <input type="text" id="nominal" name="nominal" class="form-input" placeholder="Rp. 0" required>
                 </div>
@@ -290,13 +289,35 @@
 @section('script')
 
     <script>
-        var utang_sebesar = document.getElementById('nominal_utang');
-        utang_sebesar.addEventListener('keyup', function(e) {
-            utang_sebesar.value = formatRupiah(this.value, 'Rp. ');
-        });
+      
         
+        var nominalInput = document.getElementById('nominal');
+        
+        // 2. Ambil elemen form
+        var form = nominalInput.closest('form'); 
 
-        /* Fungsi */
+        // 3. EVENT LISTENER: Format Rupiah saat pengguna mengetik
+        nominalInput.addEventListener('keyup', function(e) {
+            nominalInput.value = formatRupiah(this.value, 'Rp. ');
+        });
+
+        // 4. 🔥 EVENT LISTENER KRUSIAL: Membersihkan nilai sebelum dikirim ke backend
+        form.addEventListener('submit', function() {
+            var formattedValue = nominalInput.value;
+            
+            // Hapus semua karakter non-angka (Rp, titik, spasi)
+            // Hanya menyisakan angka murni. Contoh: "Rp. 10.000" menjadi "10000"
+            var cleanValue = formattedValue.replace(/[^0-9]/g, ''); 
+            
+            // Set nilai input ke angka murni sebelum form submit
+            nominalInput.value = cleanValue;
+            
+            // Catatan: Setelah form dikirim dan halaman direfresh/redirect,
+            // nilai Rupiah akan muncul lagi karena event listener keyup di atas.
+        });
+
+
+        /* Fungsi untuk Format Rupiah */
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split = number_string.split(','),
@@ -313,4 +334,5 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
+    <script src="{{ asset('assets/js/fab.js') }}"></script>
 @endsection
