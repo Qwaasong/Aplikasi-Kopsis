@@ -144,7 +144,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'update'])->name('riwayat_transaksi.update');
 
     //Export PDF Riwayat Transaksi
-    Route::get('/laporan-keuangan-pdf', [FinancialTransactionController::class, 'generatePDF'])->name('laporan.keuangan.pdf');
+    Route::get('/laporan-keuangan-pdf', [FinancialTransactionController::class, 'generatePDF'])->name('riwayat_transaksi.export_pdf');
 
     //=========================================================================================================
    // Hutang Piutang Routes
