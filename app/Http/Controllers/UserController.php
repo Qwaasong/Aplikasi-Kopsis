@@ -9,17 +9,18 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
-class ProfileController extends Controller
+class UserController extends Controller
 {
     /**
      * Tampilkan form edit profil pengguna.
      */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+    public function edit($id): View
+{
+    $user = User::findOrFail($id); // Cari pengguna berdasarkan ID
+    return view('pengguna.edit', [ // Arahkan ke view 'pengguna.edit' (asumsi)
+        'user' => $user,
+    ]);
+}
 
     /**
      * Simpan data profil baru.
@@ -41,24 +42,27 @@ class ProfileController extends Controller
         ]);
 
         // Redirect ke halaman daftar profil (atau ke edit)
-        return redirect()->route('profile.edit')->with('success', 'Profil berhasil ditambahkan.');
+        return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     /**
      * Update informasi profil pengguna yang sudah ada.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    public function update(ProfileUpdateRequest $request, $id): RedirectResponse
+{
+    $user = User::findOrFail($id); // Cari pengguna berdasarkan ID
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+    $user->fill($request->validated());
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    if ($user->isDirty('email')) {
+        $user->email_verified_at = null;
     }
+
+    $user->save();
+
+    // Redirect kembali ke halaman index pengguna
+    return Redirect::route('pengguna.index')->with('status', 'profile-updated');
+}
 
    
 }

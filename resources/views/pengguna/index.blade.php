@@ -54,11 +54,11 @@
 
         <hr class="my-6 border-gray-200">
         <x-table :data-table="[
-                                            'Nama' => 'name', 
-                                            'Email' => 'email', 
-                                            'Diverifikasi' => 'email_verified_at', 
-                                            'Dibuat Pada' => 'created_at',    
-                                            ]" data-url="{{ route('api.pengguna.index') }}">
+        'Nama' => 'name', 
+        'Email' => 'email', 
+        'Diverifikasi' => 'email_verified_at', 
+        'Dibuat Pada' => 'created_at',    
+        ]" data-url="{{ route('api.pengguna.index') }}">
         </x-table>
     </div>
 @endsection
