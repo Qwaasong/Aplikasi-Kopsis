@@ -73,45 +73,44 @@
                         </svg>
                     </button>
 
-                    <!-- Dropdown Filter -->
                     <div id="filter-dropdown"
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
 
-                            <!-- Tipe -->
                             <div>
-                                <label for="filter_tipe" class="block text-sm font-medium text-gray-700">Tipe</label>
-                                <select name="filter[tipe]" id="filter_tipe"
+                                <label for="filter_tanggal_awal" class="block text-sm font-medium text-gray-700">Tanggal Awal</label>
+                                <input type="date" name="filter[tanggal_awal]" id="filter_tanggal_awal"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                    <option value="">-- Pilih Tipe --</option>
-                                    <option value="hutang">Hutang</option>
-                                    <option value="piutang">Piutang</option>
+                            </div>
+
+                            <div>
+                                <label for="filter_tanggal_akhir" class="block text-sm font-medium text-gray-700">Tanggal Akhir</label>
+                                <input type="date" name="filter[tanggal_akhir]" id="filter_tanggal_akhir"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+
+                            <div>
+                                <label for="filter_bulan" class="block text-sm font-medium text-gray-700">Bulan</label>
+                                <select name="filter[bulan]" id="filter_bulan"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <option value="">-- Pilih Bulan --</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <option value="{{ $i }}">{{ date('F', mktime(0, 0, 0, $i, 10)) }}</option>
+                                    @endfor
                                 </select>
                             </div>
 
-                            <!-- Periode (radio) -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Periode</label>
-                                <div class="mt-2 space-y-2">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="filter[periode]" value="minggu"
-                                            class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                        <span class="ml-2 text-sm text-gray-700">Minggu</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="filter[periode]" value="bulan"
-                                            class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                        <span class="ml-2 text-sm text-gray-700">Bulan</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="filter[periode]" value="tahun"
-                                            class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                        <span class="ml-2 text-sm text-gray-700">Tahun</span>
-                                    </label>
-                                </div>
+                                <label for="filter_tahun" class="block text-sm font-medium text-gray-700">Tahun</label>
+                                <select name="filter[tahun]" id="filter_tahun"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <option value="">-- Pilih Tahun --</option>
+                                    @for ($i = date('Y'); $i >= (date('Y') - 5); $i--)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
                             </div>
 
-                            <!-- Tombol aksi -->
                             <div class="flex justify-end space-x-2 pt-4">
                                 <button type="button" id="reset-filter-btn"
                                     class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">

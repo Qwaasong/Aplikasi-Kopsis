@@ -14,6 +14,7 @@ class Barang_KeluarController extends Controller
     public function index(Request $request)
     {
         $query = StockOut::with('product'); // relasi ke product jika ada
+        $filters = $request->get('filter', []);
 
         // Pencarian global
         if ($search = $request->input('search')) {
@@ -24,9 +25,28 @@ class Barang_KeluarController extends Controller
         }
 
         // Filter tambahan (opsional)
-        if ($filters = $request->input('filter')) {
-            $query->filter($filters); // hanya jika kamu punya scopeFilter di model
+        //if ($filters = $request->input('filter')) {
+        //    $query->filter($filters); // hanya jika kamu punya scopeFilter di model
+        //}
+
+        // START: PENAMBAHAN FILTER TANGGAL, BULAN, TAHUN (Kode Baru)
+        
+        // 1. Filter berdasarkan Rentang Tanggal (Tanggal Awal dan Akhir)
+        if (isset($filters['tanggal_awal']) && $filters['tanggal_awal'] && isset($filters['tanggal_akhir']) && $filters['tanggal_akhir']) {
+            // Menggunakan kolom 'created_at' untuk rentang tanggal. Ubah jika nama kolom berbeda.
+            $query->whereBetween('created_at', [$filters['tanggal_awal'], $filters['tanggal_akhir']]);
         }
+        
+        // 2. Filter berdasarkan Bulan
+        if (isset($filters['bulan']) && $filters['bulan']) {
+            $query->whereMonth('created_at', $filters['bulan']);
+        }
+        
+        // 3. Filter berdasarkan Tahun
+        if (isset($filters['tahun']) && $filters['tahun']) {
+            $query->whereYear('created_at', $filters['tahun']);
+        }
+        // END: PENAMBAHAN FILTER TANGGAL, BULAN, TAHUN
 
         // Pagination
         $stockOuts = $query->latest()->paginate(10);

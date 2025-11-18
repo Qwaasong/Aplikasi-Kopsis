@@ -17,12 +17,36 @@ class Barang_MasukController extends Controller
     {
         $perPage = $request->get('per_page', 10);
         $search = $request->get('search', '');
+        $filters = $request->get('filter', []);
 
         $purchases = Purchase::with('vendor') 
             ->when($search, function ($query, $search) {
-                // Sederhana: cari berdasarkan no_faktur saja, 
-                // atau Anda bisa tambahkan pencarian di PurchaseItem/Vendor nanti.
-                return $query->where('no_faktur', 'like', '%' . $search . '%');
+                // Implementasi Pencarian Global
+                $query->where(function ($q) use ($search) {
+                    // 1. Cari berdasarkan No. Faktur (kolom Purchase)
+                    $q->where('no_faktur', 'like', '%' . $search . '%')
+                    
+                    // 2. ATAU cari berdasarkan Nama Vendor (melalui relasi 'vendor')
+                      ->orWhereHas('vendor', function ($qVendor) use ($search) {
+                          $qVendor->where('nama_vendor', 'like', '%' . $search . '%'); // Asumsi kolom nama vendor adalah 'nama'
+                      });
+                });
+            })
+            // LOGIKA FILTER BARU BERDASARKAN TANGGAL/BULAN/TAHUN
+            // 1. Filter berdasarkan Rentang Tanggal
+            ->when(isset($filters['tanggal_awal']) && $filters['tanggal_awal'] && isset($filters['tanggal_akhir']) && $filters['tanggal_akhir'], function ($query) use ($filters) {
+                // Pastikan kolom tanggal adalah 'tanggal' di tabel purchases
+                $query->whereBetween('tanggal', [$filters['tanggal_awal'], $filters['tanggal_akhir']]);
+            })
+            // 2. Filter berdasarkan Bulan
+            ->when(isset($filters['bulan']) && $filters['bulan'], function ($query) use ($filters) {
+                // Asumsi kolom tanggal adalah 'tanggal'
+                $query->whereMonth('tanggal', $filters['bulan']);
+            })
+            // 3. Filter berdasarkan Tahun
+            ->when(isset($filters['tahun']) && $filters['tahun'], function ($query) use ($filters) {
+                // Asumsi kolom tanggal adalah 'tanggal'
+                $query->whereYear('tanggal', $filters['tahun']);
             })
             ->latest()
             ->paginate($perPage);
