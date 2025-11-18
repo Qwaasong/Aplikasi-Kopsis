@@ -2,93 +2,279 @@
 @section('title', 'KopsisApp - Tambah Barang Masuk')
 
 @php
-    // Anggap ini sudah dimuat dari controller atau langsung di view
-    // Dalam kasus nyata, lebih baik dimuat dari controller
     $vendors = \App\Models\Vendor::all();
-    // Perlu memuat daftar produk juga untuk dropdown item
     $products = \App\Models\Product::all(); 
 @endphp
 
 @section('content')
     <style>
-        /* CSS yang sudah ada... */
-        .judul { padding: 4% 6% 5%; font-size: 25px; text-align: center; }
-        .block { margin: 0 6%; }
-        .form-section { margin-bottom: 24px; border-radius: 8px; padding: 0; }
-        .form-row { display: flex; gap: 16px; margin-bottom: 24px; }
-        .form-column { flex: 1; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; font-size: 14px; }
-        .form-input, .form-select, .form-textarea { 
-            width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px; 
-            font-size: 16px; transition: border-color 0.3s; background-color: #fafafa; 
-        }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { 
-            outline: none; border-color: #4a90e2; background-color: white; 
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2); 
+        /* Reset dan variabel warna */
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357ABD;
+            --success: #28a745;
+            --success-dark: #1e7e34;
+            --danger: #dc3545;
+            --danger-dark: #c82333;
+            --gray-light: #f8f9fa;
+            --gray-medium: #e9ecef;
+            --gray-dark: #6c757d;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --border-radius: 8px;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
         }
         
-        /* CSS Tambahan untuk Item */
-        .item-section { 
-            background-color: #f7f9fc; padding: 24px; border: 1px solid #e0e0e0; border-radius: 8px; 
+        .judul { 
+            padding: 3% 6% 2%; 
+            font-size: 24px; 
+            text-align: center; 
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--gray-medium);
             margin-bottom: 24px;
         }
-        .item-table { 
-            width: 100%; border-collapse: collapse; margin-top: 16px; 
-        }
-        .item-table th, .item-table td { 
-            padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; 
-        }
-        .item-table th { 
-            background-color: #eef1f7; font-weight: 600; font-size: 14px; color: #555;
-        }
-        .item-table td .form-input, .item-table td .form-select {
-            padding: 8px;
-        }
-        .btn-add-item, .btn-remove-item {
-            padding: 8px 12px; font-size: 14px; cursor: pointer; border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .btn-add-item {
-            background-color: #4a90e2; color: white; border: none;
-        }
-        .btn-add-item:hover {
-            background-color: #357ABD;
-        }
-        .btn-remove-item {
-            background-color: #dc3545; color: white; border: none;
-        }
-        .btn-remove-item:hover {
-            background-color: #c82333;
-        }
-        .total-row td { 
-            border-top: 2px solid #333; font-weight: bold; 
+        
+        .block { 
+            margin: 0 6%; 
+            padding-bottom: 40px;
         }
         
-        /* CSS yang sudah ada untuk tombol */
+        .form-section { 
+            margin-bottom: 32px; 
+            border-radius: var(--border-radius); 
+            padding: 24px; 
+            background-color: white;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-medium);
+        }
+        
+        .form-section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .form-row { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 20px; 
+        }
+        
+        .form-column { 
+            flex: 1; 
+        }
+        
+        .form-label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 500; 
+            color: var(--text-dark); 
+            font-size: 14px; 
+        }
+        
+        .form-input, .form-select, .form-textarea { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 1px solid var(--gray-medium); 
+            border-radius: 6px; 
+            font-size: 15px; 
+            transition: var(--transition); 
+            background-color: white; 
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15); 
+        }
+        
+        .item-section { 
+            background-color: white; 
+            padding: 24px; 
+            border: 1px solid var(--gray-medium); 
+            border-radius: var(--border-radius); 
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .item-section h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .item-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 16px; 
+        }
+        
+        .item-table th, .item-table td { 
+            padding: 14px 12px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--gray-medium); 
+        }
+        
+        .item-table th { 
+            background-color: var(--gray-light); 
+            font-weight: 600; 
+            font-size: 14px; 
+            color: var(--text-dark);
+        }
+        
+        .item-table td .form-input, .item-table td .form-select {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+        
+        .btn-add-item, .btn-remove-item {
+            padding: 10px 16px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            border-radius: 6px;
+            transition: var(--transition);
+            font-weight: 500;
+            border: none;
+        }
+        
+        .btn-add-item {
+            background-color: var(--success); 
+            color: white; 
+        }
+        
+        .btn-add-item:hover {
+            background-color: var(--success-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-remove-item {
+            background-color: var(--danger); 
+            color: white; 
+            padding: 8px 12px;
+        }
+        
+        .btn-remove-item:hover {
+            background-color: var(--danger-dark);
+        }
+        
+        .total-row td { 
+            border-top: 2px solid var(--gray-dark); 
+            font-weight: bold; 
+            font-size: 16px;
+            padding-top: 16px;
+        }
+        
         .button-container { 
-            display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 12px; 
+            margin-top: 32px; 
             padding-bottom: 4%; 
         }
-        .btn { 
-            padding: 10px 20px; border: none; border-radius: 6px; 
-            font-size: 16px; font-weight: 500; cursor: pointer; 
-            transition: background-color 0.3s; 
-        }
-        .btn-save { background-color: #007bff; color: white; }
-        .btn-save:hover { background-color: #0056b3; }
-        .btn-save-again { background-color: #28a745; color: white; }
-        .btn-save-again:hover { background-color: #1e7e34; }
-        .btn-cancel { background-color: #6c757d; color: white; text-decoration: none; display: inline-block; }
-        .btn-cancel:hover { background-color: #5a6268; }
-        .error-message { color: #D20D24; margin-top: 5px; font-size: 14px; }
         
+        .btn { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 15px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: var(--transition);
+        }
+        
+        .btn-save { 
+            background-color: var(--primary); 
+            color: white; 
+        }
+        
+        .btn-save:hover { 
+            background-color: var(--primary-dark); 
+            transform: translateY(-1px);
+        }
+        
+        .btn-save-again { 
+            background-color: var(--success); 
+            color: white; 
+        }
+        
+        .btn-save-again:hover { 
+            background-color: var(--success-dark); 
+            transform: translateY(-1px);
+        }
+        
+        .btn-cancel { 
+            background-color: var(--gray-dark); 
+            color: white; 
+            text-decoration: none; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-cancel:hover { 
+            background-color: #5a6268; 
+            color: white;
+        }
+        
+        .error-message { 
+            color: var(--danger); 
+            margin-top: 6px; 
+            font-size: 13px; 
+        }
+        
+        .required-star {
+            color: var(--danger);
+        }
+        
+        /* Responsif */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .button-container {
+                flex-direction: column-reverse;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .judul, .block {
+                margin-left: 4%;
+                margin-right: 4%;
+            }
+            
+            .item-section h3 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .btn-add-item {
+                align-self: flex-end;
+            }
+        }
     </style>
 
     <div class="judul">Form Tambah Barang Masuk</div>
     
     @if ($errors->any())
-        <div style="margin: 0 6%; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-            <ul>
+        <div style="margin: 0 6%; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+            <strong>Terjadi kesalahan:</strong>
+            <ul style="margin: 8px 0 0 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -104,7 +290,9 @@
                 <h3>Header Barang Masuk</h3>
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="vendor_id">Vendor <span style="color: #D20D24;">*</span></label>
+                        <label class="form-label" for="vendor_id">
+                            Vendor <span class="required-star">*</span>
+                        </label>
                         <select id="vendor_id" name="vendor_id" class="form-select" required>
                             <option value="">Pilih Vendor</option>
                             @foreach ($vendors as $vendor)
@@ -129,7 +317,9 @@
 
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="tanggal">Tanggal <span style="color: #D20D24;">*</span></label>
+                        <label class="form-label" for="tanggal">
+                            Tanggal <span class="required-star">*</span>
+                        </label>
                         <input type="date" id="tanggal" name="tanggal" class="form-input" required 
                                value="{{ old('tanggal') ?? date('Y-m-d') }}">
                         @error('tanggal')
@@ -148,7 +338,12 @@
             </div>
             
             <div class="item-section">
-                <h3>Detail Barang Masuk <button type="button" id="add-item-btn" class="btn-add-item">➕ Tambah Item</button></h3>
+                <h3>
+                    Detail Barang Masuk 
+                    <button type="button" id="add-item-btn" class="btn-add-item">
+                        Tambah Item
+                    </button>
+                </h3>
                 <table class="item-table">
                     <thead>
                         <tr>
@@ -160,23 +355,30 @@
                         </tr>
                     </thead>
                     <tbody id="item-list">
-                        </tbody>
+                        <!-- Item rows will be added here dynamically -->
+                    </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="2" style="text-align: right;">Total Pengeluaran:</td>
+                            <td colspan="2" style="text-align: right; padding-right: 20px;">Total Pengeluaran:</td>
                             <td colspan="3" id="total-pengeluaran">Rp 0</td>
                         </tr>
                     </tfoot>
                 </table>
                 @error('items')
-                    <p class="error-message">Item pembelian harus diisi minimal 1.</p>
+                    <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="button-container">
-                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat Lagi</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
-                <a href="{{ route('barang_masuk.index') }}" class="btn btn-cancel">Batal</a>
+                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">
+                    Simpan Data Dan Buat Lagi
+                </button>
+                <button type="submit" class="btn btn-save">
+                    Simpan
+                </button>
+                <a href="{{ route('barang_masuk.index') }}" class="btn btn-cancel">
+                    Batal
+                </a>
             </div>
         </form>
     </div>
@@ -184,7 +386,7 @@
     <script>
         const itemList = document.getElementById('item-list');
         const addItemBtn = document.getElementById('add-item-btn');
-        let itemIndex = 0; // Untuk index array di PHP (items[0], items[1], dst)
+        let itemIndex = 0;
 
         // Template HTML untuk satu baris item
         function createItemRow(index) {
@@ -207,18 +409,18 @@
                 </td>
                 <td>
                     <input type="number" name="items[${index}][jumlah_pack]" class="form-input item-qty" 
-                           min="1" value="1" required style="width: 100px;">
+                           min="1" value="1" required>
                 </td>
                 <td>
                     <input type="number" name="items[${index}][harga_beli]" class="form-input item-beli" 
-                           min="0" value="0" required style="width: 120px;">
+                           min="0" value="0" required>
                 </td>
                 <td>
                     <input type="number" name="items[${index}][harga_jual]" class="form-input item-jual" 
-                           min="0" value="0" required style="width: 120px;">
+                           min="0" value="0" required>
                 </td>
                 <td>
-                    <button type="button" class="btn-remove-item" data-index="${index}">🗑️</button>
+                    <button type="button" class="btn-remove-item" data-index="${index}" title="Hapus item">Hapus</button>
                 </td>
             `;
             return row;
@@ -240,8 +442,10 @@
             document.getElementById('total-pengeluaran').textContent = formatRupiah(total);
         }
         
-        // Fungsi format Rupiah sederhana
+        // Fungsi format Rupiah
         function formatRupiah(angka) {
+            if (!angka) return 'Rp 0';
+            
             let reverse = angka.toString().split('').reverse().join('');
             let ribuan = reverse.match(/\d{1,3}/g);
             let result = ribuan.join('.').split('').reverse().join('');
@@ -253,20 +457,17 @@
             const newRow = createItemRow(itemIndex);
             itemList.appendChild(newRow);
             itemIndex++;
-            calculateTotal(); // Hitung ulang setelah menambah
-
-            // Jika ada data lama (old input) dari validasi gagal, isi datanya
-            // (Logika ini akan sangat kompleks jika diimplementasikan sepenuhnya di sini)
+            calculateTotal();
         });
 
-        // Handler untuk menghapus item dan perubahan input
+        // Handler untuk menghapus item
         itemList.addEventListener('click', (e) => {
             if (e.target.classList.contains('btn-remove-item')) {
                 const index = e.target.getAttribute('data-index');
                 const row = document.getElementById(`row-${index}`);
                 if (row) {
                     row.remove();
-                    calculateTotal(); // Hitung ulang setelah menghapus
+                    calculateTotal();
                 }
             }
         });
@@ -275,7 +476,6 @@
         itemList.addEventListener('change', (e) => {
             const target = e.target;
             if (target.classList.contains('item-product')) {
-                // Ketika produk diubah, isi Harga Beli dan Harga Jual dari data-attribute
                 const selectedOption = target.options[target.selectedIndex];
                 const hargaBeli = selectedOption.getAttribute('data-harga-beli');
                 const hargaJual = selectedOption.getAttribute('data-harga-jual');
@@ -303,7 +503,7 @@
             addItemBtn.click();
         }
 
-        // Lakukan perhitungan total saat halaman dimuat (untuk kasus old input)
+        // Lakukan perhitungan total saat halaman dimuat
         document.addEventListener('DOMContentLoaded', calculateTotal);
     </script>
 @endsection
