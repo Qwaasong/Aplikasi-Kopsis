@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'KopsisApp - Vendor')
+@section('title', 'KopsisApp - Riwayat Transaksi')
 @section('content')
     <div class="px-8 py-6">
         <div class="flex flex-col space-y-4">
@@ -18,7 +18,7 @@
                 <div class="flex gap-4">
                     <button
                         class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        onclick="openModal()">
+                        onclick="openModal('export-pdf-modal')"> {{-- PERBAIKAN ID --}}
                         Export PDF
                     </button>
                     <button
@@ -30,7 +30,6 @@
             </div>
         </div>
 
-        <!-- Stat Cards Dinamis -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 my-6">
             <div class="bg-white p-5 rounded-xl border border-gray-200">
                 <p class="text-sm text-gray-500">Saldo</p>
@@ -48,9 +47,13 @@
                 <p class="text-sm text-gray-500">Total Produk</p>
                 <p id="stat-total-produk" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
             </div>
+
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Keuntungan</p>
+                <p id="stat-keuntungan" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
+            </div>
         </div>
 
-        <!-- FAB Container -->
         <div class="md:hidden fab fixed bottom-6 right-6 flex flex-col items-end gap-3">
             <div class="fab-items flex flex-col-reverse items-end gap-3">
                 <div class="fab-item-wrapper hidden-space" data-idx="0">
@@ -59,48 +62,24 @@
                     <button
                         class="fab-item w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold shadow-lg bg-gradient-to-br from-purple-500 to-pink-500"
                         onclick="window.location.href='{{ route('riwayat_transaksi.create') }}'">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640" class="w-6 h-6">
-                            <path
-                                d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
-                        </svg>
+                        <svg ...> ... </svg>
                     </button>
                 </div>
                 <div class="fab-item-wrapper hidden-space" data-idx="1">
-                    <span class="fab-label" onclick="openModal()">Export
-                        PDF</span>
+                    <span class="fab-label" onclick="openModal('export-pdf-modal')">Export PDF</span> {{-- PERBAIKAN ID --}}
                     <button
                         class="fab-item w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold shadow-lg bg-gradient-to-br from-blue-500 to-cyan-500"
-                        onclick="openModal()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" class="w-6 h-6">
-                            <path
-                                d="M128 128C128 92.7 156.7 64 192 64L405.5 64C422.5 64 438.8 70.7 450.8 82.7L493.3 125.2C505.3 137.2 512 153.5 512 170.5L512 208L128 208L128 128zM64 320C64 284.7 92.7 256 128 256L512 256C547.3 256 576 284.7 576 320L576 416C576 433.7 561.7 448 544 448L512 448L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 448L96 448C78.3 448 64 433.7 64 416L64 320zM192 480L192 512L448 512L448 416L192 416L192 480zM520 336C520 322.7 509.3 312 496 312C482.7 312 472 322.7 472 336C472 349.3 482.7 360 496 360C509.3 360 520 349.3 520 336z" />
-                        </svg>
+                        onclick="openModal('export-pdf-modal')"> {{-- PERBAIKAN ID --}}
+                        <svg ...> ... </svg>
                     </button>
                 </div>
             </div>
-
-            <!-- FAB Button-->
-            <button id="fabMain"
-                class="fab-main w-14 h-14 rounded-full btn-lg shadow-lg flex items-center justify-center transition-all bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white"
-                aria-expanded="false" aria-label="Open FAB" title="Open FAB">
-                <span id="iconX" class="fab-icon text-xl visible" role="img" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640" class="w-6 h-6">
-                        <path
-                            d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
-                    </svg>
-                </span>
-            </button>
+            <button id="fabMain" class="fab-main ..."> ... </button>
         </div>
 
         <hr class="my-6 border-gray-200">
-        
-        <!-- Table Component -->
-        <x-table :data-table="[
-            'Tipe' => 'tipe', 
-            'Jumlah' => 'jumlah', 
-            'Tanggal' => 'tanggal', 
-            'Keterangan' => 'keterangan',    
-        ]" data-url="{{ route('api.riwayat_transaksi.index') }}">
+
+        <x-financial-log data-url="{{ route('api.riwayat_transaksi.index') }}">
             <x-slot:filter>
                 <div class="flex items-center space-x-4 relative">
                     <button id="filter-button"
@@ -116,6 +95,7 @@
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
 
+                            {{-- ... bagian <form id="filter-form" ...> ... --}}
                             <div>
                                 <label for="filter_tipe" class="block text-sm font-medium text-gray-700">Tipe</label>
                                 <select name="filter[tipe]" id="filter_tipe"
@@ -126,28 +106,22 @@
                                 </select>
                             </div>
 
-                            <!-- Periode (radio) -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Periode</label>
-                                <div class="mt-2 space-y-2">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="filter[periode]" value="minggu"
-                                            class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                        <span class="ml-2 text-sm text-gray-700">Minggu</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="filter[periode]" value="bulan"
-                                            class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                        <span class="ml-2 text-sm text-gray-700">Bulan</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="filter[periode]" value="tahun"
-                                            class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                        <span class="ml-2 text-sm text-gray-700">Tahun</span>
-                                    </label>
-                                </div>
+                                <label for="filter_date_range_display"
+                                    class="block text-sm font-medium text-gray-700">Rentang Tanggal</label>
+
+                                <input type="text" id="filter_date_range_display"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
+                                    placeholder="-- Pilih Tanggal --" readonly>
+
+                                <div id="filterDatePickerContainer" class="relative z-50"></div>
+
+                                <input type="hidden" name="filter[start_date]" id="filter_start_date">
+                                <input type="hidden" name="filter[end_date]" id="filter_end_date">
                             </div>
-                            
+
+                            {{-- ... </form> ... --}}
+
                             <div class="flex justify-end space-x-2 pt-4">
                                 <button type="button" id="reset-filter-btn"
                                     class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
@@ -162,50 +136,188 @@
                     </div>
                 </div>
             </x-slot:filter>
-        </x-table>
+        </x-financial-log>
+    </div>
+
+    <div id="export-pdf-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">Export Laporan PDF</h3>
+                <button onclick="closeModal('export-pdf-modal')"
+                    class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-4">Silakan pilih rentang tanggal laporan yang ingin Anda export.</p>
+
+            <form id="export-pdf-form" action="{{ route('riwayat_transaksi.export_pdf') }}" method="GET"
+                target="_blank">
+
+                <div id="myDatePickerContainer" class="border rounded-md"></div>
+
+                <input type="hidden" name="start_date" id="start_date_input">
+                <input type="hidden" name="end_date" id="end_date_input">
+
+                <div class="flex justify-end mt-6 space-x-2">
+                    <button type="button" onclick="closeModal('export-pdf-modal')"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">
+                        Export ke PDF
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 @endsection
 
 @section('script')
     <script src="{{ asset('assets/js/fab.js') }}"></script>
     <script src="{{ asset('assets/js/DatePicker.js') }}"></script>
-    <script src="{{ asset('assets/js/riwayat_transaksi.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('myDatePickerContainer');
-            const resultDisplay = document.getElementById('resultDisplay');
-            const startDateInput = document.getElementById('start_date_input');
-            const endDateInput = document.getElementById('end_date_input');
+    {{-- Hapus riwayat_transaksi.js karena kodenya sudah digabung di bawah --}}
 
+    <script>
+        // --- Bagian 1: Fungsi Statistik (dari riwayat_transaksi.js) ---
+        function formatRupiah(angka) {
+            if (typeof angka === 'string') angka = parseFloat(angka) || 0;
+            if (typeof angka !== 'number') angka = 0;
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(angka);
+        }
+
+        function tampilkanStatistik(statistik) {
+            document.getElementById('stat-pemasukan').textContent = formatRupiah(statistik.pemasukan);
+            document.getElementById('stat-pengeluaran').textContent = formatRupiah(statistik.pengeluaran);
+            document.getElementById('stat-saldo').textContent = formatRupiah(statistik.saldo);
+            document.getElementById('stat-total-produk').textContent = statistik.total_produk || 0;
+            if (document.getElementById('stat-keuntungan')) {
+                document.getElementById('stat-keuntungan').textContent = formatRupiah(statistik.keuntungan);
+            }
+        }
+
+        function fetchStatistikData() {
+            $.ajax({
+                url: '{{ route('api.beranda.index') }}', // Sesuaikan nama rute jika perlu
+                method: 'GET',
+                success: function(response) {
+                    if (response.success && response.data.statistik) {
+                        tampilkanStatistik(response.data.statistik);
+                    } else {
+                        console.error('Error memuat statistik:', response.message);
+                        setDefaultValues();
+                    }
+                },
+                error: function(error) {
+                    console.error('Ajax error statistik:', error);
+                    setDefaultValues();
+                }
+            });
+        }
+
+        function setDefaultValues() {
+            document.getElementById('stat-pemasukan').textContent = formatRupiah(0);
+            document.getElementById('stat-pengeluaran').textContent = formatRupiah(0);
+            document.getElementById('stat-saldo').textContent = formatRupiah(0);
+            document.getElementById('stat-total-produk').textContent = 0;
+            if (document.getElementById('stat-keuntungan')) {
+                document.getElementById('stat-keuntungan').textContent = formatRupiah(0);
+            }
+        }
+
+        // --- Bagian 2: Fungsi Modal (diperbarui dan AKTIF) ---
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // --- Bagian 3: Main DOMContentLoaded ---
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Panggil Statistik
+            fetchStatistikData();
+
+            // 2. Definisikan helper DatePicker
             const normalizeDate = (d) => {
+                if (!d) return '';
                 const date = new Date(d);
                 const m = String(date.getMonth() + 1).padStart(2, '0');
                 const day = String(date.getDate()).padStart(2, '0');
                 return `${date.getFullYear()}-${m}-${day}`;
             };
 
-            const myDatePicker = new DatePicker(container, {
-                type: 'dateRange', // Tipe picker
-                data: {
-                    startDate: null, // Inisialisasi tanpa tanggal awal
-                    endDate: null    // Inisialisasi tanpa tanggal akhir
-                },
-                options: {
-                    onApply: function (dates) {
-                        console.log(normalizeDate(dates.startDate), normalizeDate(dates.endDate));
-                        startDateInput.value = normalizeDate(dates.startDate);
-                        endDateInput.value = normalizeDate(dates.endDate);
+            // 3. Inisialisasi DatePicker MODAL
+            const modalContainer = document.getElementById('myDatePickerContainer');
+            if (modalContainer) {
+                const startDateInput = document.getElementById('start_date_input');
+                const endDateInput = document.getElementById('end_date_input');
+                new DatePicker(modalContainer, {
+                    type: 'dateRange',
+                    position: 'fixed',
+                    data: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    options: {
+                        onApply: function(dates) {
+                            startDateInput.value = normalizeDate(dates.startDate);
+                            endDateInput.value = normalizeDate(dates.endDate);
+                        }
                     }
-                }
-            });
-        });
+                });
+            }
 
-        function openModal() {
-            document.getElementById('modal').classList.remove('hidden');
-        }
+            // 4. Inisialisasi DatePicker FILTER
+            const filterDateContainer = document.getElementById('filterDatePickerContainer');
+            if (filterDateContainer) {
+                const filterDateDisplay = document.getElementById('filter_date_range_display');
+                const filterStartDate = document.getElementById('filter_start_date');
+                const filterEndDate = document.getElementById('filter_end_date');
+                const filterDatePicker = new DatePicker(filterDateContainer, {
+                    type: 'dateRange',
+                    position: 'fixed',
+                    options: {
+                        onApply: function(dates) {
+                            const startDate = normalizeDate(dates.startDate);
+                            const endDate = normalizeDate(dates.endDate);
+                            filterStartDate.value = startDate;
+                            filterEndDate.value = endDate;
+                            filterDateDisplay.value = `${startDate} s/d ${endDate}`;
+                            filterDatePicker.toggle(false);
+                        },
+                        onClear: function() {
+                            filterStartDate.value = '';
+                            filterEndDate.value = '';
+                            filterDateDisplay.value = '';
+                        }
+                    }
+                });
+                filterDateDisplay.addEventListener('click', () => {
+                    filterDatePicker.toggle();
+                });
+            }
 
-        function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-        }
+            // 5. Validasi Form PDF
+            const exportForm = document.getElementById('export-pdf-form');
+            if (exportForm) {
+                exportForm.addEventListener('submit', function(e) {
+                    const start = document.getElementById('start_date_input').value;
+                    const end = document.getElementById('end_date_input').value;
+                    if (!start || !end) {
+                        e.preventDefault(); // Hentikan pengiriman form
+                        alert('Silakan pilih rentang tanggal terlebih dahulu.');
+                    }
+                });
+            }
+
+        }); // Akhir DOMContentLoaded
     </script>
 @endsection
