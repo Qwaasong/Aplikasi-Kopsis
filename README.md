@@ -1,5 +1,4 @@
-# KopsisApp - Sistem Informasi Koperasi Sekolah
-
+<img src="public\assets\images\Group 4.png" alt="Laravel">
 <div align="center">
 
 [![Laravel](https://img.shields.io/badge/Laravel-1.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
