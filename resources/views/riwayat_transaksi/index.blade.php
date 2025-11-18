@@ -30,6 +30,26 @@
             </div>
         </div>
 
+        <!-- Stat Cards (Ditambahkan dari Beranda) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 my-6">
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Saldo</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">1.000.000</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Pemasukan</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">500.000</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Pengeluaran</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">200.000</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Total Produk</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">200</p>
+            </div>
+        </div>
+
         <!-- FAB Container -->
         <div id="fab-container" class="fixed bottom-6 right-6 md:hidden z-50">
 
