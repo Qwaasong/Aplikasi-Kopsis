@@ -135,28 +135,11 @@
             background: var(--blue-600);
         }
 
-        .menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .menu-btn span {
-            display: block;
-            width: 20px;
-            height: 2px;
-            background: var(--gray-700);
-            margin: 4px 0;
-            transition: 0.3s;
-        }
-
         /* Hero */
         .hero {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 80px 24px 60px;
+            padding: 25px 24px 60px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
@@ -168,7 +151,7 @@
             font-weight: 700;
             color: var(--gray-900);
             line-height: 1.2;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
         }
 
@@ -467,13 +450,8 @@
         /* Responsive */
         @media (max-width: 768px) {
 
-            .nav-links,
-            .nav-actions {
+            .nav-links {
                 display: none;
-            }
-
-            .menu-btn {
-                display: block;
             }
 
             .nav-links.mobile-open {
@@ -542,12 +520,6 @@
                 <a href="/login" class="btn-login">Masuk</a>
             </div>
 
-            {{-- Chart button --}}
-            <button class="menu-btn" id="menuBtn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </nav>
 
@@ -555,10 +527,13 @@
     <section class="hero">
         <div class="hero-content">
             <h2>Selamat Datang di KopsisApp SMKN 9 Malang</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat.</p>
+            <p>
+                KopsisApp adalah sistem informasi koperasi sekolah yang dibuat khusus buat nge-simplify semua urusan
+                koperasi di SMKN 9 Malang. Mulai dari stok barang, transaksi, laporan keuangan, sampai manajemen
+                pengguna semua dirangkum dalam satu aplikasi dengan tampilan yang clean dan gampang dipakai. Biar
+                kerjaan jadi lebih cepat, anti-ribet, dan pastinya lebih modern.
 
+            </p>
         </div>
         <div class="hero-image">
             <div class="image-box">
@@ -596,19 +571,23 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>KopsisApp</h4>
-                <p>Aplikasi koperasi sekolah yang memudahkan pengelolaan transaksi dan aktivitas koperasi SMKN 9 Malang.
+                <p>
+                    Aplikasi ini dibangun dengan teknologi modern biar semua proses koperasi jadi lebih cepat dan
+                    efisien. Dengan sistem yang lebih rapi dan otomatis, staf koperasi bisa fokus ngasih pelayanan
+                    terbaik buat siswa dan guru tanpa ribet.
+
                 </p>
                 <div class="social">
-                    <a href="#">
-                        {!! file_get_contents(public_path('assets/icon/facebook.svg')) !!}
+                    <a href="https://smkn9malang.sch.id/">
+                        {!! file_get_contents(public_path('assets/icon/www.svg')) !!}
                     </a>
-                    <a href="#">
-                        {!! file_get_contents(public_path('assets/icon/twitter.svg')) !!}
+                    <a href="https://www.tiktok.com/@smknegeri9malang">
+                        {!! file_get_contents(public_path('assets/icon/tiktok.svg')) !!}
                     </a>
-                    <a href="#">
+                    <a href="https://www.instagram.com/smknegeri9malang">
                         {!! file_get_contents(public_path('assets/icon/instagram.svg')) !!}
                     </a>
-                    <a href="#">
+                    <a href="https://www.youtube.com/SkanawaTV">
                         {!! file_get_contents(public_path('assets/icon/youtube.svg')) !!}
                     </a>
                 </div>
@@ -616,9 +595,11 @@
 
             <div class="footer-section" id="tentangkami">
                 <h4>Tentang Kami</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat.</p>
+                <p>
+                    Kopsis SMKN 9 Malang selalu upgrade biar makin relevan. Lewat KopsisApp, kami menghadirkan koperasi
+                    yang lebih cepat, transparan, dan nyaman dipakai semua warga sekolah. Simple, modern, tinggal klik!
+
+                </p>
             </div>
 
             <div class="footer-section">
@@ -648,7 +629,7 @@
                 <div class="contact-item">
                     <a href="mailto:info@kopsisapp.com" class="contact-link">
                         <span class="contact-icon">{!! file_get_contents(public_path('assets/icon/email.svg')) !!}</span>
-                        <span>info@kopsisapp.com</span>
+                        <span>humas@smkn9malang.sch.id</span>
                     </a>
                 </div>
             </div>
@@ -662,14 +643,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- ================= FILTER MINGGU BULAN TAHUN TIDAK BISA  ======================= --}}
     <script>
-        // Mobile menu
-        const menuBtn = document.getElementById('menuBtn');
-        const navLinks = document.querySelector('.nav-links');
-
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('mobile-open');
-        });
-
         // Modal
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modalImg');
@@ -700,7 +673,7 @@
             });
         });
 
-        
+
         // Chart
         const ctx = document.getElementById('financeChart').getContext('2d');
 

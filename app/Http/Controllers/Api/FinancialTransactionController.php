@@ -8,7 +8,7 @@ use App\Models\FinancialTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class TransactionController extends Controller
+class FinancialTransactionController extends Controller
 {
     /**
      * Menampilkan semua transaksi (masuk & keluar).
@@ -18,8 +18,8 @@ class TransactionController extends Controller
         $query = FinancialTransaction::with('purchase', 'stockOut');
 
         // Filter berdasarkan jenis transaksi: masuk / keluar
-        if ($type = $request->input('type')) {
-            $query->where('type', $type);
+        if ($type = $request->input('tipe')) {
+            $query->where('tipe', $type);
         }
 
         // Filter waktu (mingguan, bulanan, tahunan)
@@ -63,37 +63,30 @@ class TransactionController extends Controller
      * Menghapus transaksi (opsional).
      * Jika dihapus, stok dikembalikan seperti semula.
      */
-    public function destroy(FinancialTransaction $transaction)
-    {
-        DB::beginTransaction();
+    public function destroy(FinancialTransaction $financialTransaction) // Ganti parameter name
+{
+    DB::beginTransaction();
 
-        try {
-            $product = Product::find($transaction->product_id);
+    try {
+        // Hanya hapus transaksi, tidak perlu adjust stok produk
+        // Karena FinancialTransaction adalah pencatatan keuangan, bukan inventory
+        $financialTransaction->delete();
 
-            if ($transaction->type === 'masuk') {
-                $product->stok -= $transaction->jumlah;
-            } else {
-                $product->stok += $transaction->jumlah;
-            }
+        DB::commit();
 
-            $product->save();
-            $transaction->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaksi keuangan berhasil dihapus.',
+        ]);
 
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Transaksi berhasil dihapus dan stok dikembalikan.',
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus transaksi: ' . $e->getMessage(),
-            ], 500);
-        }
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus transaksi: ' . $e->getMessage(),
+        ], 500);
     }
+}
     // Ringkasan jumlah transaksi dalam minggu, bulan, dan tahun ini untuk chart
     public function summary()
     {

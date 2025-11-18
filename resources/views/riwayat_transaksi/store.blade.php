@@ -56,10 +56,10 @@
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="tipe_transaksi">Tipe Transaksi <span style="color: #D20D24;">*</span></label>
-                        <select id="tipe_transaksi" name="tipe_transaksi" class="form-select" required>
+                        <select id="tipe_transaksi" name="tipe" class="form-select" required>
                             <option value="">Pilih Tipe Transaksi</option>
-                            <option value="Pemasukan">Pemasukan</option>
-                            <option value="Pengeluaran">Pengeluaran</option>
+                            <option value="pemasukan">Pemasukan</option>
+                            <option value="pengeluaran">Pengeluaran</option>
                         </select>
                     </div>
                     <div class="form-column">

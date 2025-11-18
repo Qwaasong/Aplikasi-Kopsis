@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl shadow-sm">
+    <div class="overflow-x-auto bg-white rounded-xl shadow-sm">
         <div class="hidden sm:table w-full">
             <table class="w-full text-sm text-left text-gray-60">
                 <thead class="bg-gray-50 border-b border-t border-gray-200">
@@ -145,7 +145,7 @@
                                         <button class="menu-button p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none" data-id="${item.id}">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
                                         </button>
-                                        <div id="dropdown-${item.id}" class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border border-gray-20 rounded-lg shadow-xl z-50">
+                                        <div id="dropdown-${item.id}" class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border border-gray-20 rounded-lg shadow-xl z-30">
                                             <a href="${entityBaseUrl}/${item.id}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
                                             <a href="" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-10 delete-btn" data-id="${item.id}" data-url="${entityBaseUrl}">Delete</a>
                                         </div>
@@ -209,7 +209,7 @@
                             $.each(fields, function(header, key) {
                                 let value = getNestedValue(item, key);
                                 // Format tanggal jika field adalah created_at atau updated_at
-                                if (key === 'created_at' || key === 'updated_at' || key.endsWith('.created_at') || key.endsWith('.updated_at')) {
+                                if (key === 'created_at' || key === 'updated_at' || key === 'email_verified_at' || key.endsWith('.created_at') || key.endsWith('.updated_at') || key.endsWith('.email_verified_at')) {
                                     value = formatDate(value);
                                 }
                                 cardDetails += `

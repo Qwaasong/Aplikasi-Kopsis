@@ -1,66 +1,193 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# KopsisApp - Sistem Informasi Koperasi Sekolah
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<div align="center">
 
-## About Laravel
+[![Laravel](https://img.shields.io/badge/Laravel-1.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+</div>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Deskripsi Aplikasi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**KopsisApp** adalah sistem informasi koperasi sekolah yang dirancang khusus untuk memudahkan pengelolaan transaksi dan aktivitas koperasi di lingkungan sekolah, khususnya SMKN 9 Malang. Aplikasi ini menyediakan solusi komprehensif untuk manajemen stok barang, pencatatan transaksi, laporan keuangan, dan manajemen pengguna dengan antarmuka yang intuitif dan mudah digunakan.
 
-## Learning Laravel
+Aplikasi ini dibangun dengan teknologi modern dan dirancang untuk memberikan efisiensi dalam pengelolaan koperasi sekolah, memungkinkan staf koperasi untuk fokus pada pelayanan kepada siswa dan guru.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Fitur Utama
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 📦 Manajemen Barang
+- **Manajemen Produk**: Tambah, edit, dan hapus produk dengan kategori dan satuan yang beragam
+- **Manajemen Vendor**: Pengelolaan data pemasok barang koperasi
+- **Barang Masuk**: Pencatatan pembelian barang dari vendor ke dalam stok
+- **Barang Keluar**: Pencatatan penjualan barang dari stok koperasi
+- **Stok Terkini**: Monitoring stok barang secara real-time
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 💰 Manajemen Keuangan
+- **Transaksi Keuangan**: Pencatatan pemasukan dan pengeluaran
+- **Dashboard Keuangan**: Visualisasi grafik pendapatan dan pengeluaran
+- **Laporan Keuangan**: Ringkasan keuangan mingguan, bulanan, dan tahunan
+- **Riwayat Transaksi**: Pencatatan lengkap semua transaksi yang terjadi
 
-## Laravel Sponsors
+### 👥 Manajemen Pengguna
+- **Sistem Otentikasi**: Login, registrasi, dan manajemen profil pengguna
+- **Manajemen Pengguna**: Tambah, edit, dan hapus akun pengguna
+- **Role-based Access**: Akses berdasarkan peran (admin, kasir, anggota)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 📊 Dashboard & Laporan
+- **Dashboard Interaktif**: Ringkasan data penting dalam satu tampilan
+- **Grafik Keuangan**: Visualisasi data keuangan dalam bentuk grafik
+- **Filter Data**: Pencarian dan filter data untuk semua modul
+- **Responsive Design**: Tampilan yang optimal di berbagai perangkat
 
-### Premium Partners
+## 🛠️ Teknologi yang Digunakan
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Backend
+- **Framework**: [Laravel 11.x](https://laravel.com) - Web application framework
+- **Bahasa Pemrograman**: PHP 8.2
+- **Database**: MySQL
+- **ORM**: Eloquent ORM
 
-## Contributing
+### Frontend
+- **CSS Framework**: [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
+- **JavaScript**: Alpine.js, Chart.js, Tom Select
+- **Build Tool**: Vite
+- **HTTP Client**: Axios
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### API & Tools
+- **API Development**: Laravel API Resources
+- **Development Environment**: Laravel Sail (opsional)
+- **Code Quality**: Laravel Pint, PHP CS Fixer
+- **Testing**: PestPHP, PHPUnit
 
-## Code of Conduct
+## 🚀 Instalasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Prasyarat
+- PHP 8.2 atau lebih tinggi
+- Composer
+- MySQL/MariaDB
+- Node.js & NPM
+- Web server (Apache/Nginx)
 
-## Security Vulnerabilities
+### Langkah-langkah Instalasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/username/koperasi-siswa.git
+   cd koperasi-siswa
+   ```
 
-## License
+2. **Install dependensi PHP**
+   ```bash
+   composer install
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. **Install dependensi JavaScript**
+   ```bash
+   npm install
+   ```
+
+4. **Buat file environment**
+   ```bash
+   cp .env.example .env
+   ```
+
+5. **Generate application key**
+   ```bash
+   php artisan key:generate
+   ```
+
+6. **Konfigurasi database**
+   Edit file `.env` dan sesuaikan konfigurasi database:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=306
+   DB_DATABASE=nama_database
+   DB_USERNAME=nama_pengguna
+   DB_PASSWORD=kata_sandi
+   ```
+
+7. **Migrasi database**
+   ```bash
+   php artisan migrate --seed
+   ```
+
+8. **Compile assets**
+   ```bash
+   npm run build
+   # atau untuk mode development
+   npm run dev
+   ```
+
+9. **Jalankan aplikasi**
+   ```bash
+   php artisan serve
+   ```
+
+Aplikasi akan berjalan di `http://localhost:8000`
+
+## 📖 Cara Penggunaan
+
+### Admin Panel
+1. Buka aplikasi di browser
+2. Login dengan akun admin
+3. Gunakan menu navigasi untuk mengakses berbagai modul
+
+### Manajemen Produk
+1. Masuk ke menu "Produk"
+2. Tambahkan produk baru atau edit produk yang sudah ada
+3. Pilih kategori dan satuan yang sesuai
+
+### Manajemen Stok
+1. Gunakan menu "Barang Masuk" untuk mencatat pembelian
+2. Gunakan menu "Barang Keluar" untuk mencatat penjualan
+3. Monitor stok terkini di menu "Stok Terkini"
+
+### Laporan Keuangan
+1. Akses dashboard untuk melihat ringkasan keuangan
+2. Gunakan filter waktu untuk melihat data sesuai periode
+3. Lihat grafik keuangan untuk analisis visual
+
+## 🤝 Kontribusi
+
+Kami menyambut baik kontribusi dari komunitas untuk meningkatkan kualitas aplikasi ini. Berikut adalah langkah-langkah untuk berkontribusi:
+
+1. **Fork repository** ini
+2. **Buat branch** baru (`git checkout -b feature/NamaFitur`)
+3. **Commit perubahan** (`git commit -m 'Add some NamaFitur'`)
+4. **Push ke branch** (`git push origin feature/NamaFitur`)
+5. **Buka Pull Request**
+
+### Panduan Kontribusi
+- Pastikan kode Anda mengikuti standar Laravel dan PSR-12
+- Tambahkan dokumentasi yang diperlukan
+- Sertakan test jika memungkinkan
+- Jelaskan perubahan yang Anda buat secara rinci
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](https://opensource.org/licenses/MIT). Anda bebas menggunakan, memodifikasi, dan mendistribusikan kode ini dengan syarat menyertakan informasi lisensi dan hak cipta.
+
+## 👨‍💻 Pengembang
+
+Aplikasi ini dikembangkan sebagai bagian dari program PKL (Praktik Kerja Lapangan) di SMKN 9 Malang.
+
+## 📞 Dukungan
+
+Jika Anda mengalami masalah atau memiliki pertanyaan tentang aplikasi ini, silakan:
+
+- Membuka issue di repository GitHub
+- Menghubungi tim pengembang langsung
+- Membaca dokumentasi lengkap di Wiki
+
+---
+
+<div align="center">
+
+**KopsisApp** - Solusi Modern untuk Koperasi Sekolah
+
+© 2024 KopsisApp SMKN 9 Malang. All rights reserved.
+
+</div>
