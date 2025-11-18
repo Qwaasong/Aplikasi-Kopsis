@@ -30,23 +30,23 @@
             </div>
         </div>
 
-        <!-- stat cards (ditambahkan dari beranda) -->
+        <!-- Stat Cards Dinamis -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 my-6">
             <div class="bg-white p-5 rounded-xl border border-gray-200">
                 <p class="text-sm text-gray-500">Saldo</p>
-                <p class="text-2xl md:text-3xl font-bold text-gray-800">1.000.000</p>
+                <p id="stat-saldo" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-200">
                 <p class="text-sm text-gray-500">Pemasukan</p>
-                <p class="text-2xl md:text-3xl font-bold text-gray-800">500.000</p>
+                <p id="stat-pemasukan" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-200">
                 <p class="text-sm text-gray-500">Pengeluaran</p>
-                <p class="text-2xl md:text-3xl font-bold text-gray-800">200.000</p>
+                <p id="stat-pengeluaran" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-200">
                 <p class="text-sm text-gray-500">Total Produk</p>
-                <p class="text-2xl md:text-3xl font-bold text-gray-800">200</p>
+                <p id="stat-total-produk" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
             </div>
         </div>
 
@@ -93,15 +93,14 @@
         </div>
 
         <hr class="my-6 border-gray-200">
-        {{-- PANGGIL COMPONENT --}}
+        
+        <!-- Table Component -->
         <x-table :data-table="[
-                                                                                    'Tipe' => 'tipe', 
-                                                                                    'Jumlah' => 'jumlah', 
-                                                                                    'Tanggal' => 'tanggal', 
-                                                                                    'Keterangan' => 'keterangan',    
-                                                                                    ]"
-            data-url="{{ route('api.riwayat_transaksi.index') }}">
-            {{-- Slot untuk filter --}}
+            'Tipe' => 'tipe', 
+            'Jumlah' => 'jumlah', 
+            'Tanggal' => 'tanggal', 
+            'Keterangan' => 'keterangan',    
+        ]" data-url="{{ route('api.riwayat_transaksi.index') }}">
             <x-slot:filter>
                 <div class="flex items-center space-x-4 relative">
                     <button id="filter-button"
@@ -170,6 +169,7 @@
 @section('script')
     <script src="{{ asset('assets/js/fab.js') }}"></script>
     <script src="{{ asset('assets/js/DatePicker.js') }}"></script>
+    <script src="{{ asset('assets/js/riwayat_transaksi.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('myDatePickerContainer');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\FinancialTransaction;
 use Carbon\Carbon;
 
@@ -46,7 +47,8 @@ class DashboardController extends Controller
             ->orderBy('tanggal', 'asc')
             ->get();
 
-        return view('beranda.index', [
+
+        return view('welcome', [
             'filter' => $filter,
             'pemasukan' => $pemasukan,
             'pengeluaran' => $pengeluaran,

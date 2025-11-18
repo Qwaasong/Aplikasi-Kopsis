@@ -53,6 +53,11 @@ public function stockOut()
     return $this->belongsTo(StockOut::class);
     }
 
+    public function ledgerEntry()
+    {
+        return $this->belongsTo(LedgerEntry::class);
+    }
+
 }
 
 

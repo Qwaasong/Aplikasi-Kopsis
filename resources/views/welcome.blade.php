@@ -517,7 +517,7 @@
             </ul>
 
             <div class="nav-actions" id="#">
-                <a href="/login" class="btn-login">Masuk</a>
+                <a href="{{ route('login') }}" class="btn-login">Masuk</a>
             </div>
 
         </div>
@@ -537,21 +537,20 @@
         </div>
         <div class="hero-image">
             <div class="image-box">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqOxnkfcElCyXQFkXd72XrIVZ9_4EdzjlybprW5w1k7F2EH2yMpYR_L2FgECUdR4SWOkGLPnLESBwVkLGu6gB8ZZv7Bu9NLhBQa2CWuT_klvpZQLxBpPeB2Rdo8x6GeqUyxaBQnYsEbxA/s1600/IMG20170727070834.jpg"
-                    alt="Dashboard KopsisApp" id="heroImg">
+                <img src="{{ asset('assets/images/kopsis.jpg') }}" alt="Dashboard KopsisApp" id="heroImg">
             </div>
         </div>
     </section>
 
     <!-- Chart -->
-    <section class="chart-section" id="pendapatan">
+    <section class="chart-section" id='pendapatan'>
         <div class="chart-box">
             <div class="chart-header">
-                <h3>Ringkasan Keuangan</h3>
-                <div class="chart-tabs">
-                    <button class="tab active">Minggu</button>
-                    <button class="tab">Bulan</button>
-                    <button class="tab">Tahun</button>
+                <h3>Ringkasan Pendapatan</h3>
+                <div class="chart-tabs" id="filter">
+                    <button class="tab" value="minggu">Minggu</button>
+                    <button class="tab" value="bulan">Bulan</button>
+                    <button class="tab" value="tahun">Tahun</button>
                 </div>
             </div>
             <div class="chart-canvas">
@@ -648,6 +647,96 @@
         const modalImg = document.getElementById('modalImg');
         const heroImg = document.getElementById('heroImg');
         const modalClose = document.getElementById('modalClose');
+        const filtercontainer = document.getElementById('filter');
+        const chartData = @json($dataChart);
+        let currentFilter = "{{ $filter }}";
+
+        let labels = [];
+        let pemasukanData = [];
+        let pengeluaranData = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollKe = new URLSearchParams(window.location.search).get('scroll');
+
+            if (scrollKe === 'filter') {
+                const el = document.getElementById('pendapatan'); // scroll ke section chart
+                if (el) {
+                    setTimeout(() => {
+                        scrollWithOffset(el, 90); // 140px ruang dari atas — bisa disesuaikan
+                    }); // tunggu page keload dulu
+                }
+            }
+
+            function scrollWithOffset(element, offset) {
+                const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
+
+                window.scrollTo({
+                    top: y,
+                    behavior: "smooth"
+                });
+            }
+
+        });
+
+        filtercontainer.addEventListener('click', function(event) {
+            // 'event.target' adalah elemen spesifik yang DIKLIK
+            // (bisa <button> atau <div> itu sendiri)
+            var clickedValue = event.target.value;
+
+            // --- Tambahan Penting ---
+            // Jika user mengklik spasi di antara tombol (yaitu mengklik <div> nya),
+            // 'clickedValue' akan 'undefined'. Kita harus menanganinya.
+            if (!clickedValue) {
+                // Abaikan klik ini, karena bukan tombol yang diklik
+                return;
+            }
+            // --- Akhir Tambahan ---
+
+            var $filter;
+
+            // Logika IF Anda (tidak berubah sama sekali)
+            if (clickedValue === 'minggu' || clickedValue === 'bulan' || clickedValue === 'tahun') {
+                $filter = clickedValue;
+            } else {
+                $filter = null; // Atau nilai default, misal 'harian'
+            }
+
+            // Lakukan sesuatu dengan $filter
+            if ($filter) {
+                console.log("Data akan difilter berdasarkan:", $filter);
+                currentFilter = $filter;
+                // Redirect to update filter in URL
+                window.location.href = `/?filter=${$filter}&scroll=filter`;
+            } else {
+                console.log("Nilai tidak relevan untuk filter:", clickedValue);
+            }
+        });
+
+        chartData.forEach(item => {
+            let label;
+            if (currentFilter === 'tahun') {
+                // Untuk tahun, item.bulan adalah angka bulan (1-12)
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov',
+                    'Des'
+                ];
+                label = monthNames[item.bulan - 1];
+            } else {
+                const date = new Date(item.tanggal);
+                if (currentFilter === 'minggu') {
+                    label = date.getDate();
+                } else if (currentFilter === 'bulan') {
+                    label = date.getDate();
+                } else {
+                    label = date.toLocaleDateString('id-ID', {
+                        month: 'short'
+                    });
+                }
+            }
+
+            labels.push(label);
+            pemasukanData.push(item.total_pemasukan / 1000);
+            pengeluaranData.push(item.total_pengeluaran / 1000);
+        })
 
         heroImg.onclick = () => {
             modal.style.display = 'flex';
@@ -677,13 +766,13 @@
         // Chart
         const ctx = document.getElementById('financeChart').getContext('2d');
 
-        new Chart(ctx, {
+        const financeChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                labels: labels,
                 datasets: [{
                     label: 'Pemasukan',
-                    data: [420, 380, 520, 490, 350, 310, 580],
+                    data: pemasukanData,
                     borderColor: '#0084ff',
                     backgroundColor: 'rgba(0, 132, 255, 0.1)',
                     borderWidth: 2,
@@ -695,7 +784,7 @@
                     pointBorderWidth: 2
                 }, {
                     label: 'Pengeluaran',
-                    data: [180, 290, 250, 130, 420, 180, 310],
+                    data: pengeluaranData,
                     borderColor: '#FF0000',
                     backgroundColor: 'rgba(212, 212, 212, 0.1)',
                     borderWidth: 2,
