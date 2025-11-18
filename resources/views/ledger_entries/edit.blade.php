@@ -328,123 +328,139 @@
         }
     </style>
 
-    <div class="container">
-        <!-- Header utang -->
-        <div class="header-utang">
+<div class="container">
+    <!-- Header utang - DINAMIS -->
+    <div class="header-utang">
+        <div>
+            <p class="total-text">Total {{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }} {{ $entry->nama }}</p>
+            <p class="saldo-utang">Rp {{ number_format($entry->nominal, 0, ',', '.') }}</p>
+            <span class="status-badge status-belum-lunas">BELUM LUNAS</span>
+        </div>
+        <button class="btn-lunaskan" onclick="bukaModalLunaskan()">Lunaskan</button>
+    </div>
 
-            {{-- Bisa diambil dari database --}}
-            <div>
-                <p class="total-text">Total Utang Haku</p>
-                <p class="saldo-utang">Rp 10.000</p>
-                <span class="status-badge status-belum-lunas">BELUM LUNAS</span>
+    <!-- Informasi jatuh tempo - DINAMIS -->
+    <div class="jatuh-tempo" onclick="bukaModalJatuhTempo()">
+        <span class="icon-calendar">📅</span>
+        <span id="textJatuhTempo">
+            @if($entry->jatuh_tempo)
+                Jatuh Tempo: {{ $entry->jatuh_tempo->format('d M Y') }}
+            @else
+                Atur Tanggal Jatuh Tempo
+            @endif
+        </span>
+        <span class="arrow-right"></span>
+    </div>
+
+    <!-- Modal Jatuh Tempo -->
+    <div id="modalJatuhTempo" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Pilih Tanggal Jatuh Tempo</div>
+                <button class="close-modal" onclick="tutupModal('modalJatuhTempo')">&times;</button>
             </div>
-            <button class="btn-lunaskan" onclick="bukaModalLunaskan()">Lunaskan</button>
-        </div>
-
-        <!-- Informasi jatuh tempo -->
-        <div class="jatuh-tempo" onclick="bukaModalJatuhTempo()">
-            <span class="icon-calendar">📅</span>
-            <span id="textJatuhTempo">Atur Tanggal Jatuh Tempo</span>
-            <span class="arrow-right"></span>
-        </div>
-
-        <!-- Modal Jatuh Tempo -->
-        <div id="modalJatuhTempo" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Pilih Tanggal Jatuh Tempo</div>
-                    <button class="close-modal" onclick="tutupModal('modalJatuhTempo')">&times;</button>
-                </div>
-                <input type="date" id="datePicker" class="form-input">
-                <div class="modal-buttons">
-                    <button class="btn-cancel-modal" onclick="tutupModal('modalJatuhTempo')">Batal</button>
-                    <button class="btn-confirm" onclick="simpanJatuhTempo()">Simpan</button>
-                </div>
+            <input type="date" id="datePicker" class="form-input" 
+                   value="{{ $entry->jatuh_tempo ? $entry->jatuh_tempo->format('Y-m-d') : '' }}">
+            <div class="modal-buttons">
+                <button class="btn-cancel-modal" onclick="tutupModal('modalJatuhTempo')">Batal</button>
+                <button class="btn-confirm" onclick="simpanJatuhTempo({{ $entry->id }})">Simpan</button>
             </div>
-        </div>
-
-        <!-- Modal Tambah Utang -->
-        <div id="modalTambahUtang" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Tambah Utang</div>
-                    <button class="close-modal" onclick="tutupModal('modalTambahUtang')">&times;</button>
-                </div>
-                <input type="text" id="inputTambahUtang" class="form-input" placeholder="Masukkan nominal"
-                    onkeyup="formatRupiahInput(this)">
-                <div class="modal-buttons">
-                    <button class="btn-cancel-modal" onclick="tutupModal('modalTambahUtang')">Batal</button>
-                    <button class="btn-confirm" onclick="simpanTambahUtang()">Tambah</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Bayar Utang -->
-        <div id="modalBayarUtang" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Bayar Utang</div>
-                    <button class="close-modal" onclick="tutupModal('modalBayarUtang')">&times;</button>
-                </div>
-                <input type="text" id="inputBayarUtang" class="form-input" placeholder="Masukkan nominal pembayaran"
-                    onkeyup="formatRupiahInput(this)">
-                <div class="modal-buttons">
-                    <button class="btn-cancel-modal" onclick="tutupModal('modalBayarUtang')">Batal</button>
-                    <button class="btn-confirm" onclick="simpanBayarUtang()">Bayar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Lunaskan -->
-        <div id="modalLunaskan" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Lunaskan Utang</div>
-                    <button class="close-modal" onclick="tutupModal('modalLunaskan')">&times;</button>
-                </div>
-                <p style="margin-bottom: 15px; color: #666;">Apakah Anda yakin ingin melunasi seluruh utang sebesar:</p>
-                <p style="font-size: 18px; font-weight: bold; color: #d32f2f; margin-bottom: 20px;">Rp 10.000</p> {{-- dari database --}}
-                <div class="modal-buttons">
-                    <button class="btn-cancel-modal" onclick="tutupModal('modalLunaskan')">Batal</button>
-                    <button class="btn-confirm" onclick="lunaskanUtang()">Ya, Lunaskan</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tabel riwayat transaksi -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="text-align: center" >Tanggal</th>
-                        <th style="text-align: center" >Bayar <span class="info-icon" title="Penerimaan pembayaran">ℹ️</span></th>
-                        <th style="text-align: center" >Utang <span class="info-icon" title="Penambahan utang">ℹ️</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: center"> 17 Nov 2025 
-                            <span class="subtext">utang</span>
-                        </td>
-                        <td style="text-align: center">----</td>
-                        <td style="text-align: center">Rp 10.000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tombol aksi -->
-        <div class="button-group">
-            <button class="btn-berikan" onclick="bukaModalTambahUtang()">Tambah Utang</button>
-            <button class="btn-terima" onclick="bukaModalBayarUtang()">Bayar Utang</button>
         </div>
     </div>
+
+    <!-- Modal Tambah Utang -->
+    <div id="modalTambahUtang" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Tambah {{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }}</div>
+                <button class="close-modal" onclick="tutupModal('modalTambahUtang')">&times;</button>
+            </div>
+            <input type="text" id="inputTambahUtang" class="form-input" placeholder="Masukkan nominal"
+                onkeyup="formatRupiahInput(this)">
+            <div class="modal-buttons">
+                <button class="btn-cancel-modal" onclick="tutupModal('modalTambahUtang')">Batal</button>
+                <button class="btn-confirm" onclick="simpanTambahUtang({{ $entry->id }})">Tambah</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Bayar Utang -->
+    <div id="modalBayarUtang" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Bayar {{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }}</div>
+                <button class="close-modal" onclick="tutupModal('modalBayarUtang')">&times;</button>
+            </div>
+            <input type="text" id="inputBayarUtang" class="form-input" placeholder="Masukkan nominal pembayaran"
+                onkeyup="formatRupiahInput(this)">
+            <div class="modal-buttons">
+                <button class="btn-cancel-modal" onclick="tutupModal('modalBayarUtang')">Batal</button>
+                <button class="btn-confirm" onclick="simpanBayarUtang({{ $entry->id }})">Bayar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Lunaskan - DINAMIS -->
+    <div id="modalLunaskan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Lunaskan {{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }}</div>
+                <button class="close-modal" onclick="tutupModal('modalLunaskan')">&times;</button>
+            </div>
+            <p style="margin-bottom: 15px; color: #666;">Apakah Anda yakin ingin melunasi seluruh {{ $entry->tipe == 'hutang' ? 'hutang' : 'piutang' }} sebesar:</p>
+            <p style="font-size: 18px; font-weight: bold; color: #d32f2f; margin-bottom: 20px;">
+                Rp {{ number_format($entry->nominal, 0, ',', '.') }}
+            </p>
+            <div class="modal-buttons">
+                <button class="btn-cancel-modal" onclick="tutupModal('modalLunaskan')">Batal</button>
+                <button class="btn-confirm" onclick="lunaskanUtang({{ $entry->id }})">Ya, Lunaskan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel riwayat transaksi - DINAMIS -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align: center">Tanggal</th>
+                    <th style="text-align: center">Bayar <span class="info-icon" title="Penerimaan pembayaran">ℹ️</span></th>
+                    <th style="text-align: center">{{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }} <span class="info-icon" title="Penambahan utang">ℹ️</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- SEMENTARA: Tampilkan hanya data utama -->
+                <tr>
+                    <td style="text-align: center">
+                        {{ $entry->tanggal_transaksi->format('d M Y') }}
+                        <span class="subtext">{{ $entry->tipe }}</span>
+                    </td>
+                    <td style="text-align: center">----</td>
+                    <td style="text-align: center">
+                        Rp {{ number_format($entry->nominal, 0, ',', '.') }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tombol aksi -->
+    <div class="button-group">
+        <button class="btn-berikan" onclick="bukaModalTambahUtang()">
+            Tambah {{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }}
+        </button>
+        <button class="btn-terima" onclick="bukaModalBayarUtang()">
+            Bayar {{ $entry->tipe == 'hutang' ? 'Hutang' : 'Piutang' }}
+        </button>
+    </div>
+</div>
 
 @endsection
 
 @section('script')
     <script>
-        let currentJatuhTempo = '';
+        let currentJatuhTempo = '{{ $entry->jatuh_tempo ? $entry->jatuh_tempo->format("Y-m-d") : "" }}';
+        let entryId = {{ $entry->id }};
 
         // Fungsi umum untuk buka/tutup modal
         function bukaModal(modalId) {
@@ -458,9 +474,14 @@
         // Fungsi khusus untuk masing-masing modal
         function bukaModalJatuhTempo() {
             const datePicker = document.getElementById('datePicker');
-            const defaultDate = new Date();
-            defaultDate.setDate(defaultDate.getDate() + 30);
-            datePicker.value = defaultDate.toISOString().split('T')[0];
+            // Jika sudah ada jatuh tempo, gunakan yang ada, jika tidak default +30 hari
+            if (!currentJatuhTempo) {
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 30);
+                datePicker.value = defaultDate.toISOString().split('T')[0];
+            } else {
+                datePicker.value = currentJatuhTempo;
+            }
             bukaModal('modalJatuhTempo');
         }
 
@@ -501,8 +522,8 @@
             return prefix == undefined ? rupiah : (rupiah ? prefix + rupiah : '');
         }
 
-        // Fungsi simpan untuk masing-masing modal
-        function simpanJatuhTempo() {
+        // Fungsi simpan untuk masing-masing modal - DENGAN ID
+        function simpanJatuhTempo(id) {
             const datePicker = document.getElementById('datePicker');
             const selectedDate = datePicker.value;
 
@@ -511,18 +532,7 @@
                 return;
             }
 
-            const dateObj = new Date(selectedDate);
-            const formattedDate = dateObj.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-
-            document.getElementById('textJatuhTempo').textContent = `Jatuh Tempo: ${formattedDate}`;
-            currentJatuhTempo = selectedDate;
-
-            // ini route
-            fetch('', {
+            fetch(`/ledger_entries/${id}/update-jatuh-tempo`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -535,6 +545,14 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        const dateObj = new Date(selectedDate);
+                        const formattedDate = dateObj.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                        document.getElementById('textJatuhTempo').textContent = `Jatuh Tempo: ${formattedDate}`;
+                        currentJatuhTempo = selectedDate;
                         alert('Jatuh tempo berhasil diupdate!');
                         tutupModal('modalJatuhTempo');
                     } else {
@@ -545,102 +563,92 @@
                     console.error('Error:', error);
                     alert('Terjadi kesalahan saat update jatuh tempo');
                 });
-
-            tutupModal('modalJatuhTempo');
         }
 
-        function simpanTambahUtang() {
-            const input = document.getElementById('inputTambahUtang');
-            const nominal = input.value.replace(/[^0-9]/g, '');
+        function simpanTambahUtang(id) {
+    const input = document.getElementById('inputTambahUtang');
+    const nominal = input.value.replace(/[^0-9]/g, '');
 
-            if (!nominal || nominal === '0') {
-                alert('Silakan masukkan nominal yang valid');
-                return;
+    if (!nominal || nominal === '0') {
+        alert('Silakan masukkan nominal yang valid');
+        return;
+    }
+
+    fetch(`/ledger_entries/${id}/tambah-utang`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                nominal: parseInt(nominal)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message); // Tampilkan pesan dengan total baru
+                tutupModal('modalTambahUtang');
+                location.reload();
+            } else {
+                alert('Gagal menambah utang: ' + data.message);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menambah utang');
+        });
+}
 
-            // ini route
-            fetch('', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        nominal: nominal,
-                        tipe: 'tambah_utang'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Utang berhasil ditambahkan!');
-                        tutupModal('modalTambahUtang');
-                        location.reload();
-                    } else {
-                        alert('Gagal menambah utang: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menambah utang');
-                });
-        }
+        function simpanBayarUtang(id) {
+    const input = document.getElementById('inputBayarUtang');
+    const nominal = input.value.replace(/[^0-9]/g, '');
 
-        function simpanBayarUtang() {
-            const input = document.getElementById('inputBayarUtang');
-            const nominal = input.value.replace(/[^0-9]/g, '');
+    if (!nominal || nominal === '0') {
+        alert('Silakan masukkan nominal yang valid');
+        return;
+    }
 
-            if (!nominal || nominal === '0') {
-                alert('Silakan masukkan nominal yang valid');
-                return;
+    fetch(`/ledger_entries/${id}/bayar-utang`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                nominal: parseInt(nominal)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message); // Tampilkan pesan dengan sisa nominal
+                tutupModal('modalBayarUtang');
+                location.reload(); // Refresh untuk update tampilan
+            } else {
+                alert('Gagal melakukan pembayaran: ' + data.message);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat melakukan pembayaran');
+        });
+}
 
-            // ini route
-            fetch('', {
+        function lunaskanUtang(id) {
+            fetch(`/ledger_entries/${id}/lunaskan`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        nominal: nominal,
-                        tipe: 'bayar_utang'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Pembayaran utang berhasil!');
-                        tutupModal('modalBayarUtang');
-                        location.reload();
-                    } else {
-                        alert('Gagal melakukan pembayaran: ' + data.message);
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat melakukan pembayaran');
-                });
-        }
-
-        function lunaskanUtang() {
-            // ini route
-            fetch('', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        tipe: 'lunaskan_utang'
-                    })
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         alert('Utang berhasil dilunasi!');
                         tutupModal('modalLunaskan');
-                        location.reload();
+                        window.location.href = '/ledger_entries';
                     } else {
                         alert('Gagal melunasi utang: ' + data.message);
                     }
