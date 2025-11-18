@@ -537,8 +537,7 @@
         </div>
         <div class="hero-image">
             <div class="image-box">
-                <img src="{{ asset('assets/images/kopsis.jpg') }}"
-                    alt="Dashboard KopsisApp" id="heroImg">
+                <img src="{{ asset('assets/images/kopsis.jpg') }}" alt="Dashboard KopsisApp" id="heroImg">
             </div>
         </div>
     </section>

@@ -15,9 +15,7 @@ Route::get('/home', function () {
     return redirect()->route('beranda.index');
 })->name('home');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DashboardController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,7 +25,9 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/beranda', [DashboardController::class, 'index'])->name('beranda.index');
+    Route::get('/beranda', function () {
+        return view('beranda.index');
+    })->name('beranda.index');
 
     // Vendor
     Route::get('/vendor', function () {
