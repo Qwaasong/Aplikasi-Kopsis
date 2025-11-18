@@ -2,7 +2,6 @@
 @section('title', 'KopsisApp - Vendor')
 @section('content')
     <div class="px-8 py-6">
-        <!-- Header Konten -->
         <div class="flex flex-col space-y-4">
             <div class="flex items-center text-sm text-gray-500">
                 <span>Keuangan</span>
@@ -31,29 +30,23 @@
             </div>
         </div>
 
-        <!-- Modal Background -->
-        <div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-start justify-center p-4 z-50">
-
-            <!-- Modal Card -->
-            <div class="bg-white w-full max-w-sm rounded-xl shadow-lg p-6">
-                <form action="{{ route('laporan.keuangan.pdf') }}" method="GET">
-                    <h2 class="text-xl font-semibold mb-4">Pilih Tanggal</h2>
-
-                    <!-- Input Tanggal -->
-                    <label class="block mb-2 text-sm font-medium">Tanggal:</label>
-                    <div id="myDatePickerContainer" class="max-w-md">
-                        <!-- DatePicker akan diinisialisasi di sini -->
-                    </div>
-
-                    <input type="hidden" name="start_date" id="start_date_input">
-                    <input type="hidden" name="end_date" id="end_date_input">
-
-                    <!-- Buttons -->
-                    <div class="flex justify-end gap-2">
-                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Batal</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Simpan</button>
-                    </div>
-                </form>
+        <!-- stat cards (ditambahkan dari beranda) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 my-6">
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Saldo</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">1.000.000</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Pemasukan</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">500.000</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Pengeluaran</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">200.000</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200">
+                <p class="text-sm text-gray-500">Total Produk</p>
+                <p class="text-2xl md:text-3xl font-bold text-gray-800">200</p>
             </div>
         </div>
 
@@ -120,12 +113,10 @@
                         </svg>
                     </button>
 
-                    <!-- Dropdown Filter -->
                     <div id="filter-dropdown"
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
 
-                            <!-- Tipe -->
                             <div>
                                 <label for="filter_tipe" class="block text-sm font-medium text-gray-700">Tipe</label>
                                 <select name="filter[tipe]" id="filter_tipe"
@@ -157,8 +148,7 @@
                                     </label>
                                 </div>
                             </div>
-
-                            <!-- Tombol aksi -->
+                            
                             <div class="flex justify-end space-x-2 pt-4">
                                 <button type="button" id="reset-filter-btn"
                                     class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">

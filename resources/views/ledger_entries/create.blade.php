@@ -212,83 +212,89 @@
         }
     </style>
 
-    <div class="judul">
-        <h2 class="font-bold">Tambah Penghutang</h2>
-    </div>
+<div class="judul">
+    <h2 class="font-bold">Tambah Hutang/Piutang</h2>
+</div>
 
-    <div class="block">
-        <form action="{{ route('vendor.store') }}" method="POST">
-            @csrf
-            <div class="form-section">
-                <!-- Baris Atas: Nama Penghutang, Tipe, Nominal Utang -->
-                <div class="form-row">
-                    <div class="form-column">
-                        <label class="form-label" for="nama_penghutang">Nama Penghutang</label>
-                        <input type="text" id="nama_penghutang" name="nama_penghutang" class="form-input"
-                            placeholder="Nama Penghutang..." required>
-                    </div>
-
-                    <div class="form-column">
-                        <label class="form-label" for="tipe">Tipe</label>
-                        <select name="tipe" class="form-input">
-                            <option value="utang">Utang</option>
-                            <option value="piutang">Piutang</option>
-                        </select>
-                    </div>
-
-                    <div class="form-column">
-                        <label class="form-label" for="nominal_utang">Nominal Utang</label>
-                        <input type="text" id="nominal_utang" name="nominal_utang" class="form-input"
-                            placeholder="Rp. 0">
-                    </div>
+<div class="block">
+    <!-- PERBAIKAN: Ganti route ke ledger_entries.store -->
+    <form action="{{ route('ledger_entries.store') }}" method="POST">
+        @csrf
+        <div class="form-section">
+            <!-- Baris Atas: Nama, Tipe, Nominal -->
+            <div class="form-row">
+                <div class="form-column">
+                    <!-- PERBAIKAN: name="nama" -->
+                    <label class="form-label" for="nama">Nama</label>
+                    <input type="text" id="nama" name="nama" class="form-input" placeholder="Nama..." required>
                 </div>
 
-                <!-- Baris Bawah: Tanggal dan Jatuh Tempo -->
-                <div class="form-row">
-                    {{-- <div class="form-column">
-                        <label class="form-label" for="no_telepon">No Telepon</label>
-                        <input type="text" id="no_telepon" name="no_telepon" class="form-input" placeholder="+62.." required>
-                    </div> --}}
-
-                    <div class="form-column">
-                        <label class="form-label" for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal" name="tanggal" class="form-input" value="{{ date('Y-m-d') }}"
-                            required>
-                    </div>
-
-                    <div class="form-column">
-                        <label class="form-label" for="jatuh_tempo">Jatuh Tempo</label>
-                        <input type="date" id="jatuh_tempo" name="jatuh_tempo" class="form-input">
-                    </div>
+                <div class="form-column">
+                    <label class="form-label" for="tipe">Tipe</label>
+                    <select name="tipe" class="form-input" required>
+                        <option value="">Pilih Tipe</option>
+                        <!-- PERBAIKAN: value="hutang" bukan "utang" -->
+                        <option value="hutang">Hutang</option>
+                        <option value="piutang">Piutang</option>
+                    </select>
                 </div>
 
-                <!-- Keterangan (tetap seperti semula) -->
-                <div class="form-row">
-                    <div class="form-column">
-                        <label class="form-label" for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" class="form-input" rows="3" placeholder="Keterangan..."></textarea>
-                    </div>
+                <div class="form-column">
+                    <!-- PERBAIKAN: name="nominal" -->
+                    <label class="form-label" for="nominal">Nominal</label>
+                    <input type="text" id="nominal" name="nominal" class="form-input" placeholder="Rp. 0" required>
                 </div>
             </div>
 
-            <div class="button-container">
-                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat
-                    Lagi</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
-                <button type="button" class="btn btn-cancel">Batal</button>
-            </div>
-        </form>
-    </div>
+            <!-- Baris Bawah: Telepon, Tanggal, Jatuh Tempo -->
+            <div class="form-row">
+                <div class="form-column">
+                    <!-- TAMBAHKAN: Field telepon -->
+                    <label class="form-label" for="telepon">Telepon</label>
+                    <input type="text" id="telepon" name="telepon" class="form-input" placeholder="+62...">
+                </div>
 
+                <div class="form-column">
+                    <!-- PERBAIKAN: name="tanggal_transaksi" -->
+                    <label class="form-label" for="tanggal_transaksi">Tanggal Transaksi</label>
+                    <input type="date" id="tanggal_transaksi" name="tanggal_transaksi" class="form-input" value="{{ date('Y-m-d') }}" required>
+                </div>
+
+                <div class="form-column">
+                    <!-- PERBAIKAN: name="jatuh_tempo" -->
+                    <label class="form-label" for="jatuh_tempo">Jatuh Tempo</label>
+                    <input type="date" id="jatuh_tempo" name="jatuh_tempo" class="form-input">
+                </div>
+            </div>
+
+            <!-- Keterangan -->
+            <div class="form-row">
+                <div class="form-column">
+                    <label class="form-label" for="keterangan">Keterangan</label>
+                    <textarea id="keterangan" name="keterangan" class="form-input" rows="3" placeholder="Keterangan..." required></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat Lagi</button>
+            <button type="submit" class="btn btn-save">Simpan</button>
+            <!-- PERBAIKAN: Tombol batal redirect ke index -->
+            <a href="{{ route('ledger_entries.index') }}" class="btn btn-cancel">Batal</a>
+        </div>
+    </form>
+</div>
+    <script src="{{ asset('assets/js/fab.js') }}"></script>
 @endsection
 
 @section('script')
-    <script src="{{ asset('assets/js/fab.js') }}"></script>
+
     <script>
         var utang_sebesar = document.getElementById('nominal_utang');
         utang_sebesar.addEventListener('keyup', function(e) {
             utang_sebesar.value = formatRupiah(this.value, 'Rp. ');
         });
+        
 
         /* Fungsi */
         function formatRupiah(angka, prefix) {

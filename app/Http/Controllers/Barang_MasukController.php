@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Purchase;
 use App\Models\PurchaseItem; // NEW: Untuk menyimpan detail barang masuk
 use App\Models\Product; // NEW: Untuk update stok
+use App\Models\FinancialTransaction; // NEW: Untuk mencatat transaksi keuangan
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; // NEW: Untuk memastikan transaksi atomik
 
@@ -52,8 +53,34 @@ class Barang_MasukController extends Controller
 
         try {
             // 2. Simpan Header Pembelian (Purchase)
-            $purchase = Purchase::create($request->only(['tanggal', 'vendor_id', 'no_faktur', 'keterangan']));
+            $totalBiaya = collect($request->items)->sum(function ($item) {
+                return $item['jumlah_pack'] * $item['harga_beli']; 
+            });
 
+            $purchase = Purchase::create(array_merge(
+                $request->only(['tanggal', 'vendor_id', 'no_faktur', 'keterangan']),
+                ['total_biaya' => $totalBiaya] // Tambahkan total biaya ke Purchase
+            ));
+
+            // 3. Simpan Detail Item Pembelian (PurchaseItem)
+            $purchase->items()->createMany($request->items);
+
+            // -----------------------------------------------------------------------------------
+            // 4. Buat entri di Riwayat Transaksi (FinancialTransaction) sebagai PENGELUARAN
+            // Pindahkan logika ini ke sini, menggunakan data $purchase yang benar.
+
+            FinancialTransaction::create([
+                'tanggal' => $purchase->tanggal,
+                'tipe' => 'pengeluaran',
+                'keterangan' => 'Biaya Pembelian Barang Masuk: ' . $purchase->no_faktur ?? $purchase->id,
+                'jumlah' => $totalBiaya, // Gunakan total biaya yang sudah dihitung
+                'purchase_id' => $purchase->id,
+                'stock_out_id' => null,
+            ]);
+
+            // -----------------------------------------------------------------------------------
+            // ...
+            DB::commit();
             // 3. Simpan Detail Item Pembelian (PurchaseItem)
             // Model Event di PurchaseItem akan otomatis mengupdate stok (increment)
             // Model Event di Purchase akan otomatis membuat FinancialTransaction
@@ -70,7 +97,7 @@ class Barang_MasukController extends Controller
                     'updated_at' => now(), // Tambahkan timestamp
                 ];
             })->toArray();
-            
+            // ... (Langkah 1: Validasi data dan simpan data Barang Masuk/Purchase) ...            
             // Insert semua item sekaligus untuk efisiensi. 
             // NOTE: Batch insert tidak memicu Model Event, jadi harus diubah ke createMany.
             // Pilihan A: Menggunakan createMany (Memicu Model Event per item)
@@ -115,23 +142,85 @@ class Barang_MasukController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $purchase = Purchase::findOrFail($id);
+        // Muat Purchase beserta item-itemnya yang lama
+        $purchase = Purchase::with('items')->findOrFail($id); 
 
+        // 1. Validasi Data Utama dan Item Pembelian
         $request->validate([
             'tanggal' => 'required|date',
             'vendor_id' => 'required|integer|exists:vendors,id', 
             'no_faktur' => 'nullable|string|max:255|unique:purchases,no_faktur,' . $id,
             'keterangan' => 'nullable|string|max:1000',
+            
+            // Tambahkan validasi untuk item baru/yang diubah
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items.*.jumlah_pack' => 'required|integer|min:1',
+            'items.*.harga_beli' => 'required|numeric|min:0',
+            'items.*.harga_jual' => 'required|numeric|min:0',
         ]);
         
-        // Catatan: Logika untuk memperbarui PurchaseItem (item di dalamnya)
-        // dan menyesuaikan stok sangat kompleks, sehingga untuk saat ini 
-        // hanya header Purchase yang diperbarui.
-        $purchase->update($request->only(['tanggal', 'vendor_id', 'no_faktur', 'keterangan']));
+        DB::beginTransaction();
 
-        return redirect()->route('barang_masuk.index')->with('success', 'Header Barang Masuk berhasil diperbarui.');
+        try {
+            // 2. Hitung Total Biaya Baru
+            $newTotalBiaya = collect($request->items)->sum(function ($item) {
+                return $item['jumlah_pack'] * $item['harga_beli']; 
+            });
+
+            // 3. Reversal Stok Lama dan Hapus Item Lama
+            
+            // Reversal Stok Lama (Kurangi stok produk berdasarkan jumlah item lama)
+            foreach ($purchase->items as $item) {
+                // Kurangi stok produk
+                Product::where('id', $item->product_id)->decrement('stok', $item->jumlah_pack);
+            }
+
+            // Hapus semua item pembelian lama yang terkait
+            $purchase->items()->delete(); 
+
+            // 4. Update Header Pembelian (Purchase)
+            $purchase->update(array_merge(
+                $request->only(['tanggal', 'vendor_id', 'no_faktur', 'keterangan']),
+                ['total_biaya' => $newTotalBiaya] // Update total biaya baru
+            ));
+
+            // 5. Simpan Detail Item Pembelian Baru (PurchaseItem) dan Update Stok Baru
+            // Asumsi: Model Event di PurchaseItem akan otomatis meng-increment stok saat createMany() dipanggil.
+            $purchase->items()->createMany($request->items);
+            
+            // 6. Update Entri di Riwayat Transaksi (FinancialTransaction)
+            // Cari FinancialTransaction yang terkait dengan Purchase ini
+            $transaction = FinancialTransaction::where('purchase_id', $purchase->id)->first();
+            
+            if ($transaction) {
+                // Update data transaksi keuangan dengan data baru
+                $transaction->update([
+                    'tanggal' => $purchase->tanggal,
+                    'keterangan' => 'Biaya Pembelian Barang Masuk: ' . $purchase->no_faktur ?? $purchase->id,
+                    'jumlah' => $newTotalBiaya, // Gunakan total biaya yang baru
+                ]);
+            } else {
+                // Jika entri transaksi tidak ditemukan (situasi tak terduga jika proses store berhasil)
+                FinancialTransaction::create([
+                    'tanggal' => $purchase->tanggal,
+                    'tipe' => 'pengeluaran',
+                    'keterangan' => 'Biaya Pembelian Barang Masuk: ' . $purchase->no_faktur ?? $purchase->id,
+                    'jumlah' => $newTotalBiaya,
+                    'purchase_id' => $purchase->id,
+                    'stock_out_id' => null,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('barang_masuk.index')->with('success', 'Barang Masuk berhasil diperbarui, termasuk item dan transaksi.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui Barang Masuk: ' . $e->getMessage());
+        }
     }
-    
     /**
      * Hapus data Barang Masuk yang sudah ada.
      */
