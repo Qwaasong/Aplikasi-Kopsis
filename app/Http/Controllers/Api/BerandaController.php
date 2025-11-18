@@ -143,6 +143,7 @@ class BerandaController extends Controller
                     'pemasukan' => $pemasukan,
                     'pengeluaran' => $pengeluaran,
                     'total_produk' => $totalProduk,
+                    // 'keuntungan' => $saldo,
                 ],
                 'chart' => $dataChart,
                 'distribusi_produk' => $distribusiProduk,
