@@ -158,6 +158,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/ledger_entries/{id}', [LedgerEntryController::class, 'update'])->name('ledger_entries.update');
     Route::post('/ledger_entries/{id}/lunaskan', [LedgerEntryController::class, 'lunaskan'])->name('ledger_entries.lunaskan');
 
+    Route::post('/ledger_entries/{id}/update-jatuh-tempo', [LedgerEntryController::class, 'updateJatuhTempo']);
+Route::post('/ledger_entries/{id}/tambah-utang', [LedgerEntryController::class, 'tambahUtang']);
+Route::post('/ledger_entries/{id}/bayar-utang', [LedgerEntryController::class, 'bayarUtang']);
+
     //=========================================================================================================
     // Pengguna
     Route::get('/pengguna', function () {

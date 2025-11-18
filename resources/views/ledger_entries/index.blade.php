@@ -54,11 +54,15 @@
 
         <hr class="my-6 border-gray-200">
         <x-table :data-table="[
-                                                'Nama' => 'name', 
-                                                'Email' => 'email', 
-                                                'Diverifikasi' => 'email_verified_at', 
-                                                'Dibuat Pada' => 'created_at',    
-                                                ]" data-url="{{ route('api.pengguna.index') }}">
+            'Nama' => 'nama', 
+             
+            'Tipe' => 'tipe', 
+            'Nominal' => 'nominal',
+            'Keterangan' => 'keterangan',
+            'Telepon' => 'telepon',
+            //'Tanggal Transaksi' => 'tanggal_transaksi',
+            //'Jatuh Tempo' => 'jatuh_tempo'    
+                    ]" data-url="{{ route('api.ledger_entries.index') }}">
             <x-slot:filter>
                 <div class="flex items-center space-x-4">
                     <button id="filter-button"
