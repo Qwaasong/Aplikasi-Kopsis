@@ -11,6 +11,7 @@ function tampilkanStatistik(statistik) {
     document.getElementById('stat-pengeluaran').textContent = formatRupiah(statistik.pengeluaran);
     document.getElementById('stat-saldo').textContent = formatRupiah(statistik.saldo);
     document.getElementById('stat-total-produk').textContent = statistik.total_produk;
+    document.getElementById('stat-keuntungan').textContent = formatRupiah(statistik.keuntungan);
 }
 
 function fetchStatistikData() {
@@ -37,6 +38,7 @@ function setDefaultValues() {
     document.getElementById('stat-pemasukan').textContent = '0';
     document.getElementById('stat-pengeluaran').textContent = '0';
     document.getElementById('stat-total-produk').textContent = '0';
+    document.getElementById('stat-saldo').textContent = '0';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
