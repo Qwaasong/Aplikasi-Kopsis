@@ -350,7 +350,7 @@
                             <div class="cell-header note">Catatan</div>
                             <div class="cell-header sales">Pemasukan</div>
                             <div class="cell-header expense">Pengeluaran</div>
-                            <div class="cell-header expense">Aksi</div>
+                            <div class="cell-header expense">    </div>
                         </div>
                 `;
                     if (day.transactions && Array.isArray(day.transactions)) {
@@ -367,8 +367,8 @@
                                 <div class="cell sales">${formatValue(tx.sales)}</div>
                                 <div class="cell expense">${formatValue(tx.expense)}</div>
                                 <div class="cell action">
-                                    <a href="${editUrl}" class="btn-edit">Edit</a>
-                                    <button class="btn-delete" data-id="${tx.id}">Hapus</button>
+                                    <!-- <a href="${editUrl}" class="btn-edit">Edit</a> -->
+                                     <!-- <button class="btn-delete" data-id="${tx.id}">Hapus</button> -->
                                 </div>
                             </div>
                         `;
