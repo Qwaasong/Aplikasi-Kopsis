@@ -18,7 +18,7 @@
                 <div class="flex gap-4">
                     <button
                         class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        onclick="openModal('export-pdf-modal')"> {{-- PERBAIKAN ID --}}
+                        onclick="openModal('export-pdf-modal')">
                         Export PDF
                     </button>
                     <button
@@ -48,33 +48,54 @@
                 <p id="stat-total-produk" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
             </div>
 
-            <div class="bg-white p-5 rounded-xl border border-gray-200">
+            {{-- <div class="bg-white p-5 rounded-xl border border-gray-200">
                 <p class="text-sm text-gray-500">Keuntungan</p>
                 <p id="stat-keuntungan" class="text-2xl md:text-3xl font-bold text-gray-800">Loading...</p>
-            </div>
+            </div> --}}
         </div>
 
+        <!-- FAB Container -->
         <div class="md:hidden fab fixed bottom-6 right-6 flex flex-col items-end gap-3">
             <div class="fab-items flex flex-col-reverse items-end gap-3">
+
                 <div class="fab-item-wrapper hidden-space" data-idx="0">
-                    <span class="fab-label" onclick="window.location.href='{{ route('riwayat_transaksi.create') }}'">Tambah
-                        Transaksi</span>
+                    <span class="fab-label" onclick="window.location.href='{{ route('produk.create') }}'">Tambah
+                        Produk</span>
                     <button
                         class="fab-item w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold shadow-lg bg-gradient-to-br from-purple-500 to-pink-500"
-                        onclick="window.location.href='{{ route('riwayat_transaksi.create') }}'">
-                        <svg ...> ... </svg>
+                        onclick="window.location.href='{{ route('produk.create') }}'">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640" class="w-6 h-6">
+                            <path
+                                d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
+                        </svg>
                     </button>
                 </div>
+
                 <div class="fab-item-wrapper hidden-space" data-idx="1">
-                    <span class="fab-label" onclick="openModal('export-pdf-modal')">Export PDF</span> {{-- PERBAIKAN ID --}}
+                    <span class="fab-label" onclick="openModal('export-pdf-modal')">Export PDF</span>
                     <button
                         class="fab-item w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold shadow-lg bg-gradient-to-br from-blue-500 to-cyan-500"
-                        onclick="openModal('export-pdf-modal')"> {{-- PERBAIKAN ID --}}
-                        <svg ...> ... </svg>
+                        onclick="openModal('export-pdf-modal')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor" class="w-6 h-6">
+                            <path
+                                d="M96 0C60.7 0 32 28.7 32 64l0 384c0 35.3 28.7 64 64 64l80 0 0-112c0-35.3 28.7-64 64-64l176 0 0-165.5c0-17-6.7-33.3-18.7-45.3L290.7 18.7C278.7 6.7 262.5 0 245.5 0L96 0zM357.5 176L264 176c-13.3 0-24-10.7-24-24L240 58.5 357.5 176zM240 380c-11 0-20 9-20 20l0 128c0 11 9 20 20 20s20-9 20-20l0-28 12 0c33.1 0 60-26.9 60-60s-26.9-60-60-60l-32 0zm32 80l-12 0 0-40 12 0c11 0 20 9 20 20s-9 20-20 20zm96-80c-11 0-20 9-20 20l0 128c0 11 9 20 20 20l32 0c28.7 0 52-23.3 52-52l0-64c0-28.7-23.3-52-52-52l-32 0zm20 128l0-88 12 0c6.6 0 12 5.4 12 12l0 64c0 6.6-5.4 12-12 12l-12 0zm88-108l0 128c0 11 9 20 20 20s20-9 20-20l0-44 28 0c11 0 20-9 20-20s-9-20-20-20l-28 0 0-24 28 0c11 0 20-9 20-20s-9-20-20-20l-48 0c-11 0-20 9-20 20z" />
+                        </svg>
                     </button>
                 </div>
             </div>
-            <button id="fabMain" class="fab-main ..."> ... </button>
+
+            <button id="fabMain"
+                class="fab-main w-14 h-14 rounded-full btn-lg shadow-lg flex items-center justify-center transition-all bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white"
+                aria-expanded="false" aria-label="Open FAB" title="Open FAB">
+                <span id="iconX" class="fab-icon text-xl visible" role="img" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640" class="w-6 h-6">
+                        <path
+                            d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
+                    </svg>
+                </span>
+                {{-- Jika fab.js Anda butuh ikon 'close' terpisah, tambahkan di sini --}}
+                {{-- <span id="iconClose" class="fab-icon text-xl hidden" ...> ... SVG X ... </span> --}}
+            </button>
         </div>
 
         <hr class="my-6 border-gray-200">
@@ -95,7 +116,6 @@
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
 
-                            {{-- ... bagian <form id="filter-form" ...> ... --}}
                             <div>
                                 <label for="filter_tipe" class="block text-sm font-medium text-gray-700">Tipe</label>
                                 <select name="filter[tipe]" id="filter_tipe"
@@ -110,17 +130,15 @@
                                 <label for="filter_date_range_display"
                                     class="block text-sm font-medium text-gray-700">Rentang Tanggal</label>
 
-                                <input type="text" id="filter_date_range_display"
+                                {{-- <input type="text" id="filter_date_range_display"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
-                                    placeholder="-- Pilih Tanggal --" readonly>
+                                    placeholder="-- Pilih Tanggal --" readonly> --}}
 
                                 <div id="filterDatePickerContainer" class="relative z-50"></div>
 
                                 <input type="hidden" name="filter[start_date]" id="filter_start_date">
                                 <input type="hidden" name="filter[end_date]" id="filter_end_date">
                             </div>
-
-                            {{-- ... </form> ... --}}
 
                             <div class="flex justify-end space-x-2 pt-4">
                                 <button type="button" id="reset-filter-btn"
@@ -139,20 +157,22 @@
         </x-financial-log>
     </div>
 
-    <div id="export-pdf-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+    <div id="export-pdf-modal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-start justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-md max-w-sm">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold">Export Laporan PDF</h3>
                 <button onclick="closeModal('export-pdf-modal')"
                     class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
             </div>
 
+          {{-- Filter pada export --}}
             <p class="text-sm text-gray-600 mb-4">Silakan pilih rentang tanggal laporan yang ingin Anda export.</p>
 
             <form id="export-pdf-form" action="{{ route('riwayat_transaksi.export_pdf') }}" method="GET"
                 target="_blank">
 
-                <div id="myDatePickerContainer" class="border rounded-md"></div>
+                <div id="myDatePickerContainer" class="border rounded-md relative z-50"></div>
 
                 <input type="hidden" name="start_date" id="start_date_input">
                 <input type="hidden" name="end_date" id="end_date_input">
@@ -261,7 +281,7 @@
                 const endDateInput = document.getElementById('end_date_input');
                 new DatePicker(modalContainer, {
                     type: 'dateRange',
-                    position: 'fixed',
+                    direction: 'top',
                     data: {
                         startDate: null,
                         endDate: null
@@ -283,7 +303,6 @@
                 const filterEndDate = document.getElementById('filter_end_date');
                 const filterDatePicker = new DatePicker(filterDateContainer, {
                     type: 'dateRange',
-                    position: 'fixed',
                     options: {
                         onApply: function(dates) {
                             const startDate = normalizeDate(dates.startDate);
