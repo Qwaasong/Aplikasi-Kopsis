@@ -329,39 +329,52 @@
             <thead>
                 <tr>
                     <th style="width: 5%;" class="text-center">No</th>
-                    <th style="width: 12%;">Tanggal</th>
-                    <th style="width: 12%;" class="text-center">Tipe</th>
-                    <th style="width: 51%;">Keterangan</th>
-                    <th style="width: 20%;" class="text-right">Jumlah (Rp)</th>
-                </tr>
-            </thead>
+                    <th style="width: 15%;">Tanggal</th>
+                    <th style="width: 40%;">Keterangan</th>
+                    <th style="width: 20%;" class="text-right">Pemasukan</th>
+                    <th style="width: 20%;" class="text-right">Pengeluaran</th>
+                    </tr>
+                </thead>
             <tbody>
                 @forelse($transactions as $index => $transaction)
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y') }}</td>
-                        <td class="text-center">
-                            <span class="type-badge {{ $transaction->tipe === 'pemasukan' ? 'income' : 'expense' }}">
-                                {{ $transaction->tipe }}
-                            </span>
+                        <td>{{ \Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y') }}
                         </td>
                         <td>{{ $transaction->keterangan }}</td>
-                        <td
-                            class="text-right {{ $transaction->tipe === 'pemasukan' ? 'amount-debit' : 'amount-credit' }}">
-                            {{ number_format($transaction->jumlah, 0, ',', '.') }}
-                        </td>
-                    </tr>
+
+                        {{-- Ini adalah logika untuk memisah kolom --}}
+                        @if ($transaction->tipe === 'pemasukan')
+                            <td class="text-right amount-debit">
+                                {{ number_format($transaction->jumlah, 0, ',', '.') }}
+                                </td>
+                            <td class="text-right">-</td>
+                        @else
+                            <td class="text-right">-</td>
+                            <td class="text-right amount-credit">
+                                {{ number_format($transaction->jumlah, 0, ',', '.') }}
+                                </td>
+                        @endif
+                        </tr>
                 @empty
                     <tr>
+                        {{-- Colspan sekarang 5 karena ada 5 kolom --}}
                         <td colspan="5" class="text-center">Tidak ada data transaksi</td>
-                    </tr>
+                        </tr>
                 @endforelse
+
+                {{-- Baris Total (diperbaiki) --}}
+                <tr class="total-row">
+                    <td colspan="3" class="text-right">TOTAL</td>
+                    <td class="text-right">{{ number_format($totalPemasukan, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+                    </tr>
                 <tr class="total-row">
                     <td colspan="4" class="text-right">SALDO BERSIH</td>
                     <td class="text-right">{{ number_format($saldo, 0, ',', '.') }}</td>
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                </tbody>
+            </table>
 
         <!-- Footer -->
         <div class="report-footer">
@@ -381,7 +394,7 @@
             </div> --}}
             <div class="document-info">
                 Dokumen ini dicetak secara otomatis pada {{ now('Asia/jakarta')->format('d M Y H:i:s') }} WIB<br>
-                Laporan ini bersifat rahasia dan hanya untuk keperluan internal 
+                Laporan ini bersifat rahasia dan hanya untuk keperluan internal
             </div>
         </div>
     </div>
