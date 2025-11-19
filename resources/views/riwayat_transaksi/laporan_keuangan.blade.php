@@ -44,7 +44,6 @@
             display: table-cell;
             vertical-align: top;
             text-align: center;
-            /* 1. BUAT TEKS RATA TENGAH */
         }
 
         .company-logo {
