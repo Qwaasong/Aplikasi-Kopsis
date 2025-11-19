@@ -654,6 +654,7 @@
         let labels = [];
         let pemasukanData = [];
         let pengeluaranData = [];
+        let financeChart = null; // Ubah dari const ke let
 
         document.addEventListener('DOMContentLoaded', () => {
             const scrollKe = new URLSearchParams(window.location.search).get('scroll');
@@ -678,6 +679,221 @@
 
         });
 
+        // Fungsi untuk mengelompokkan data berdasarkan periode
+        function groupChartData(data, filterType) {
+            if (!data || data.length === 0) {
+                return { labels: [], pemasukan: [], pengeluaran: [] };
+            }
+            
+            const groupedData = {};
+            const labels = [];
+            const pemasukan = [];
+            const pengeluaran = [];
+            
+            data.forEach(item => {
+                const date = new Date(item.tanggal);
+                
+                let key;
+                switch(filterType) {
+                    case 'minggu':
+                        // Group by day of week (Monday=1, Tuesday=2, ..., Sunday=7)
+                        const dayOfWeek = date.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+                        const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                        key = dayNames[dayOfWeek];
+                        break;
+                    case 'bulan':
+                        // Group by day of month (1, 2, 3, ...)
+                        key = date.getDate();
+                        break;
+                    case 'tahun':
+                        // Group by month (Jan, Feb, Mar, ...)
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+                        key = monthNames[date.getMonth()];
+                        break;
+                    default:
+                        // Default to month grouping
+                        key = date.getDate();
+                }
+                
+                if (!groupedData[key]) {
+                    groupedData[key] = {
+                        total_pemasukan: 0,
+                        total_pengeluaran: 0
+                    };
+                }
+                
+                groupedData[key].total_pemasukan += parseInt(item.total_pemasukan);
+                groupedData[key].total_pengeluaran += parseInt(item.total_pengeluaran);
+            });
+            
+            // Convert to arrays for chart
+            Object.keys(groupedData).forEach(key => {
+                labels.push(key);
+                pemasukan.push(groupedData[key].total_pemasukan / 1000);
+                pengeluaran.push(groupedData[key].total_pengeluaran / 1000);
+            });
+            
+            // Sort labels appropriately
+            if (filterType === 'minggu') {
+                const dayOrder = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+                const sortedLabels = labels.sort((a, b) => {
+                    return dayOrder.indexOf(a) - dayOrder.indexOf(b);
+                });
+                const sortedPemasukan = [];
+                const sortedPengeluaran = [];
+                sortedLabels.forEach(label => {
+                    const index = labels.indexOf(label);
+                    sortedPemasukan.push(pemasukan[index]);
+                    sortedPengeluaran.push(pengeluaran[index]);
+                });
+                return {
+                    labels: sortedLabels,
+                    pemasukan: sortedPemasukan,
+                    pengeluaran: sortedPengeluaran
+                };
+            } else if (filterType === 'tahun') {
+                // Sort months chronologically
+                const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+                const sortedLabels = labels.sort((a, b) => {
+                    return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+                });
+                const sortedPemasukan = [];
+                const sortedPengeluaran = [];
+                sortedLabels.forEach(label => {
+                    const index = labels.indexOf(label);
+                    sortedPemasukan.push(pemasukan[index]);
+                    sortedPengeluaran.push(pengeluaran[index]);
+                });
+                return {
+                    labels: sortedLabels,
+                    pemasukan: sortedPemasukan,
+                    pengeluaran: sortedPengeluaran
+                };
+            } else {
+                // For monthly grouping, sort by date
+                const sortedLabels = labels.sort((a, b) => a - b);
+                const sortedPemasukan = [];
+                const sortedPengeluaran = [];
+                sortedLabels.forEach(label => {
+                    const index = labels.indexOf(label);
+                    sortedPemasukan.push(pemasukan[index]);
+                    sortedPengeluaran.push(pengeluaran[index]);
+                });
+                return {
+                    labels: sortedLabels,
+                    pemasukan: sortedPemasukan,
+                    pengeluaran: sortedPengeluaran
+                };
+            }
+        }
+        
+        // Fungsi untuk merender chart dengan data yang sudah dikelompokkan
+        function renderChartWithGroupedData(filterType) {
+            const groupedData = groupChartData(chartData, filterType);
+            labels = groupedData.labels;
+            pemasukanData = groupedData.pemasukan;
+            pengeluaranData = groupedData.pengeluaran;
+            
+            // Destroy existing chart if it exists
+            try {
+                if (financeChart) {
+                    financeChart.destroy();
+                }
+            } catch (error) {
+                // Ignore errors when destroying chart
+            }
+            
+            // Reinitialize chart with new data
+            financeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pemasukan',
+                        data: pemasukanData,
+                        borderColor: '#0084ff',
+                        backgroundColor: 'rgba(0, 132, 255, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#0084ff',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Pengeluaran',
+                        data: pengeluaranData,
+                        borderColor: '#FF0000',
+                        backgroundColor: 'rgba(212, 212, 212, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#FF0000',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15,
+                                color: '#525252',
+                                font: {
+                                    size: 13
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#171717',
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            callbacks: {
+                                label: (context) => {
+                                    return context.dataset.label + ': Rp ' + context.parsed.y.toLocaleString(
+                                        'id-ID') + 'k';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: {
+                                display: false
+                            },
+                            grid: {
+                                color: '#f5f5f5'
+                            },
+                            ticks: {
+                                color: '#737373',
+                                callback: (value) => 'Rp ' + value + 'k'
+                            }
+                        },
+                        x: {
+                            border: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#737373'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
         filtercontainer.addEventListener('click', function(event) {
             // 'event.target' adalah elemen spesifik yang DIKLIK
             // (bisa <button> atau <div> itu sendiri)
@@ -703,40 +919,34 @@
 
             // Lakukan sesuatu dengan $filter
             if ($filter) {
-                console.log("Data akan difilter berdasarkan:", $filter);
                 currentFilter = $filter;
-                // Redirect to update filter in URL
-                window.location.href = `/?filter=${$filter}&scroll=filter`;
+                // Update tab active state
+                tabs.forEach(t => t.classList.remove('active'));
+                event.target.classList.add('active');
+                // Render chart with grouped data without page reload
+                renderChartWithGroupedData($filter);
             } else {
-                console.log("Nilai tidak relevan untuk filter:", clickedValue);
+                // Handle nilai tidak relevan
             }
         });
 
-        chartData.forEach(item => {
-            let label;
-            if (currentFilter === 'tahun') {
-                // Untuk tahun, item.bulan adalah angka bulan (1-12)
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov',
-                    'Des'
-                ];
-                label = monthNames[item.bulan - 1];
-            } else {
-                const date = new Date(item.tanggal);
-                if (currentFilter === 'minggu') {
-                    label = date.getDate();
-                } else if (currentFilter === 'bulan') {
-                    label = date.getDate();
-                } else {
-                    label = date.toLocaleDateString('id-ID', {
-                        month: 'short'
-                    });
-                }
-            }
+        // Initial data processing for default view
+        if (chartData && chartData.length > 0) {
+            // Group data initially based on current filter
+            const groupedData = groupChartData(chartData, currentFilter);
+            labels = groupedData.labels;
+            pemasukanData = groupedData.pemasukan;
+            pengeluaranData = groupedData.pengeluaran;
+        }
 
-            labels.push(label);
-            pemasukanData.push(item.total_pemasukan / 1000);
-            pengeluaranData.push(item.total_pengeluaran / 1000);
-        })
+        // Set initial active state for filter buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set Minggu as active by default
+            const mingguTab = document.querySelector('.tab[value="minggu"]');
+            if (mingguTab) {
+                mingguTab.classList.add('active');
+            }
+        });
 
         heroImg.onclick = () => {
             modal.style.display = 'flex';
@@ -766,7 +976,8 @@
         // Chart
         const ctx = document.getElementById('financeChart').getContext('2d');
 
-        const financeChart = new Chart(ctx, {
+        // Hapus deklarasi const financeChart di sini karena sudah ada di atas
+        financeChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
