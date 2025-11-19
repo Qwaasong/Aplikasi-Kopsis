@@ -22,12 +22,36 @@ class LedgerEntryController extends Controller
         }
 
         // 🏷️ Filter berdasarkan tipe
-        if ($tipe = $request->input('tipe')) {
-            $query->where('tipe', $tipe);
+        if ($request->filled('filter.tipe')) {
+            $query->where('tipe', $request->filter['tipe']);
         }
 
-        // 📅 Filter berdasarkan status jatuh tempo
-        if ($status = $request->input('status')) {
+        // 🏷️ Filter berdasarkan periode (minggu/bulan/tahun)
+        if ($request->filled('filter.periode')) {
+            $periode = $request->filter['periode'];
+            $now = now();
+            switch ($periode) {
+                case 'minggu':
+                    $startDate = $now->startOfWeek()->format('Y-m-d');
+                    $endDate = $now->endOfWeek()->format('Y-m-d');
+                    $query->whereBetween('tanggal_transaksi', [$startDate, $endDate]);
+                    break;
+                case 'bulan':
+                    $startDate = $now->startOfMonth()->format('Y-m-d');
+                    $endDate = $now->endOfMonth()->format('Y-m-d');
+                    $query->whereBetween('tanggal_transaksi', [$startDate, $endDate]);
+                    break;
+                case 'tahun':
+                    $startDate = $now->startOfYear()->format('Y-m-d');
+                    $endDate = $now->endOfYear()->format('Y-m-d');
+                    $query->whereBetween('tanggal_transaksi', [$startDate, $endDate]);
+                    break;
+            }
+        }
+
+        // 📅 Filter berdasarkan status jatuh tempo (terlambat/mendatang)
+        if ($request->filled('filter.status')) {
+            $status = $request->filter['status'];
             if ($status === 'terlambat') {
                 $query->where('jatuh_tempo', '<', now())->whereNotNull('jatuh_tempo');
             } elseif ($status === 'mendatang') {

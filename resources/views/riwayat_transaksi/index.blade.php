@@ -160,14 +160,14 @@
     <div id="export-pdf-modal"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-start justify-center z-50 hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl w-md max-w-sm">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center">
                 <h3 class="text-lg font-bold">Export Laporan PDF</h3>
                 <button onclick="closeModal('export-pdf-modal')"
                     class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
             </div>
 
           {{-- Filter pada export --}}
-            <p class="text-sm text-gray-600 mb-4">Silakan pilih rentang tanggal laporan yang ingin Anda export.</p>
+            <p class="text-sm text-gray-600 mb-2">Silakan pilih rentang tanggal laporan yang ingin Anda export.</p>
 
             <form id="export-pdf-form" action="{{ route('riwayat_transaksi.export_pdf') }}" method="GET"
                 target="_blank">
