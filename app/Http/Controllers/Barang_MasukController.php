@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
-use App\Models\PurchaseItem; // NEW: Untuk menyimpan detail barang masuk
-use App\Models\Product; // NEW: Untuk update stok
-use App\Models\FinancialTransaction; // NEW: Untuk mencatat transaksi keuangan
+use App\Models\PurchaseItem; 
+use App\Models\Product; 
+use App\Models\FinancialTransaction; 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // NEW: Untuk memastikan transaksi atomik
+use Illuminate\Support\Facades\DB; 
 
 class Barang_MasukController extends Controller
 {
@@ -43,32 +43,32 @@ class Barang_MasukController extends Controller
             // Validasi array item
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|integer|exists:products,id',
-            'items.*.jumlah_pack' => 'required|integer|min:1', // Hanya pack, tidak perlu satuan
+            'items.*.jumlah_pack' => 'required|integer|min:1',
             'items.*.harga_beli' => 'required|numeric|min:0',
-            'items.*.harga_jual' => 'required|numeric|min:0', // Simpan harga jual baru
+            'items.*.harga_jual' => 'required|numeric|min:0', 
         ]);
         
         // Memastikan semua operasi database berjalan sukses (atomik)
         DB::beginTransaction();
 
         try {
-            // 2. Simpan Header Pembelian (Purchase)
+            // 2. Hitung Total Biaya Pembelian
             $totalBiaya = collect($request->items)->sum(function ($item) {
                 return $item['jumlah_pack'] * $item['harga_beli']; 
             });
 
+            // 3. Simpan Header Pembelian (Purchase)
             $purchase = Purchase::create(array_merge(
                 $request->only(['tanggal', 'vendor_id', 'no_faktur', 'keterangan']),
                 ['total_biaya' => $totalBiaya] // Tambahkan total biaya ke Purchase
             ));
 
-            // 3. Simpan Detail Item Pembelian (PurchaseItem)
+            // 4. Simpan Detail Item Pembelian (PurchaseItem)
+            // Lakukan pemanggilan createMany HANYA SEKALI!
+            // Model Event di PurchaseItem akan otomatis mengupdate stok (increment)
             $purchase->items()->createMany($request->items);
 
-            // -----------------------------------------------------------------------------------
-            // 4. Buat entri di Riwayat Transaksi (FinancialTransaction) sebagai PENGELUARAN
-            // Pindahkan logika ini ke sini, menggunakan data $purchase yang benar.
-
+            // 5. Buat entri di Riwayat Transaksi (FinancialTransaction) sebagai PENGELUARAN
             FinancialTransaction::create([
                 'tanggal' => $purchase->tanggal,
                 'tipe' => 'pengeluaran',
@@ -78,37 +78,7 @@ class Barang_MasukController extends Controller
                 'stock_out_id' => null,
             ]);
 
-            // -----------------------------------------------------------------------------------
-            // ...
-            DB::commit();
-            // 3. Simpan Detail Item Pembelian (PurchaseItem)
-            // Model Event di PurchaseItem akan otomatis mengupdate stok (increment)
-            // Model Event di Purchase akan otomatis membuat FinancialTransaction
-            
-            // Siapkan data item, hapus kunci yang tidak perlu dari input request
-            $itemsData = collect($request->items)->map(function ($item) use ($purchase) {
-                return [
-                    'purchase_id' => $purchase->id, // Tambahkan foreign key
-                    'product_id' => $item['product_id'],
-                    'jumlah_pack' => $item['jumlah_pack'],
-                    'harga_beli' => $item['harga_beli'],
-                    'harga_jual' => $item['harga_jual'],
-                    'created_at' => now(), // Tambahkan timestamp
-                    'updated_at' => now(), // Tambahkan timestamp
-                ];
-            })->toArray();
-            // ... (Langkah 1: Validasi data dan simpan data Barang Masuk/Purchase) ...            
-            // Insert semua item sekaligus untuk efisiensi. 
-            // NOTE: Batch insert tidak memicu Model Event, jadi harus diubah ke createMany.
-            // Pilihan A: Menggunakan createMany (Memicu Model Event per item)
-            $purchase->items()->createMany($request->items);
-
-            // Pilihan B: Menggunakan batch insert (Lebih cepat, TAPI HARUS memanggil update stok secara manual)
-            // $purchase->items()->insert($itemsData); 
-            // foreach ($itemsData as $item) {
-            //      Product::where('id', $item['product_id'])->increment('stok', $item['jumlah_pack']);
-            // }
-
+            // 6. Commit Transaksi setelah semua langkah berhasil
             DB::commit();
 
             $message = 'Barang Masuk berhasil disimpan.';
@@ -138,7 +108,7 @@ class Barang_MasukController extends Controller
     }
 
     /**
-     * Update data Barang Masuk yang sudah ada (Hanya update header).
+     * Update data Barang Masuk yang sudah ada.
      */
     public function update(Request $request, $id)
     {
@@ -201,7 +171,7 @@ class Barang_MasukController extends Controller
                     'jumlah' => $newTotalBiaya, // Gunakan total biaya yang baru
                 ]);
             } else {
-                // Jika entri transaksi tidak ditemukan (situasi tak terduga jika proses store berhasil)
+                // Jika entri transaksi tidak ditemukan, buat yang baru
                 FinancialTransaction::create([
                     'tanggal' => $purchase->tanggal,
                     'tipe' => 'pengeluaran',
@@ -221,6 +191,7 @@ class Barang_MasukController extends Controller
             return redirect()->back()->withInput()->with('error', 'Gagal memperbarui Barang Masuk: ' . $e->getMessage());
         }
     }
+    
     /**
      * Hapus data Barang Masuk yang sudah ada.
      */
@@ -228,11 +199,28 @@ class Barang_MasukController extends Controller
     {
         $purchase = Purchase::findOrFail($id);
         
-        // PENTING: Untuk implementasi yang lengkap, 
-        // Anda perlu memastikan *semua* perubahan stok dan transaksi 
-        // dibalikkan (dikurangi) sebelum baris di bawah dieksekusi.
-        $purchase->delete();
+        // PENTING: Jika menggunakan Model Event, hapus item secara manual
+        // untuk memicu Model Event yang mengurangi stok.
+        
+        DB::beginTransaction();
+        try {
+            // Reversal stok (seperti di method update)
+            foreach ($purchase->items as $item) {
+                Product::where('id', $item->product_id)->decrement('stok', $item->jumlah_pack);
+            }
+            
+            // Hapus Financial Transaction terkait
+            FinancialTransaction::where('purchase_id', $purchase->id)->delete();
+            
+            // Hapus Purchase (ini akan menghapus PurchaseItem karena cascade delete di database, 
+            // atau Anda harus melakukannya secara eksplisit jika tidak ada cascade)
+            $purchase->delete();
 
-        return redirect()->route('barang_masuk.index')->with('success', 'Barang Masuk berhasil dihapus.');
+            DB::commit();
+            return redirect()->route('barang_masuk.index')->with('success', 'Barang Masuk berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menghapus Barang Masuk: ' . $e->getMessage());
+        }
     }
 }
