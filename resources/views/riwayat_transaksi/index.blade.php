@@ -60,7 +60,7 @@
 
                 <div class="fab-item-wrapper hidden-space" data-idx="0">
                     <span class="fab-label" onclick="window.location.href='{{ route('produk.create') }}'">Tambah
-                        Produk</span>
+                        Transaksi</span>
                     <button
                         class="fab-item w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold shadow-lg bg-gradient-to-br from-purple-500 to-pink-500"
                         onclick="window.location.href='{{ route('produk.create') }}'">
@@ -129,11 +129,6 @@
                             <div>
                                 <label for="filter_date_range_display"
                                     class="block text-sm font-medium text-gray-700">Rentang Tanggal</label>
-
-                                {{-- <input type="text" id="filter_date_range_display"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
-                                    placeholder="-- Pilih Tanggal --" readonly> --}}
-
                                 <div id="filterDatePickerContainer" class="relative z-50"></div>
 
                                 <input type="hidden" name="filter[start_date]" id="filter_start_date">
