@@ -418,7 +418,7 @@
         </div>
     </div>
 
-    <!-- Tabel riwayat transaksi - DINAMIS -->
+    <!-- Tabel pembukuan transaksi - DINAMIS -->
     <div class="table-container">
         <table>
             <thead>

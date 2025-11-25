@@ -137,8 +137,20 @@
                     let paginationMeta = {};
                     try {
                         if (response && typeof response === 'object') {
-                            // Handle Laravel pagination structure - the key issue!
-                            if (response.data && response.data.data && Array.isArray(response.data.data)) {
+                            // Handle new FinancialTransaction format: response.data directly
+                            if (response.data && Array.isArray(response.data)) {
+                                data = response.data;
+                                paginationMeta = {
+                                    current_page: response.current_page,
+                                    last_page: response.last_page,
+                                    per_page: response.per_page,
+                                    from: response.from,
+                                    to: response.to,
+                                    total: response.total
+                                };
+                            }
+                            // Handle Laravel pagination structure - for backward compatibility
+                            else if (response.data && response.data.data && Array.isArray(response.data.data)) {
                                 data = response.data.data;
                                 paginationMeta = {
                                     current_page: response.data.current_page,
@@ -156,25 +168,6 @@
                             // Handle case where response is already the data array
                             else if (Array.isArray(response)) {
                                 data = response;
-                            }
-                            // Handle case where response is a plain object with data property
-                            else if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
-                                // Try to extract data from nested structure
-                                if (response.data.hasOwnProperty('data') && Array.isArray(response.data.data)) {
-                                    data = response.data.data;
-                                    // Set pagination meta from the nested data
-                                    paginationMeta = {
-                                        current_page: response.data.current_page,
-                                        last_page: response.data.last_page,
-                                        per_page: response.data.per_page,
-                                        from: response.data.from,
-                                        to: response.data.to,
-                                        total: response.data.total
-                                    };
-                                } else {
-                                    // If it's a single object, put it in an array
-                                    data = [response.data];
-                                }
                             }
                         }
                     } catch (e) {
@@ -389,12 +382,18 @@
         $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             const itemId = $(this).data('id');
+            console.log('Delete clicked for item ID:', itemId);
+            
             // Ambil URL dari atribut tombol jika ada, kalau tidak gunakan entityBaseUrl sebagai fallback
             const entityUrl = $(this).data('url') || entityBaseUrl; // Mengambil URL entitas dari tombol
             const apiUrl = entityUrl.replace(
                 /^(https?:\/\/[^/]+)(\/.*)?$/,
                 (_, host, path = '') => `${host}/api${path}`
             );
+            
+            console.log('Entity URL:', entityUrl);
+            console.log('API URL:', apiUrl);
+            
             if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
                 $.ajax({
                     url: `${apiUrl}/${itemId}`, // Menggunakan URL dinamis
@@ -402,13 +401,16 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function() {
+                    success: function(response) {
+                        console.log('Delete success:', response);
                         $(`#row-${itemId}`).remove();
                         $(`#card-${itemId}`).remove();
                         alert('Item berhasil dihapus!');
                     },
-                    error: function(xhr) {
-                        alert('Gagal menghapus item! ' + (xhr.responseJSON?.message || ''));
+                    error: function(xhr, status, error) {
+                        console.error('Delete error:', { xhr, status, error });
+                        console.error('Response JSON:', xhr.responseJSON);
+                        alert('Gagal menghapus item! ' + (xhr.responseJSON?.message || error || ''));
                     }
                 });
             }

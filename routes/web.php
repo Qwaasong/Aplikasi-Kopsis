@@ -124,27 +124,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/barang_keluar/{id}', [Barang_KeluarController::class, 'update'])->name('barang_keluar.update');
 
     //=========================================================================================================
-    // Riwayat Transaksi
-    Route::get('/riwayat_transaksi', function () {
-        return view('riwayat_transaksi.index');
-    })->name('riwayat_transaksi.index');
+    // Pembukuan Transaksi
+    Route::get('/pembukuan_transaksi', function () {
+        return view('pembukuan_transaksi.index');
+    })->name('pembukuan_transaksi.index');
 
     //Ke halaman create Barang Keluar
-    Route::get('/riwayat_transaksi/create', function () {
-        return view('riwayat_transaksi.store');
-    })->name('riwayat_transaksi.create');
+    Route::get('/pembukuan_transaksi/create', function () {
+        return view('pembukuan_transaksi.store');
+    })->name('pembukuan_transaksi.create');
 
     //Ketika Submit Akan Menjalankan Method Store di BarangKeluarController
-    Route::post('/riwayat_transaksi/create', [FinancialTransactionController::class, 'store'])->name('riwayat_transaksi.store');
+    Route::post('/pembukuan_transaksi/create', [FinancialTransactionController::class, 'store'])->name('pembukuan_transaksi.store');
 
     //Ke halaman edit Barang Keluar
-    Route::get('/riwayat_transaksi/{id}/edit', [FinancialTransactionController::class, 'edit'])->name('riwayat_transaksi.edit');
+    Route::get('/pembukuan_transaksi/{id}/edit', [FinancialTransactionController::class, 'edit'])->name('pembukuan_transaksi.edit');
 
     //Ketika Submit Akan Menjalankan Method Update di BarangKeluarController
-    Route::put('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'update'])->name('riwayat_transaksi.update');
+    Route::put('/pembukuan_transaksi/{id}', [FinancialTransactionController::class, 'update'])->name('pembukuan_transaksi.update');
 
-    //Export PDF Riwayat Transaksi
-    Route::get('/laporan-keuangan-pdf', [FinancialTransactionController::class, 'generatePDF'])->name('riwayat_transaksi.export_pdf');
+    //Export PDF Pembukuan Transaksi
+    Route::get('/laporan-keuangan-pdf', [FinancialTransactionController::class, 'generatePDF'])->name('pembukuan_transaksi.export_pdf');
+
+    //Route Delete Pembukuan Transaksi
+    Route::delete('/pembukuan_transaksi/{id}', [FinancialTransactionController::class, 'destroy'])->name('pembukuan_transaksi.destroy');
 
     //=========================================================================================================
    // Hutang Piutang Routes
@@ -159,8 +162,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/ledger_entries/{id}/lunaskan', [LedgerEntryController::class, 'lunaskan'])->name('ledger_entries.lunaskan');
 
     Route::post('/ledger_entries/{id}/update-jatuh-tempo', [LedgerEntryController::class, 'updateJatuhTempo']);
-Route::post('/ledger_entries/{id}/tambah-utang', [LedgerEntryController::class, 'tambahUtang']);
-Route::post('/ledger_entries/{id}/bayar-utang', [LedgerEntryController::class, 'bayarUtang']);
+    Route::post('/ledger_entries/{id}/tambah-utang', [LedgerEntryController::class, 'tambahUtang']);
+    Route::post('/ledger_entries/{id}/bayar-utang', [LedgerEntryController::class, 'bayarUtang']);
 
     //=========================================================================================================
     // Pengguna

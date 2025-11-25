@@ -153,14 +153,14 @@
                         </div>
 
                         <div class="pl-6 mt-1 space-y-1">
-                            <a href="{{ route('riwayat_transaksi.index') }}"
-                                class="flex items-center px-4 py-2 text-sm font-medium {{ request()->routeIs('riwayat_transaksi.index') ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
+                            <a href="{{ route('pembukuan_transaksi.index') }}"
+                                class="flex items-center px-4 py-2 text-sm font-medium {{ request()->routeIs('pembukuan_transaksi.index') ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                 <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                     height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                     <path
                                         d="M360-200v-80h480v80H360Zm0-240v-80h480v80H360Zm0-240v-80h480v80H360ZM200-160q-33 0-56.5-23.5T120-240q0-33 23.5-56.5T200-320q33 0 56.5 23.5T280-240q0 33-23.5 56.5T200-160Zm0-240q-33 0-56.5-23.5T120-480q0-33 23.5-56.5T200-560q33 0 56.5 23.5T280-480q0 33-23.5 56.5T200-400Zm0-240q-33 0-56.5-23.5T120-720q0-33 23.5-56.5T200-800q33 0 56.5 23.5T280-720q0 33-23.5 56.5T200-640Z" />
                                 </svg>
-                                Riwayat Transaksi
+                                Pembukuan
                             </a>
                         </div>
                     </details>
@@ -350,14 +350,14 @@
                                 </a>
                             </div>
                             <div class="pl-6 mt-1 space-y-1">
-                                <a href="{{ route('riwayat_transaksi.index') }}"
-                                    class="flex items-center px-4 py-2 text-sm font-medium {{ request()->routeIs('riwayat_transaksi.index') || request()->is('riwayat_transaksi*') ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
+                                <a href="{{ route('pembukuan_transaksi.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm font-medium {{ request()->routeIs('pembukuan_transaksi.index') || request()->is('pembukuan_transaksi*') ? 'text-gray-700 bg-gray-100' : 'text-gray-600 text-gray-600' }} rounded-lg cursor-pointer">
                                     <svg class="w-5 h-5 mr-3 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                         height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
                                         <path
                                             d="M360-200v-80h480v80H360Zm0-240v-80h480v80H360Zm0-240v-80h480v80H360ZM200-160q-33 0-56.5-23.5T120-240q0-33 23.5-56.5T200-320q33 0 56.5 23.5T280-240q0 33-23.5 56.5T200-160Zm0-240q-33 0-56.5-23.5T120-480q0-33 23.5-56.5T200-560q33 0 56.5 23.5T280-480q0 33-23.5 56.5T200-400Zm0-240q-33 0-56.5-23.5T120-720q0-33 23.5-56.5T200-800q33 0 56.5 23.5T280-720q0 33-23.5 56.5T200-640Z" />
                                     </svg>
-                                    Riwayat Transaksi
+                                    Pembukuan
                                 </a>
                             </div>
                         </details>

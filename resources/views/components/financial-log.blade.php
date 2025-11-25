@@ -199,9 +199,9 @@
 
             const logContainer = $(@json('#' . $uniqueId));
             const paginationContainer = $(@json('#pagination-' . $uniqueId));
-            const editUrlTemplate = '{{ route('riwayat_transaksi.edit', ['id' => 'PLACEHOLDER']) }}';
+            const editUrlTemplate = '{{ route('pembukuan_transaksi.edit', ['id' => 'PLACEHOLDER']) }}';
             const deleteUrlTemplate =
-                '{{ route('api.riwayat_transaksi.destroy', ['id' => 'PLACEHOLDER']) }}';
+                '{{ route('api.pembukuan_transaksi.destroy', ['id' => 'PLACEHOLDER']) }}';
 
             const dataUrl = @json($dataUrl);
             let currentFilters = {};
@@ -355,7 +355,7 @@
                 `;
                     if (day.transactions && Array.isArray(day.transactions)) {
                         day.transactions.forEach(tx => {
-                            // Buat URL Edit. Asumsi rute web Anda adalah /riwayat-transaksi/{id}/edit
+                            // Buat URL Edit. Asumsi rute web Anda adalah /pembukuan-transaksi/{id}/edit
                             const editUrl = editUrlTemplate.replace('PLACEHOLDER', tx.id);
 
                             html += `

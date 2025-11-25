@@ -39,7 +39,7 @@ class Barang_KeluarController extends Controller
         // 2. Catat data barang keluar
         StockOut::create($request->all());
         
-        // 3. Catat data ke riwayat transaksi sebagai Pemasukan
+        // 3. Catat data ke pembukuan transaksi sebagai Pemasukan
         FinancialTransaction::create([
             'tanggal'    => $request->tanggal,
             'tipe'       => 'pemasukan',

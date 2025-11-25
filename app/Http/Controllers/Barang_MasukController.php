@@ -68,7 +68,7 @@ class Barang_MasukController extends Controller
             // Model Event di PurchaseItem akan otomatis mengupdate stok (increment)
             $purchase->items()->createMany($request->items);
 
-            // 5. Buat entri di Riwayat Transaksi (FinancialTransaction) sebagai PENGELUARAN
+            // 5. Buat entri di Pembukuan Transaksi (FinancialTransaction) sebagai PENGELUARAN
             FinancialTransaction::create([
                 'tanggal' => $purchase->tanggal,
                 'tipe' => 'pengeluaran',
@@ -159,7 +159,7 @@ class Barang_MasukController extends Controller
             // Asumsi: Model Event di PurchaseItem akan otomatis meng-increment stok saat createMany() dipanggil.
             $purchase->items()->createMany($request->items);
             
-            // 6. Update Entri di Riwayat Transaksi (FinancialTransaction)
+            // 6. Update Entri di Pembukuan Transaksi (FinancialTransaction)
             // Cari FinancialTransaction yang terkait dengan Purchase ini
             $transaction = FinancialTransaction::where('purchase_id', $purchase->id)->first();
             

@@ -12,7 +12,7 @@ class FinancialTransactionController extends Controller
 
     public function create()
     {
-        return view('riwayat_transaksi.create');
+        return view('pembukuan_transaksi.create');
     }
 
     public function store(Request $request)
@@ -26,14 +26,14 @@ class FinancialTransactionController extends Controller
 
         FinancialTransaction::create($request->all());
 
-        return redirect()->route('riwayat_transaksi.index')
+        return redirect()->route('pembukuan_transaksi.index')
             ->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
         $transaction = FinancialTransaction::findOrFail($id);
-        return view('riwayat_transaksi.edit', compact('transaction'));
+        return view('pembukuan_transaksi.edit', compact('transaction'));
     }
 
     public function update(Request $request, $id)
@@ -49,7 +49,7 @@ class FinancialTransactionController extends Controller
 
         $transaction->update($request->all());
 
-        return redirect()->route('riwayat_transaksi.index')
+        return redirect()->route('pembukuan_transaksi.index')
             ->with('success', 'Transaksi berhasil diperbarui.');
     }
 
@@ -89,7 +89,7 @@ class FinancialTransactionController extends Controller
         ];
 
         // Generate PDF
-        $pdf = Pdf::loadView('riwayat_transaksi.laporan_keuangan', $data);
+        $pdf = Pdf::loadView('pembukuan_transaksi.laporan_keuangan', $data);
         return $pdf->download('laporan-keuangan-' . date('Y-m-d') . '.pdf');
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'KopsisApp - Riwayat Transaksi')
+@section('title', 'KopsisApp - Pembukuan Transaksi')
 @section('content')
     <div class="px-8 py-6">
         <div class="flex flex-col space-y-4">
@@ -10,11 +10,11 @@
                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span>Riwayat Transaksi</span>
+                <span>Pembukuan</span>
             </div>
 
             <div class="flex items-center justify-between">
-                <h2 class="text-3xl font-bold text-gray-900 m-0">Riwayat Transaksi</h2>
+                <h2 class="text-3xl font-bold text-gray-900 m-0">Pembukuan</h2>
                 <div class="flex gap-4">
                     <button
                         class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -23,7 +23,7 @@
                     </button>
                     <button
                         class="hidden md:flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        onclick="window.location.href='{{ route('riwayat_transaksi.create') }}'">
+                        onclick="window.location.href='{{ route('pembukuan_transaksi.create') }}'">
                         Tambah Transaksi
                     </button>
                 </div>
@@ -100,56 +100,15 @@
 
         <hr class="my-6 border-gray-200">
 
-        <x-financial-log data-url="{{ route('api.riwayat_transaksi.index') }}">
-            <x-slot:filter>
-                <div class="flex items-center space-x-4 relative">
-                    <button id="filter-button"
-                        class="p-3 sm:p-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                        </svg>
-                    </button>
-
-                    <div id="filter-dropdown"
-                        class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
-                        <form id="filter-form" class="p-6 space-y-4">
-
-                            <div>
-                                <label for="filter_tipe" class="block text-sm font-medium text-gray-700">Tipe</label>
-                                <select name="filter[tipe]" id="filter_tipe"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                    <option value="">-- Pilih Tipe --</option>
-                                    <option value="pemasukan">Pemasukan</option>
-                                    <option value="pengeluaran">Pengeluaran</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label for="filter_date_range_display"
-                                    class="block text-sm font-medium text-gray-700">Rentang Tanggal</label>
-                                <div id="filterDatePickerContainer" class="relative z-50"></div>
-
-                                <input type="hidden" name="filter[start_date]" id="filter_start_date">
-                                <input type="hidden" name="filter[end_date]" id="filter_end_date">
-                            </div>
-
-                            <div class="flex justify-end space-x-2 pt-4">
-                                <button type="button" id="reset-filter-btn"
-                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
-                                    Reset
-                                </button>
-                                <button type="submit"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">
-                                    Apply
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </x-slot:filter>
-        </x-financial-log>
+       <!-- Tabel Pembukuan Transaksi-->
+        <x-table :data-table="[
+                    'Tanggal' => 'tanggal', 
+                    'Keterangan' => 'keterangan', 
+                    'Pemasukan' => 'pemasukan', 
+                    'Pengeluaran' => 'pengeluaran',
+                    'Saldo' => 'saldo'   
+                    ]" data-url="{{ route('api.pembukuan_transaksi.index') }}" :showAction="false">
+        </x-table>
     </div>
 
     <div id="export-pdf-modal"
@@ -164,7 +123,7 @@
           {{-- Filter pada export --}}
             <p class="text-sm text-gray-600 mb-2">Silakan pilih rentang tanggal laporan yang ingin Anda export.</p>
 
-            <form id="export-pdf-form" action="{{ route('riwayat_transaksi.export_pdf') }}" method="GET"
+            <form id="export-pdf-form" action="{{ route('pembukuan_transaksi.export_pdf') }}" method="GET"
                 target="_blank">
 
                 <div id="myDatePickerContainer" class="border rounded-md relative z-50"></div>
@@ -190,10 +149,10 @@
 @section('script')
     <script src="{{ asset('assets/js/fab.js') }}"></script>
     <script src="{{ asset('assets/js/DatePicker.js') }}"></script>
-    {{-- Hapus riwayat_transaksi.js karena kodenya sudah digabung di bawah --}}
+    {{-- Hapus pembukuan_transaksi.js karena kodenya sudah digabung di bawah --}}
 
     <script>
-        // --- Bagian 1: Fungsi Statistik (dari riwayat_transaksi.js) ---
+        // --- Bagian 1: Fungsi Statistik (dari pembukuan_transaksi.js) ---
         function formatRupiah(angka) {
             if (typeof angka === 'string') angka = parseFloat(angka) || 0;
             if (typeof angka !== 'number') angka = 0;
