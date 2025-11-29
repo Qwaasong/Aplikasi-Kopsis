@@ -51,14 +51,22 @@ class FinancialTransactionController extends Controller
                 $runningBalance -= $transaction->jumlah;
             }
 
+            // Ambil nilai mentah (raw) untuk Pemasukan/Pengeluaran
+            $pemasukanRaw = $transaction->tipe === 'pemasukan' ? $transaction->jumlah : 0;
+            $pengeluaranRaw = $transaction->tipe === 'pengeluaran' ? $transaction->jumlah : 0;
+
             // Format data per transaksi
             $formattedTransactions[] = [
                 'id' => $transaction->id,
                 'tanggal' => $transaction->tanggal, // Ini tetap tanggal transaksi
                 'keterangan' => $transaction->keterangan,
-                'pemasukan' => $transaction->tipe === 'pemasukan' ? $transaction->jumlah : 0,
-                'pengeluaran' => $transaction->tipe === 'pengeluaran' ? $transaction->jumlah : 0,
-                'saldo' => $runningBalance
+                
+                // --- PERUBAHAN DI SINI ---
+                // Terapkan number_format untuk format Rupiah
+                'pemasukan' => 'Rp ' . number_format($pemasukanRaw, 0, ',', '.'),
+                'pengeluaran' => 'Rp ' . number_format($pengeluaranRaw, 0, ',', '.'),
+                'saldo' => 'Rp ' . number_format($runningBalance, 0, ',', '.')
+                // --- AKHIR PERUBAHAN ---
             ];
         }
 
