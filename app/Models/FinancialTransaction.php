@@ -15,6 +15,7 @@ class FinancialTransaction extends Model
         'jumlah',
         'purchase_id',
         'stock_out_id',
+        'ledger_entry_id',
     ];
 #    protected static function booted()
 #{

@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LedgerEntry;
+use App\Models\FinancialTransaction; // <-- 1. Tambahkan ini
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;   // <-- 2. Tambahkan ini
+use Illuminate\Support\Facades\Log;  // <-- 3. Tambahkan ini (opsional, untuk error)
 
 class LedgerEntryController extends Controller
 {
@@ -16,8 +19,8 @@ class LedgerEntryController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
-                  ->orWhere('keterangan', 'like', '%' . $search . '%')
-                  ->orWhere('telepon', 'like', '%' . $search . '%');
+                    ->orWhere('keterangan', 'like', '%' . $search . '%')
+                    ->orWhere('telepon', 'like', '%' . $search . '%');
             });
         }
 
@@ -62,33 +65,69 @@ class LedgerEntryController extends Controller
 
         $entries = $query->latest()->paginate(10);
 
+        // Transformasi data untuk frontend
         $entries->getCollection()->transform(function ($entry) {
             return [
-                'id'             => $entry->id,
-                'nama'           => $entry->nama, 
-                'tipe'           => $entry->tipe,
-                'nominal'        => 'Rp ' . number_format($entry->nominal, 0, ',', '.'),
-                'keterangan'     => $entry->keterangan,
-                'telepon'        => $entry->telepon,
-                
+                'id'            => $entry->id,
+                'nama'          => $entry->nama, 
+                'tipe'          => $entry->tipe,
+                'nominal'       => 'Rp ' . number_format($entry->nominal, 0, ',', '.'),
+                'keterangan'    => $entry->keterangan,
+                'telepon'       => $entry->telepon,
+                // Tambahkan data lain jika perlu
             ];
         });
+
         return response()->json([
             'success' => true,
             'data' => $entries
         ]);
     }
 
+    /**
+     * Hapus data Hutang (LedgerEntry) dan FinancialTransaction terkait.
+     * Logika ini sekarang disamakan dengan controller non-API Anda.
+     */
     public function destroy($id)
     {
+        // 1. Cari data Hutang (LedgerEntry)
         $entry = LedgerEntry::findOrFail($id);
-        $entry->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Catatan hutang/piutang berhasil dihapus.'
-        ]);
+        // 2. Mulai Database Transaction untuk keamanan data
+        DB::beginTransaction();
+
+        try {
+            // 3. Hapus Financial Transaction terkait SECARA MANUAL
+            //    Ini menggunakan kolom 'ledger_entry_id' yang sudah Anda migrasikan
+            FinancialTransaction::where('ledger_entry_id', $entry->id)->delete();
+
+            // 4. Hapus data Hutang (LedgerEntry) itu sendiri
+            $entry->delete();
+
+            // 5. Commit jika semua berhasil
+            DB::commit();
+
+            // 6. Kirim respon sukses (JSON)
+            return response()->json([
+                'success' => true,
+                'message' => 'Catatan hutang/piutang dan transaksi keuangannya berhasil dihapus.'
+            ]);
+
+        } catch (\Exception $e) {
+            // 7. Rollback jika terjadi error
+            DB::rollBack();
+
+            // Catat error untuk debugging
+            Log::error("Gagal menghapus hutang via API (ID: {$id}). Error: " . $e->getMessage());
+
+            // 8. Kirim respon error (JSON)
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage()
+            ], 500); // 500 = Internal Server Error
+        }
     }
+
 
     // 📈 Method untuk dashboard summary
     public function summary()

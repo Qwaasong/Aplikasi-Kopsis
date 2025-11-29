@@ -35,10 +35,11 @@ class FinancialTransactionController extends Controller
                 ->whereDate('tanggal', '<=', $endDate);
         }
 
-        // 5. Ambil data yang terfilter dan urutkan
-        $transactions = $query->orderBy('tanggal', 'desc')->get();
+        // 5. Ambil data dan urutkan dari YANG PALING LAMA (ASC)
+        // Ini PENTING untuk perhitungan Saldo (Running Balance) yang benar
+        $transactions = $query->orderBy('created_at', 'asc')->get();
 
-        // 6. Hitung saldo kumulatif
+        // 6. Hitung saldo kumulatif (secara kronologis/maju)
         $runningBalance = 0;
         $formattedTransactions = [];
 
@@ -53,7 +54,7 @@ class FinancialTransactionController extends Controller
             // Format data per transaksi
             $formattedTransactions[] = [
                 'id' => $transaction->id,
-                'tanggal' => $transaction->tanggal,
+                'tanggal' => $transaction->tanggal, // Ini tetap tanggal transaksi
                 'keterangan' => $transaction->keterangan,
                 'pemasukan' => $transaction->tipe === 'pemasukan' ? $transaction->jumlah : 0,
                 'pengeluaran' => $transaction->tipe === 'pengeluaran' ? $transaction->jumlah : 0,
@@ -61,7 +62,12 @@ class FinancialTransactionController extends Controller
             ];
         }
 
-        // 7. Buat paginasi
+        // 7. BALIK URUTAN ARRAY
+        // Setelah saldo dihitung dengan benar (dari lama ke baru),
+        // kita balik array-nya agar yang terbaru tampil di atas untuk display.
+        $formattedTransactions = array_reverse($formattedTransactions);
+
+        // 8. Buat paginasi manual dari array yang sudah dibalik
         $page = $request->input('page', 1);
         $offset = ($page - 1) * $perPage;
         $pagedItems = array_slice($formattedTransactions, $offset, $perPage);
@@ -74,7 +80,7 @@ class FinancialTransactionController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        // 8. Kembalikan data dalam format tabel yang kompatibel dengan table component
+        // 9. Kembalikan data dalam format tabel yang kompatibel
         return response()->json([
             'data' => $paginator->items(),
             'current_page' => $paginator->currentPage(),
