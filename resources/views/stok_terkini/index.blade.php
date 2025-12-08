@@ -1,6 +1,12 @@
+@php
+use App\Models\Product;
+// Mengambil array kategori dari model Product
+$kategoriOptions = Product::$kategoriOptions;
+@endphp
 @extends('layouts.main')
 @section('title', 'KopsisApp - Vendor')
 @section('content')
+
     <div class="px-8 py-6">
         <!-- Header Konten -->
         <div class="flex flex-col space-y-4">
@@ -50,13 +56,29 @@
                     <div id="filter-dropdown"
                         class="hidden absolute mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-20 top-full">
                         <form id="filter-form" class="p-6 space-y-4">
-
+                        
                             <!-- Kategori -->
+                           
                             <div>
-                                <label for="filter_kategori"
-                                    class="block text-sm font-medium text-gray-700">Kategori</label>
-                                <input type="text" name="filter[kategori]" id="filter_kategori"
+                                <label for="filter_kategori" class="block text-sm font-medium text-gray-700">Kategori</label>
+                                <select name="filter[kategori]" id="filter_kategori"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    
+                                    {{-- Opsi default untuk membatalkan filter --}}
+                                    <option value="">Semua Kategori</option>
+                                    
+                                    {{-- Loop untuk menampilkan semua kategori dari model Product --}}
+                                    @foreach ($kategoriOptions as $key => $label)
+                                        <option value="{{ $key }}" 
+                                            {{-- Cek apakah opsi ini adalah kategori yang sedang difilter --}}
+                                            @if(request()->get('filter') && request()->get('filter')['kategori'] == $key)
+                                                selected
+                                            @endif
+                                        >
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Stock -->
