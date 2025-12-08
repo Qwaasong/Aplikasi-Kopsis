@@ -289,8 +289,7 @@
 @section('script')
 
     <script>
-      
-        
+
         var nominalInput = document.getElementById('nominal');
         
         // 2. Ambil elemen form
