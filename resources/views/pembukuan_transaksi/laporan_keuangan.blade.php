@@ -281,7 +281,6 @@
 
 <body>
     <div class="document-container">
-        <!-- Header Perusahaan -->
         <div class="company-header">
             <div class="company-logo">
                 <img src="{{ public_path('assets/images/logo.jpg') }}" alt="Logo Koperasi" style="max-width: 60px;">
@@ -298,14 +297,12 @@
             </div>
         </div>
 
-        <!-- Judul Laporan -->
         <div class="report-title">
             <h1>Laporan Keuangan</h1>
             <div class="report-period">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} s/d
                 {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</div>
         </div>
 
-        <!-- Summary Box -->
         <div class="summary-box">
             <div class="summary-grid">
                 <div class="summary-item">
@@ -324,59 +321,62 @@
             </div>
         </div>
 
-        <!-- Tabel Transaksi -->
         <table class="transaction-table">
             <thead>
                 <tr>
                     <th style="width: 5%;" class="text-center">No</th>
                     <th style="width: 15%;">Tanggal</th>
+                    <th style="width: 15%;">Nofaktur</th>
                     <th style="width: 40%;">Keterangan</th>
                     <th style="width: 20%;" class="text-right">Pemasukan</th>
                     <th style="width: 20%;" class="text-right">Pengeluaran</th>
-                    </tr>
-                </thead>
+                </tr>
+            </thead>
             <tbody>
                 @forelse($transactions as $index => $transaction)
-                    <tr>
-                        <td class="text-center">{{ $index + 1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y') }}
-                        </td>
-                        <td>{{ $transaction->keterangan }}</td>
+                <tr>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td>{{ \Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y') }}
+                    </td>
+                    {{-- PERBAIKAN: Menambahkan kolom untuk Nofaktur --}}
+                    <td>{{ $transaction->no_faktur ?? '-' }}</td> 
+                    
+                    <td>{{ $transaction->keterangan }}</td>
 
-                        {{-- Ini adalah logika untuk memisah kolom --}}
-                        @if ($transaction->tipe === 'pemasukan')
-                            <td class="text-right amount-debit">
-                                {{ number_format($transaction->jumlah, 0, ',', '.') }}
-                                </td>
-                            <td class="text-right">-</td>
-                        @else
-                            <td class="text-right">-</td>
-                            <td class="text-right amount-credit">
-                                {{ number_format($transaction->jumlah, 0, ',', '.') }}
-                                </td>
-                        @endif
-                        </tr>
+                    {{-- Ini adalah logika untuk memisah kolom --}}
+                    @if ($transaction->tipe === 'pemasukan')
+                    <td class="text-right amount-debit">
+                        {{ number_format($transaction->jumlah, 0, ',', '.') }}
+                    </td>
+                    <td class="text-right">-</td>
+                    @else
+                    <td class="text-right">-</td>
+                    <td class="text-right amount-credit">
+                        {{ number_format($transaction->jumlah, 0, ',', '.') }}
+                    </td>
+                    @endif
+                </tr>
                 @empty
-                    <tr>
-                        {{-- Colspan sekarang 5 karena ada 5 kolom --}}
-                        <td colspan="5" class="text-center">Tidak ada data transaksi</td>
-                        </tr>
+                <tr>
+                    {{-- PERBAIKAN: Colspan sekarang 6 karena ada 6 kolom --}}
+                    <td colspan="6" class="text-center">Tidak ada data transaksi</td>
+                </tr>
                 @endforelse
 
                 {{-- Baris Total (diperbaiki) --}}
                 <tr class="total-row">
-                    <td colspan="3" class="text-right">TOTAL</td>
+                    <td colspan="4" class="text-right">TOTAL</td>
                     <td class="text-right">{{ number_format($totalPemasukan, 0, ',', '.') }}</td>
                     <td class="text-right">{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
-                    </tr>
+                </tr>
                 <tr class="total-row">
-                    <td colspan="4" class="text-right">SALDO BERSIH</td>
+                    <td colspan="5" class="text-right">SALDO BERSIH</td>
+                    {{-- PERBAIKAN: Kolom Saldo Bersih menggunakan colspan 5 dan menempati kolom Pengeluaran --}}
                     <td class="text-right">{{ number_format($saldo, 0, ',', '.') }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                </tr>
+            </tbody>
+        </table>
 
-        <!-- Footer -->
         <div class="report-footer">
             {{-- <div class="signature-section">
                 <div class="signature-box">
@@ -394,7 +394,6 @@
             </div> --}}
             <div class="document-info">
                 Dokumen ini dicetak secara otomatis pada {{ now('Asia/jakarta')->format('d M Y H:i:s') }} WIB<br>
-                Laporan ini bersifat rahasia dan hanya untuk keperluan internal
             </div>
         </div>
     </div>

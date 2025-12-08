@@ -40,16 +40,16 @@ class Barang_KeluarController extends Controller
         StockOut::create($request->all());
         
         // 3. Catat data ke pembukuan transaksi sebagai Pemasukan
-        FinancialTransaction::create([
-            'tanggal'    => $request->tanggal,
-            'tipe'       => 'pemasukan',
-            // Gunakan keterangan yang lebih informatif
-            'keterangan' => 'Penjualan Produk: ' . $product->nama . '. Keterangan: ' . $request->keterangan,
-            'jumlah'     => $totalHarga,
-            // Opsional: Jika Anda memiliki foreign key 'stock_out_id' di tabel financial_transactions, 
-            // Anda perlu mencatat StockOut terlebih dahulu, lalu mendapatkan ID-nya untuk field ini.
-            // Saat ini, kita asumsikan tidak ada foreign key tersebut agar perubahan minimal.
-        ]);
+        //FinancialTransaction::create([
+        //    'tanggal'    => $request->tanggal,
+        //    'tipe'       => 'pemasukan',
+        //    // Gunakan keterangan yang lebih informatif
+        //    'keterangan' => 'Penjualan Produk: ' . $product->nama . '. Keterangan: ' . $request->keterangan,
+        //    'jumlah'     => $totalHarga,
+        //    // Opsional: Jika Anda memiliki foreign key 'stock_out_id' di tabel financial_transactions, 
+        //    // Anda perlu mencatat StockOut terlebih dahulu, lalu mendapatkan ID-nya untuk field ini.
+        //    // Saat ini, kita asumsikan tidak ada foreign key tersebut agar perubahan minimal.
+        //]);
 
         // **LOGIKA BARU UNTUK TRANSAKSI KEUANGAN SELESAI DI SINI**
 
@@ -92,16 +92,16 @@ public function edit($id)
         ];
 
         // Data yang akan diperbarui/dibuat
-        $values = [
-            'tanggal'      => $request->tanggal,
-            'keterangan'   => 'Penjualan Produk: ' . ($product->nama ?? 'N/A') . '. Keterangan: ' . $request->keterangan,
-            'jumlah'       => $totalHarga,
-        ];
+        //$values = [
+        //    'tanggal'      => $request->tanggal,
+        //    'keterangan'   => 'Penjualan Produk: ' . ($product->nama ?? 'N/A') . '. Keterangan: ' . $request->keterangan,
+        //    'jumlah'       => $totalHarga,
+        //];
         
         // 3. Gunakan updateOrCreate: 
         // Mencari record dengan stock_out_id yang cocok. 
         // Jika ketemu, update dengan $values. Jika tidak, buat baru.
-        FinancialTransaction::updateOrCreate($attributes, $values);
+        //FinancialTransaction::updateOrCreate($attributes, $values);
 
         // --- Logika Pembaruan Transaksi Keuangan Selesai ---
 

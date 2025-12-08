@@ -46,7 +46,7 @@ class StockOut extends Model
                 FinancialTransaction::create([
                     'tipe' => 'pemasukan',
                     'jumlah' => $total,
-                    'tanggal' => now(),
+                    'tanggal' => now()->toDateString(),
                     'keterangan' =>
                         'Penjualan produk: ' . ($purchaseItem->product->nama ?? 'Tidak diketahui') .
                         ' | Keuntungan: ' . number_format($keuntungan, 0, ',', '.') .
