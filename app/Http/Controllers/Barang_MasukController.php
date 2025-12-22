@@ -69,14 +69,14 @@ class Barang_MasukController extends Controller
             $purchase->items()->createMany($request->items);
 
             // 5. Buat entri di Pembukuan Transaksi (FinancialTransaction) sebagai PENGELUARAN
-            FinancialTransaction::create([
-                'tanggal' => $purchase->tanggal,
-                'tipe' => 'pengeluaran',
-                'keterangan' => 'Biaya Pembelian Barang Masuk: ' . $purchase->no_faktur ?? $purchase->id,
-                'jumlah' => $totalBiaya, // Gunakan total biaya yang sudah dihitung
-                'purchase_id' => $purchase->id,
-                'stock_out_id' => null,
-            ]);
+            //FinancialTransaction::create([
+            //    'tanggal' => $purchase->tanggal,
+            //    'tipe' => 'pengeluaran',
+            //    'keterangan' => 'Biaya Pembelian Barang Masuk: ' . $purchase->no_faktur ?? $purchase->id,
+            //    'jumlah' => $totalBiaya, // Gunakan total biaya yang sudah dihitung
+            //    'purchase_id' => $purchase->id,
+            //    'stock_out_id' => null,
+            //]);
 
             // 6. Commit Transaksi setelah semua langkah berhasil
             DB::commit();
@@ -130,7 +130,7 @@ class Barang_MasukController extends Controller
             'items.*.harga_jual' => 'required|numeric|min:0',
         ]);
         
-        DB::beginTransaction();
+        //DB::beginTransaction();
 
         try {
             // 2. Hitung Total Biaya Baru
@@ -182,7 +182,7 @@ class Barang_MasukController extends Controller
                 ]);
             }
 
-            DB::commit();
+            //DB::commit();
 
             return redirect()->route('barang_masuk.index')->with('success', 'Barang Masuk berhasil diperbarui, termasuk item dan transaksi.');
 
