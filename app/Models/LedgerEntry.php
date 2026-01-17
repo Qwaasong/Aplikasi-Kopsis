@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log; // Tambahkan ini jika ingin logging
 
 class LedgerEntry extends Model
 {
@@ -22,6 +23,35 @@ class LedgerEntry extends Model
         'jatuh_tempo' => 'date',
         'nominal' => 'decimal:2',
     ];
+
+    /**
+     * Daftarkan model event listeners.
+     * Ini adalah inti solusinya.
+     */
+    protected static function booted(): void
+    {
+        // Gunakan event 'deleted' yang berjalan SETELAH model dihapus dari database.
+        static::deleted(function (LedgerEntry $ledgerEntry) {
+            
+            // Cek apakah ledgerEntry ini memiliki financialTransaction yang terkait
+            // Kita menggunakan relasi `financialTransaction()` yang sudah Anda definisikan.
+            if ($ledgerEntry->financialTransaction) {
+                try {
+                    // Hapus data financial transaction yang terkait
+                    $ledgerEntry->financialTransaction->delete();
+
+                } catch (\Exception $e) {
+                    // Opsional: Catat error jika gagal menghapus transaksi terkait
+                    Log::error("Gagal menghapus financial transaction terkait LedgerEntry ID: {$ledgerEntry->id}. Error: " . $e->getMessage());
+                }
+            }
+        });
+    }
+
+    public function financialTransaction()
+    {
+        return $this->hasOne(FinancialTransaction::class, 'ledger_entry_id'); // Pastikan foreign key benar
+    }
 
     // Scope untuk hutang
     public function scopeHutang($query)
@@ -57,4 +87,5 @@ class LedgerEntry extends Model
     {
         return Carbon::parse($this->tanggal_transaksi)->format('d/m/Y');
     }
+    
 }

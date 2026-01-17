@@ -390,7 +390,57 @@
 
 @section('script')
 <script>
+   // Function to get available stock for a product
+   function getAvailableStock(productId) {
+       if (!productId) return;
+       
+       $.ajax({
+           url: '/api/produk/' + productId + '/stock',
+           method: 'GET',
+           success: function(data) {
+               if (data.success && data.data) {
+                   var maxStock = data.data.available_stock || 0;
+                   // Set max to the available stock plus a reasonable buffer to prevent negative values
+                   $('#jumlah').attr('max', maxStock);
+                   // Also update the min to ensure it's at least 1
+                   $('#jumlah').attr('min', '1');
+               }
+           },
+           error: function() {
+               // If API call fails, set a default max value
+               $('#jumlah').attr('max', '999999');
+           }
+       });
+   }
    
-    </script>
+   // Update max value when product selection changes
+   document.getElementById('product_id').addEventListener('change', function() {
+       var selectedProductId = this.value;
+       if (selectedProductId) {
+           getAvailableStock(selectedProductId);
+       } else {
+           // Reset to default if no product selected
+           $('#jumlah').removeAttr('max');
+           $('#jumlah').attr('max', '999999');
+       }
+   });
+   
+   // Also set max to current value if editing
+   document.addEventListener('DOMContentLoaded', function() {
+       var jumlahInput = document.getElementById('jumlah');
+       if (jumlahInput) {
+           // Set a default max value to prevent extremely large numbers
+           jumlahInput.setAttribute('max', '999999');
+           jumlahInput.setAttribute('min', '1');
+           
+           // If there's already a selected product, get its stock
+           var selectedProduct = document.getElementById('product_id');
+           if (selectedProduct && selectedProduct.value) {
+               getAvailableStock(selectedProduct.value);
+           }
+       }
+   });
+   
+   </script>
     
 @endsection

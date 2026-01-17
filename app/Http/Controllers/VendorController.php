@@ -17,6 +17,12 @@ class VendorController extends Controller
         ]);
 
         Vendor::create($request->all());
+        
+        // Check if "save_and_create" button was pressed
+        if ($request->has('save_and_create') && $request->input('save_and_create') == 1) {
+            return redirect()->route('vendor.create')->with('success', 'Vendor berhasil ditambahkan. Silakan tambahkan vendor lainnya.');
+        }
+        
         return redirect()->route('vendor.index')->with('success', 'Vendor berhasil ditambahkan.');
     }
 

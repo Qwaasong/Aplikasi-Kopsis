@@ -41,7 +41,28 @@ class ProductController extends Controller
     ]);
 }
 
-
+    /**
+     * Mendapatkan informasi stok untuk produk tertentu.
+     */
+    public function getStock($id)
+    {
+        $product = Product::with(['purchaseItems', 'stockOuts'])->findOrFail($id);
+        
+        // Hitung stok tersedia
+        $masuk = $product->purchaseItems->sum('jumlah_pack');
+        $keluar = $product->stockOuts->sum('jumlah_pack');
+        $stok_tersedia = max(0, $masuk - $keluar);
+        
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'product_id' => $product->id,
+                'product_name' => $product->nama,
+                'available_stock' => $stok_tersedia
+            ]
+        ]);
+    }
+ 
     /**
      * Menghapus produk (soft/hard delete sesuai kebutuhan).
      */

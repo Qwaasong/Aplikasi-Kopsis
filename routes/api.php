@@ -24,6 +24,7 @@ Route::delete('/vendor/{id}', [VendorController::class, 'destroy']);
 
 // Produk API Routes
 Route::get('/produk', [ProductController::class, 'index'])->name('api.produk.index');
+Route::get('/produk/{id}/stock', [ProductController::class, 'getStock'])->name('api.produk.stock');
 Route::delete('/produk/{id}', [ProductController::class, 'destroy'])->name('api.produk.destroy');
 
 // Stok Terkini API Routes
@@ -38,9 +39,9 @@ Route::delete('/barang_masuk/{id}', [Barang_MasukController::class, 'destroy']);
 Route::get('/barang_keluar', [Barang_KeluarController::class, 'index'])->name('api.barang_keluar.index');
 Route::delete('/barang_keluar/{id}', [Barang_KeluarController::class, 'destroy'])->name('api.barang_keluar.destroy');
 
-// Riwayat Transaksi API Routes
-Route::get('/riwayat_transaksi', [FinancialTransactionController::class, 'index'])->name('api.riwayat_transaksi.index');
-Route::delete('/riwayat_transaksi/{id}', [FinancialTransactionController::class, 'destroy'])->name('api.riwayat_transaksi.destroy');
+// Pembukuan Transaksi API Routes
+Route::get('/pembukuan_transaksi', [FinancialTransactionController::class, 'index'])->name('api.pembukuan_transaksi.index');
+Route::delete('/pembukuan_transaksi/{id}', [FinancialTransactionController::class, 'destroy'])->name('api.pembukuan_transaksi.destroy');
 
 // Hutang Piutang API Routes
 Route::get('/ledger_entries', [LedgerEntryController::class, 'index'])->name('api.ledger_entries.index');

@@ -391,6 +391,47 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
 
     <script>
+        // Function to get available stock for a product
+        function getAvailableStock(productId) {
+            if (!productId) return;
+            
+            $.ajax({
+                url: '/api/produk/' + productId + '/stock',
+                method: 'GET',
+                success: function(data) {
+                    if (data.success && data.data) {
+                        var maxStock = data.data.available_stock || 0;
+                        // Set max to the available stock plus a reasonable buffer to prevent negative values
+                        $('#jumlah_pack').attr('max', maxStock);
+                        // Also update the min to ensure it's at least 1
+                        $('#jumlah_pack').attr('min', '1');
+                    }
+                },
+                error: function() {
+                    // If API call fails, set a default max value
+                    $('#jumlah_pack').attr('max', '999999');
+                }
+            });
+        }
+        
+        // Set max attribute for jumlah_pack input to prevent negative values
+        document.addEventListener('DOMContentLoaded', function() {
+            var jumlahInput = document.getElementById('jumlah_pack');
+            if (jumlahInput) {
+                // Set a reasonable max value to prevent extremely large numbers
+                jumlahInput.setAttribute('max', '999999');
+                
+                // Also set min to 1 for safety
+                jumlahInput.setAttribute('min', '1');
+                
+                // For edit form, we can get the stock for the existing product
+                var productId = document.querySelector('input[name="product_id"]').value;
+                if (productId) {
+                    getAvailableStock(productId);
+                }
+            }
+        });
+        
         //document.addEventListener('DOMContentLoaded', function() {
         //    new TomSelect('#produk', {
         //        create: false,
@@ -410,7 +451,7 @@
         //        valueField: 'value',
         //        labelField: 'text',
         //        searchField: ['text'],
-//
+        //
         //        // Tambah data dari database disini
         //        options: [{
         //                value: '1',
@@ -442,7 +483,7 @@
         //            }
         //        }
         //    });
-//
+        //
         //    document.getElementById('produk').focus();
         //});
     </script>

@@ -36,6 +36,8 @@ class Product extends Model
         'makanan_berat' => 'Makanan Berat',
     ];
 
+    
+
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);

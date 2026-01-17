@@ -215,6 +215,7 @@
 
     <div class="block">
         <form action="{{ route('vendor.update', ['id' => $vendor->id]) }}" method="POST">
+            @method('PUT')
             @csrf
 
             <div class="form-section">
@@ -227,7 +228,7 @@
 
                     <div class="form-column">
                         <label class="form-label" for="telepon">No Telepon</label>
-                        <input type="text" value="{{ $vendor->no_telp }}" id="telepon" name="no_telp"
+                        <input type="number" value="{{ $vendor->no_telp }}" id="telepon" name="no_telp"
                             class="form-input" placeholder="No Telepon...">
                     </div>
                 </div>

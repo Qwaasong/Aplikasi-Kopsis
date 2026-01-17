@@ -360,7 +360,7 @@ class DatePicker {
         const inputPlaceholder = this.options.singleDate ? 'Pilih tanggal' : 'Pilih rentang tanggal';
 
         return `
-            <div class="relative picker-input mb-4">
+            <div class="relative picker-input">
                 <input 
                     type="text" 
                     id="dateInput" 

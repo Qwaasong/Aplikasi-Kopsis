@@ -51,7 +51,7 @@
     </div>
 
     {{-- Pagination akan di-inject di sini --}}
-    <div id="pagination-links" class="mt-4 flex justify-end"></div>
+    <div id="pagination-links" class="mt-4 flex justify-center"></div>
 
 </div>
 
@@ -80,6 +80,7 @@
         let currentPage = 1;
         let currentSearch = '';
         let currentFilters = {}; // Menyimpan state filter saat ini
+        let paginationMeta = {}; // Initialize pagination meta to avoid reference errors
 
         // Fungsi untuk mengakses nilai bersarang
         function getNestedValue(obj, path) {
@@ -129,13 +130,62 @@
                 data: requestData,
                 dataType: 'json',
                 success: function(response) {
-                    // Cek apakah response menggunakan Laravel Pagination (data ada di response.data)
-                    const data = response.data.data ? response.data.data : response.data;
-                    const paginationMeta = response.data;
+                    console.log('API Response:', response); // Debugging line
+                    
+                    // Safely extract data with multiple fallbacks
+                    let data = [];
+                    let paginationMeta = {};
+                    try {
+                        if (response && typeof response === 'object') {
+                            // Handle new FinancialTransaction format: response.data directly
+                            if (response.data && Array.isArray(response.data)) {
+                                data = response.data;
+                                paginationMeta = {
+                                    current_page: response.current_page,
+                                    last_page: response.last_page,
+                                    per_page: response.per_page,
+                                    from: response.from,
+                                    to: response.to,
+                                    total: response.total
+                                };
+                            }
+                            // Handle Laravel pagination structure - for backward compatibility
+                            else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+                                data = response.data.data;
+                                paginationMeta = {
+                                    current_page: response.data.current_page,
+                                    last_page: response.data.last_page,
+                                    per_page: response.data.per_page,
+                                    from: response.data.from,
+                                    to: response.data.to,
+                                    total: response.data.total
+                                };
+                            }
+                            // Handle direct data structure
+                            else if (response.data && Array.isArray(response.data)) {
+                                data = response.data;
+                            }
+                            // Handle case where response is already the data array
+                            else if (Array.isArray(response)) {
+                                data = response;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error extracting data:', e);
+                        data = [];
+                    }
+                    
+                    console.log('Extracted Data:', data); // Debugging line
+                    console.log('Data length:', data.length); // Debugging line
+                    console.log('Pagination Meta:', paginationMeta); // Debugging line
 
                     // 1. Render Tabel Desktop
                     let tableRows = '';
-                    if (data.length > 0) {
+                    console.log('Rendering table with data length:', data.length);
+                    console.log('Data type:', typeof data);
+                    console.log('Is Array:', Array.isArray(data));
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        console.log('Processing data items:', data);
                         $.each(data, function(i, item) {
                             // Membuat tombol aksi yang reusable (gunakan slot untuk isi)
                             let actionsHtml = '';
@@ -177,6 +227,7 @@
 
                         });
                     } else {
+                        console.log('No data condition triggered');
                         tableRows =
                             `<tr><td colspan="${totalColumns}" class="text-center py-4 text-gray-500">Tidak ada data ditemukan.</td></tr>`;
                     }
@@ -185,7 +236,8 @@
 
                     // 2. Render Card Mobile
                     let cardHtml = '';
-                    if (data.length > 0) {
+                    console.log('Rendering cards with data length:', data.length);
+                    if (data && Array.isArray(data) && data.length > 0) {
                         $.each(data, function(i, item) {
                             // Sama seperti di desktop, gunakan item.id untuk dropdown
                             let actionsHtml = '';
@@ -239,16 +291,47 @@
                     cardContainer.html(cardHtml);
 
                     // 3. Render Pagination (Jika menggunakan Laravel Pagination)
-                    if (paginationMeta.last_page > 1) {
+                    if (paginationMeta && paginationMeta.last_page > 1) {
+                        // Calculate pagination range with limits
+                        let startPage = Math.max(1, paginationMeta.current_page - 2); // 2 pages before current
+                        let endPage = Math.min(paginationMeta.last_page, startPage + 4); // 4 pages after start (total 5)
+                        
+                        // Adjust start if we're near the end
+                        if (endPage - startPage < 4) {
+                            startPage = Math.max(1, endPage - 4);
+                        }
+                        
+                        // For mobile, show only 3 pages max
+                        let mobileStartPage = Math.max(1, paginationMeta.current_page - 1);
+                        let mobileEndPage = Math.min(paginationMeta.last_page, mobileStartPage + 2);
+                        
+                        if (mobileEndPage - mobileStartPage < 2) {
+                            mobileStartPage = Math.max(1, mobileEndPage - 2);
+                        }
+                        
                         let paginationHtml = `
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px justify-center" aria-label="Pagination">
                                 <button data-page="${paginationMeta.current_page - 1}" ${paginationMeta.current_page === 1 ? 'disabled' : ''} class="pagination-link relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 rounded-l-md hover:text-gray-700 ${paginationMeta.current_page === 1 ? 'cursor-not-allowed opacity-50' : ''}">
                                     <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /> </svg> Previous
                                 </button>
                                 
-                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600">
-                                    ${paginationMeta.current_page}
-                                </span>
+                                ${window.innerWidth >= 768 ?
+                                    // Desktop: Show up to 5 pages
+                                    Array.from({length: endPage - startPage + 1}, (_, i) => {
+                                        let pageNum = startPage + i;
+                                        return `<button data-page="${pageNum}" class="pagination-link relative inline-flex items-center px-4 py-2 text-sm font-medium ${pageNum === paginationMeta.current_page ? 'text-white bg-blue-600' : 'text-gray-500 hover:text-gray-700'} ${pageNum === paginationMeta.current_page ? '' : 'hover:bg-gray-50'}">
+                                            ${pageNum}
+                                        </button>`;
+                                    }).join('')
+                                    :
+                                    // Mobile: Show up to 3 pages
+                                    Array.from({length: mobileEndPage - mobileStartPage + 1}, (_, i) => {
+                                        let pageNum = mobileStartPage + i;
+                                        return `<button data-page="${pageNum}" class="pagination-link relative inline-flex items-center px-4 py-2 text-sm font-medium ${pageNum === paginationMeta.current_page ? 'text-white bg-blue-600' : 'text-gray-500 hover:text-gray-700'} ${pageNum === paginationMeta.current_page ? '' : 'hover:bg-gray-50'}">
+                                            ${pageNum}
+                                        </button>`;
+                                    }).join('')
+                                }
                                 
                                 <button data-page="${paginationMeta.current_page + 1}" ${paginationMeta.current_page === paginationMeta.last_page ? 'disabled' : ''} class="pagination-link relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 rounded-r-md hover:text-gray-700 ${paginationMeta.current_page === paginationMeta.last_page ? 'cursor-not-allowed opacity-50' : ''}">
                                     Next <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /> </svg>
@@ -262,6 +345,7 @@
                     attachMenuDropdownListeners();
                 },
                 error: function(xhr, status, error) {
+                    console.error('API Error:', { xhr, status, error }); // Debugging line
                     // Gunakan totalColumns yang sudah didefinisikan di scope atas
                     tableBody.html(
                         `<tr><td colspan="${totalColumns}" class="text-center py-4 text-red-500">Gagal memuat data: ${xhr.statusText}</td></tr>`
@@ -298,12 +382,18 @@
         $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             const itemId = $(this).data('id');
+            console.log('Delete clicked for item ID:', itemId);
+            
             // Ambil URL dari atribut tombol jika ada, kalau tidak gunakan entityBaseUrl sebagai fallback
             const entityUrl = $(this).data('url') || entityBaseUrl; // Mengambil URL entitas dari tombol
             const apiUrl = entityUrl.replace(
                 /^(https?:\/\/[^/]+)(\/.*)?$/,
                 (_, host, path = '') => `${host}/api${path}`
             );
+            
+            console.log('Entity URL:', entityUrl);
+            console.log('API URL:', apiUrl);
+            
             if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
                 $.ajax({
                     url: `${apiUrl}/${itemId}`, // Menggunakan URL dinamis
@@ -311,13 +401,16 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function() {
+                    success: function(response) {
+                        console.log('Delete success:', response);
                         $(`#row-${itemId}`).remove();
                         $(`#card-${itemId}`).remove();
                         alert('Item berhasil dihapus!');
                     },
-                    error: function(xhr) {
-                        alert('Gagal menghapus item! ' + (xhr.responseJSON?.message || ''));
+                    error: function(xhr, status, error) {
+                        console.error('Delete error:', { xhr, status, error });
+                        console.error('Response JSON:', xhr.responseJSON);
+                        alert('Gagal menghapus item! ' + (xhr.responseJSON?.message || error || ''));
                     }
                 });
             }

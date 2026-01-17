@@ -125,7 +125,8 @@
                                         </select>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <input type="number" name="items[{{ $loop->index }}][jumlah_pack]" class="form-input item-qty" min="1" value="1" required>
+                                        <input type="number" name="items[{{ $loop->index }}][jumlah_pack]" class="form-input item-qty" min="1" value="{{ $item->jumlah_pack }}" required
+                                        >
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <input type="number" name="items[{{ $loop->index }}][harga_beli]" class="form-input item-beli" 

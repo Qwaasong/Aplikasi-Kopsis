@@ -1,6 +1,5 @@
 @extends('layouts.main')
-
-@section('title', 'KopsisApp - Tambah Riwayat Transaksi')
+@section('title', 'KopsisApp - Edit Pembukuan Transaksi')
 
 @section('content')
     <style>
@@ -42,49 +41,48 @@
     </style>
 
     <div class="judul">
-        <h2 class="font-bold">Tambah Riwayat Transaksi</h2>
+        <h2 class="font-bold">Edit Pembukuan Transaksi</h2>
     </div>
 
-    {{-- Kontainer utama --}}
     <div class="block">
-        {{-- Form untuk menambah transaksi --}}
-        <form action="{{ route('riwayat_transaksi.store') }}" method="POST">
-            {{-- csrf token biar secure --}}
+        <form action="{{ route('pembukuan_transaksi.update', $transaction->id) }}" method="POST">
             @csrf
+            @method('PUT')
 
             <div class="form-section">
                 <div class="form-row">
                     <div class="form-column">
-                        <label class="form-label" for="tipe_transaksi">Tipe Transaksi <span style="color: #D20D24;">*</span></label>
-                        <select id="tipe_transaksi" name="tipe" class="form-select" required>
+                        <label class="form-label" for="tipe">Tipe Transaksi <span style="color: #D20D24;">*</span></label>
+                        <select id="tipe" name="tipe" class="form-select" required>
                             <option value="">Pilih Tipe Transaksi</option>
-                            <option value="pemasukan">Pemasukan</option>
-                            <option value="pengeluaran">Pengeluaran</option>
+                            <option value="pemasukan" {{ $transaction->tipe === 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+                            <option value="pengeluaran" {{ $transaction->tipe === 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
                         </select>
                     </div>
                     <div class="form-column">
                         <label class="form-label" for="jumlah">Jumlah <span style="color: #D20D24;">*</span></label>
-                        <input type="number" id="jumlah" name="jumlah" class="form-input" placeholder="Masukkan jumlah..." required>
+                        <input type="number" id="jumlah" name="jumlah" class="form-input"
+                               value="{{ old('jumlah', $transaction->jumlah) }}" placeholder="Masukkan jumlah..." required>
                     </div>
                 </div>
 
-                {{-- Tanggal dan Keterangan --}}
                 <div class="form-row">
                     <div class="form-column">
                         <label class="form-label" for="tanggal">Tanggal <span style="color: #D20D24;">*</span></label>
-                        <input type="date" id="tanggal" name="tanggal" class="form-input" required>
+                        <input type="date" id="tanggal" name="tanggal" class="form-input"
+                               value="{{ old('tanggal', $transaction->tanggal) }}" required>
                     </div>
                     <div class="form-column">
                         <label class="form-label" for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" class="form-textarea" rows="3" placeholder="Tambahkan keterangan (opsional)..."></textarea>
+                        <textarea id="keterangan" name="keterangan" class="form-textarea" rows="3"
+                                  placeholder="Tambahkan keterangan (opsional)...">{{ old('keterangan', $transaction->keterangan) }}</textarea>
                     </div>
                 </div>
             </div>
 
             <div class="button-container">
-                <button type="submit" name="save_and_create" value="1" class="btn btn-save-again">Simpan Data Dan Buat Lagi</button>
-                <button type="submit" class="btn btn-save">Simpan</button>
-                <a href="{{ route('riwayat_transaksi.index') }}" class="btn btn-cancel">Batal</a>
+                <button type="submit" class="btn btn-save">Simpan Perubahan</button>
+                <a href="{{ route('pembukuan_transaksi.index') }}" class="btn btn-cancel">Batal</a>
             </div>
         </form>
     </div>

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\FinancialTransaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FinancialTransactionController extends Controller
 {
@@ -15,47 +14,89 @@ class FinancialTransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = FinancialTransaction::with('purchase', 'stockOut');
+        // 1. Tentukan jumlah item per halaman
+        $perPage = 10;
 
-        // Filter berdasarkan jenis transaksi: masuk / keluar
-        if ($type = $request->input('tipe')) {
-            $query->where('tipe', $type);
+        // 2. Ambil filter dari request
+        $filterTipe = $request->input('filter.tipe');
+        $startDate = $request->input('filter.start_date');
+        $endDate = $request->input('filter.end_date');
+
+        // 3. Buat query dasar
+        $query = FinancialTransaction::query();
+
+        // 4. Terapkan Filter
+        if ($filterTipe) {
+            $query->where('tipe', $filterTipe);
         }
 
-        // Filter waktu (mingguan, bulanan, tahunan)
-        if ($filter = $request->input('filter')) {
-            $query->when(
-                $filter === 'minggu',
-                fn($q) =>
-                $q->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-            );
-            $query->when(
-                $filter === 'bulan',
-                fn($q) =>
-                $q->whereMonth('created_at', now()->month)
-            );
-            $query->when(
-                $filter === 'tahun',
-                fn($q) =>
-                $q->whereYear('created_at', now()->year)
-            );
+        if ($startDate && $endDate) {
+            $query->whereDate('tanggal', '>=', $startDate)
+                ->whereDate('tanggal', '<=', $endDate);
         }
 
-        // Pencarian berdasarkan field-field yang relevan
-        if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('tipe', 'like', "%{$search}%")
-                    ->orWhere('keterangan', 'like', "%{$search}%")
-                    ->orWhere('tanggal', 'like', "%{$search}%")
-                    ->orWhere('jumlah', 'like', "%{$search}%");
-            });
+        // 5. Ambil data dan urutkan dari YANG PALING LAMA (ASC)
+        // Ini PENTING untuk perhitungan Saldo (Running Balance) yang benar
+        $transactions = $query->orderBy('created_at', 'asc')->get();
+
+        // 6. Hitung saldo kumulatif (secara kronologis/maju)
+        $runningBalance = 0;
+        $formattedTransactions = [];
+
+        foreach ($transactions as $transaction) {
+            // Update running balance
+            if ($transaction->tipe === 'pemasukan') {
+                $runningBalance += $transaction->jumlah;
+            } else {
+                $runningBalance -= $transaction->jumlah;
+            }
+
+            // Ambil nilai mentah (raw) untuk Pemasukan/Pengeluaran
+            $pemasukanRaw = $transaction->tipe === 'pemasukan' ? $transaction->jumlah : 0;
+            $pengeluaranRaw = $transaction->tipe === 'pengeluaran' ? $transaction->jumlah : 0;
+
+            // Format data per transaksi
+            $formattedTransactions[] = [
+                'id' => $transaction->id,
+                'tanggal' => $transaction->tanggal, // Ini tetap tanggal transaksi
+                'keterangan' => $transaction->keterangan,
+                
+                // --- PERUBAHAN DI SINI ---
+                // Terapkan number_format untuk format Rupiah
+                'pemasukan' => 'Rp ' . number_format($pemasukanRaw, 0, ',', '.'),
+                'pengeluaran' => 'Rp ' . number_format($pengeluaranRaw, 0, ',', '.'),
+                'saldo' => 'Rp ' . number_format($runningBalance, 0, ',', '.')
+                // --- AKHIR PERUBAHAN ---
+            ];
         }
 
-        $transactions = $query->latest()->paginate(10);
+        // 7. BALIK URUTAN ARRAY
+        // Setelah saldo dihitung dengan benar (dari lama ke baru),
+        // kita balik array-nya agar yang terbaru tampil di atas untuk display.
+        $formattedTransactions = array_reverse($formattedTransactions);
 
+        // 8. Buat paginasi manual dari array yang sudah dibalik
+        $page = $request->input('page', 1);
+        $offset = ($page - 1) * $perPage;
+        $pagedItems = array_slice($formattedTransactions, $offset, $perPage);
+        
+        $paginator = new LengthAwarePaginator(
+            $pagedItems,
+            count($formattedTransactions),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        // 9. Kembalikan data dalam format tabel yang kompatibel
         return response()->json([
-            'success' => true,
-            'data' => $transactions,
+            'data' => $paginator->items(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'from' => $paginator->firstItem(),
+            'to' => $paginator->lastItem()
         ]);
     }
 
@@ -63,30 +104,25 @@ class FinancialTransactionController extends Controller
      * Menghapus transaksi (opsional).
      * Jika dihapus, stok dikembalikan seperti semula.
      */
-    public function destroy(FinancialTransaction $financialTransaction) // Ganti parameter name
-{
-    DB::beginTransaction();
+    // DENGAN FUNGSI INI
+    public function destroy($id) // Terima $id (string/int)
+    {
+        try {
+            // Cari transaksinya secara manual
+            $financialTransaction = FinancialTransaction::findOrFail($id);
 
-    try {
-        // Hanya hapus transaksi, tidak perlu adjust stok produk
-        // Karena FinancialTransaction adalah pencatatan keuangan, bukan inventory
-        $financialTransaction->delete();
+            // Hapus
+            $financialTransaction->delete();
 
-        DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Transaksi keuangan berhasil dihapus.',
-        ]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => 'Gagal menghapus transaksi: ' . $e->getMessage(),
-        ], 500);
+            return response()->json(['success' => true, 'message' => 'Transaksi berhasil dihapus.']);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Ini jika ID-nya tidak ditemukan
+            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan.'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus transaksi.'], 500);
+        }
     }
-}
+
     // Ringkasan jumlah transaksi dalam minggu, bulan, dan tahun ini untuk chart
     public function summary()
     {

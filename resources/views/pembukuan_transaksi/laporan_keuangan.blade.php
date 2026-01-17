@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,26 +43,31 @@
         .company-info {
             display: table-cell;
             vertical-align: top;
+            text-align: center;
         }
 
         .company-logo {
             display: table-cell;
-            text-align: right;
             vertical-align: top;
-            width: 100px;
+            width: 80px;
+            /* Cukup berikan satu padding-right untuk jarak logo ke teks */
+            padding-right: 15px;
         }
 
         .company-name {
             font-size: 18pt;
             font-weight: bold;
-            color: #0000;
+            color: #000;
+            /* Cukup gunakan margin-bottom untuk memberi jarak ke alamat di bawahnya */
             margin-bottom: 10px;
+            padding-right: 80px;
         }
 
         .company-details {
             font-size: 9pt;
             color: #4a4a4a;
             line-height: 1.5;
+            padding-right: 80px;
         }
 
         /* Judul Laporan */
@@ -73,7 +79,7 @@
         .report-title h1 {
             font-size: 16pt;
             font-weight: bold;
-            color: #0000;
+            color: #000;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 8px;
@@ -120,7 +126,7 @@
         .summary-value {
             font-size: 16pt;
             font-weight: bold;
-            color: #00000;
+            color: #000;
         }
 
         .summary-value.positive {
@@ -212,7 +218,7 @@
             background-color: #1f2937 !important;
             color: #ffffff;
             font-weight: bold;
-            border-top: 2px solid #0000;
+            border-top: 2px solid #000;
         }
 
         .total-row td {
@@ -272,29 +278,31 @@
         }
     </style>
 </head>
+
 <body>
     <div class="document-container">
-        <!-- Header Perusahaan -->
         <div class="company-header">
-            <div class="company-info">
-                <div class="company-name">Koperasi Siswa SMKN 9 Malang</div>
-                <div class="company-details">
-                    Jl. Sampurna No.1, Cemorokandang, Kec. Kedungkandang, Kota Malang, Jawa Timur 65138<br>
-                    Telp: 0341727998 | Email: humas@smkn9malang.sch.id<br>
-                </div>
-            </div>
             <div class="company-logo">
                 <img src="{{ public_path('assets/images/logo.jpg') }}" alt="Logo Koperasi" style="max-width: 60px;">
             </div>
+            <div class="company-info">
+                <div class="company-name">
+                    Koperasi Siswa SMKN 9 Malang
+                </div>
+                <div class="company-details">
+                    Jl. Sampurna No.1, Cemorokandang, Kec. Kedungkandang, Kota Malang, Jawa Timur
+                    65138<br>
+                    Telp: 0341727998 | Email: humas@smkn9malang.sch.id<br>
+                </div>
+            </div>
         </div>
 
-        <!-- Judul Laporan -->
         <div class="report-title">
             <h1>Laporan Keuangan</h1>
-            <div class="report-period">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</div>
+            <div class="report-period">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} s/d
+                {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</div>
         </div>
 
-        <!-- Summary Box -->
         <div class="summary-box">
             <div class="summary-grid">
                 <div class="summary-item">
@@ -307,52 +315,70 @@
                 </div>
                 <div class="summary-item">
                     <div class="summary-label">Saldo Bersih</div>
-                    <div class="summary-value {{ $saldo >= 0 ? 'positive' : 'negative' }}">Rp {{ number_format($saldo, 0, ',', '.') }}</div>
+                    <div class="summary-value {{ $saldo >= 0 ? 'positive' : 'negative' }}">Rp
+                        {{ number_format($saldo, 0, ',', '.') }}</div>
                 </div>
             </div>
         </div>
 
-        <!-- Tabel Transaksi -->
         <table class="transaction-table">
             <thead>
                 <tr>
                     <th style="width: 5%;" class="text-center">No</th>
-                    <th style="width: 12%;">Tanggal</th>
-                    <th style="width: 12%;" class="text-center">Tipe</th>
-                    <th style="width: 51%;">Keterangan</th>
-                    <th style="width: 20%;" class="text-right">Jumlah (Rp)</th>
+                    <th style="width: 15%;">Tanggal</th>
+                    <th style="width: 15%;">Nofaktur</th>
+                    <th style="width: 40%;">Keterangan</th>
+                    <th style="width: 20%;" class="text-right">Pemasukan</th>
+                    <th style="width: 20%;" class="text-right">Pengeluaran</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($transactions as $index => $transaction)
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y') }}</td>
-                    <td class="text-center">
-                        <span class="type-badge {{ $transaction->tipe === 'pemasukan' ? 'income' : 'expense' }}">
-                            {{ $transaction->tipe }}
-                        </span>
+                    <td>{{ \Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y') }}
                     </td>
+                    {{-- PERBAIKAN: Menambahkan kolom untuk Nofaktur --}}
+                    <td>{{ $transaction->no_faktur ?? '-' }}</td> 
+                    
                     <td>{{ $transaction->keterangan }}</td>
-                    <td class="text-right {{ $transaction->tipe === 'pemasukan' ? 'amount-debit' : 'amount-credit' }}">
+
+                    {{-- Ini adalah logika untuk memisah kolom --}}
+                    @if ($transaction->tipe === 'pemasukan')
+                    <td class="text-right amount-debit">
                         {{ number_format($transaction->jumlah, 0, ',', '.') }}
                     </td>
+                    <td class="text-right">-</td>
+                    @else
+                    <td class="text-right">-</td>
+                    <td class="text-right amount-credit">
+                        {{ number_format($transaction->jumlah, 0, ',', '.') }}
+                    </td>
+                    @endif
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center">Tidak ada data transaksi</td>
+                    {{-- PERBAIKAN: Colspan sekarang 6 karena ada 6 kolom --}}
+                    <td colspan="6" class="text-center">Tidak ada data transaksi</td>
                 </tr>
                 @endforelse
+
+                {{-- Baris Total (diperbaiki) --}}
                 <tr class="total-row">
-                    <td colspan="4" class="text-right">SALDO BERSIH</td>
+                    <td colspan="4" class="text-right">TOTAL</td>
+                    <td class="text-right">{{ number_format($totalPemasukan, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="5" class="text-right">SALDO BERSIH</td>
+                    {{-- PERBAIKAN: Kolom Saldo Bersih menggunakan colspan 5 dan menempati kolom Pengeluaran --}}
                     <td class="text-right">{{ number_format($saldo, 0, ',', '.') }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <!-- Footer -->
         <div class="report-footer">
-            <div class="signature-section">
+            {{-- <div class="signature-section">
                 <div class="signature-box">
                     <div class="signature-title">Mengetahui</div>
                     <div class="signature-line"></div>
@@ -365,12 +391,12 @@
                     <div class="signature-name">Admin Keuangan</div>
                     <div class="signature-position">Koperasi Siswa</div>
                 </div>
-            </div>
+            </div> --}}
             <div class="document-info">
-                Dokumen ini dicetak secara otomatis pada {{ now()->format('d M Y H:i:s') }} WIB<br>
-                Laporan ini bersifat rahasia dan hanya untuk keperluan internal perusahaan
+                Dokumen ini dicetak secara otomatis pada {{ now('Asia/jakarta')->format('d M Y H:i:s') }} WIB<br>
             </div>
         </div>
     </div>
 </body>
+
 </html>

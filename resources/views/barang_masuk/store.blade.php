@@ -283,7 +283,7 @@
     @endif
 
     <div class="block">
-        <form action="{{ route('barang_masuk.store') }}" method="POST">
+        <form id="purchase-form" action="{{ route('barang_masuk.store') }}" method="POST">
             @csrf
             
             <div class="form-section">
@@ -308,7 +308,7 @@
                     <div class="form-column">
                         <label class="form-label" for="no_faktur">No Faktur</label>
                         <input type="text" id="no_faktur" name="no_faktur" class="form-input" 
-                               placeholder="Masukkan nomor faktur..." value="{{ old('no_faktur') }}">
+                                placeholder="Masukkan nomor faktur..." value="{{ old('no_faktur') }}">
                         @error('no_faktur')
                             <p class="error-message">{{ $message }}</p>
                         @enderror
@@ -321,7 +321,7 @@
                             Tanggal <span class="required-star">*</span>
                         </label>
                         <input type="date" id="tanggal" name="tanggal" class="form-input" required 
-                               value="{{ old('tanggal') ?? date('Y-m-d') }}">
+                                value="{{ old('tanggal') ?? date('Y-m-d') }}">
                         @error('tanggal')
                             <p class="error-message">{{ $message }}</p>
                         @enderror
@@ -329,7 +329,7 @@
                     <div class="form-column">
                         <label class="form-label" for="keterangan">Keterangan</label>
                         <textarea id="keterangan" name="keterangan" class="form-textarea" rows="3" 
-                                  placeholder="Tambahkan keterangan (opsional)...">{{ old('keterangan') }}</textarea>
+                                    placeholder="Tambahkan keterangan (opsional)...">{{ old('keterangan') }}</textarea>
                         @error('keterangan')
                             <p class="error-message">{{ $message }}</p>
                         @enderror
@@ -355,8 +355,7 @@
                         </tr>
                     </thead>
                     <tbody id="item-list">
-                        <!-- Item rows will be added here dynamically -->
-                    </tbody>
+                        </tbody>
                     <tfoot>
                         <tr class="total-row">
                             <td colspan="2" style="text-align: right; padding-right: 20px;">Total Pengeluaran:</td>
@@ -386,7 +385,49 @@
     <script>
         const itemList = document.getElementById('item-list');
         const addItemBtn = document.getElementById('add-item-btn');
+        const form = document.getElementById('purchase-form'); 
         let itemIndex = 0;
+
+        /* ---------------------------------------------------------------------- */
+        /* FUNGSI FORMAT RUPIAH (untuk tampilan label Total)                      */
+        /* ---------------------------------------------------------------------- */
+        function formatRupiah(angka) {
+            if (!angka) return 'Rp 0';
+            let number_string = angka.toString().replace(/[^0-9]/g, '');
+            if (number_string === '') return 'Rp 0';
+            
+            let reverse = number_string.split('').reverse().join('');
+            let ribuan = reverse.match(/\d{1,3}/g);
+            let result = ribuan.join('.').split('').reverse().join('');
+            return 'Rp ' + result;
+        }
+
+        /* ---------------------------------------------------------------------- */
+        /* FUNGSI FORMAT RUPIAH UNTUK INPUT (untuk field Harga Beli/Jual)         */
+        /* ---------------------------------------------------------------------- */
+        function formatRupiahInput(angka) {
+            // Hilangkan semua non-digit dan titik koma
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            // Gunakan prefix 'Rp. ' hanya untuk input
+            return rupiah ? 'Rp. ' + rupiah : '';
+        }
+
+        // Fungsi untuk membersihkan nilai Rupiah menjadi angka murni
+        function cleanRupiah(rupiah) {
+            // Hapus 'Rp. ', koma, dan semua titik (separator ribuan)
+            return rupiah.replace(/[^0-9]/g, '');
+        }
 
         // Template HTML untuk satu baris item
         function createItemRow(index) {
@@ -409,20 +450,44 @@
                 </td>
                 <td>
                     <input type="number" name="items[${index}][jumlah_pack]" class="form-input item-qty" 
-                           min="1" value="1" required>
+                            min="1" value="1" required>
                 </td>
                 <td>
-                    <input type="number" name="items[${index}][harga_beli]" class="form-input item-beli" 
-                           min="0" value="0" required>
+                    <input type="text" name="items[${index}][harga_beli]" class="form-input item-beli rupiah-input" 
+                            value="" required data-numeric-value="0">
                 </td>
                 <td>
-                    <input type="number" name="items[${index}][harga_jual]" class="form-input item-jual" 
-                           min="0" value="0" required>
+                    <input type="text" name="items[${index}][harga_jual]" class="form-input item-jual rupiah-input" 
+                            value="" required data-numeric-value="0">
                 </td>
                 <td>
                     <button type="button" class="btn-remove-item" data-index="${index}" title="Hapus item">Hapus</button>
                 </td>
             `;
+            
+            // Setelah baris dibuat, terapkan event listeners ke input Rupiah
+            const beliInput = row.querySelector('.item-beli');
+            const jualInput = row.querySelector('.item-jual');
+            
+            // Terapkan event listener untuk format otomatis saat ketik pada Harga Beli
+            beliInput.addEventListener('keyup', function() {
+                this.value = formatRupiahInput(this.value);
+                calculateTotal(); // Hitung total ulang setelah format
+            });
+            
+            // Terapkan event listener untuk format otomatis saat ketik pada Harga Jual
+            jualInput.addEventListener('keyup', function() {
+                this.value = formatRupiahInput(this.value);
+            });
+            
+            // Format nilai default jika ada
+            if (beliInput.value) {
+                beliInput.value = formatRupiahInput(beliInput.value);
+            }
+            if (jualInput.value) {
+                jualInput.value = formatRupiahInput(jualInput.value);
+            }
+            
             return row;
         }
 
@@ -431,25 +496,18 @@
             let total = 0;
             itemList.querySelectorAll('tr').forEach(row => {
                 const qtyInput = row.querySelector('.item-qty');
-                const beliInput = row.querySelector('.item-beli');
+                const beliInput = row.querySelector('.item-beli'); 
                 
                 const qty = parseInt(qtyInput ? qtyInput.value : 0);
-                const beli = parseInt(beliInput ? beliInput.value : 0);
+                
+                // Gunakan fungsi cleanRupiah untuk mendapatkan nilai angka murni
+                const beliRupiah = beliInput ? beliInput.value : '0';
+                const beli = parseInt(cleanRupiah(beliRupiah)) || 0;
                 
                 total += qty * beli;
             });
 
             document.getElementById('total-pengeluaran').textContent = formatRupiah(total);
-        }
-        
-        // Fungsi format Rupiah
-        function formatRupiah(angka) {
-            if (!angka) return 'Rp 0';
-            
-            let reverse = angka.toString().split('').reverse().join('');
-            let ribuan = reverse.match(/\d{1,3}/g);
-            let result = ribuan.join('.').split('').reverse().join('');
-            return 'Rp ' + result;
         }
 
         // Handler untuk menambah item
@@ -472,7 +530,7 @@
             }
         });
 
-        // Handler untuk perubahan di kolom Produk, Qty, dan Harga Beli
+        // Handler untuk perubahan di kolom Produk, Qty
         itemList.addEventListener('change', (e) => {
             const target = e.target;
             if (target.classList.contains('item-product')) {
@@ -482,28 +540,45 @@
                 
                 const row = target.closest('tr');
                 if (row) {
-                    row.querySelector('.item-beli').value = hargaBeli || 0;
-                    row.querySelector('.item-jual').value = hargaJual || 0;
+                    // Format harga beli dan jual yang diambil dari data atribut
+                    row.querySelector('.item-beli').value = formatRupiahInput(hargaBeli || '0');
+                    row.querySelector('.item-jual').value = formatRupiahInput(hargaJual || '0');
                 }
                 calculateTotal();
-            } else if (target.classList.contains('item-qty') || target.classList.contains('item-beli')) {
+            } else if (target.classList.contains('item-qty')) {
                 calculateTotal();
             }
         });
         
+        // Handle input event untuk Qty dan Harga Beli (untuk update total saat ketik)
         itemList.addEventListener('input', (e) => {
-             const target = e.target;
-             if (target.classList.contains('item-qty') || target.classList.contains('item-beli')) {
-                 calculateTotal();
-             }
+            const target = e.target;
+            if (target.classList.contains('item-qty') || target.classList.contains('item-beli')) {
+                calculateTotal();
+            }
+        });
+        
+        /* ---------------------------------------------------------------------- */
+        /* LOGIKA KRUSIAL: Membersihkan nilai sebelum form submit                 */
+        /* ---------------------------------------------------------------------- */
+        form.addEventListener('submit', function() {
+            // Iterasi semua input yang memiliki class 'rupiah-input' (Harga Beli & Harga Jual)
+            document.querySelectorAll('.rupiah-input').forEach(input => {
+                // Set nilai input ke angka murni sebelum form submit
+                input.value = cleanRupiah(input.value);
+            });
+            // Nilai yang dikirim ke backend sekarang adalah angka murni
         });
 
-        // Tambahkan satu baris item secara default saat halaman dimuat
-        if (itemList.children.length === 0) {
-            addItemBtn.click();
-        }
 
-        // Lakukan perhitungan total saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', calculateTotal);
+        // menambahkan satu baris item secara default saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            if (itemList.children.length === 0) {
+                addItemBtn.click();
+            }
+            // perhitungan total saat halaman dimuat
+            calculateTotal();
+        });
     </script>
+    
 @endsection
