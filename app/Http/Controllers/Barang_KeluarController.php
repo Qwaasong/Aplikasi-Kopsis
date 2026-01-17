@@ -31,13 +31,13 @@ class Barang_KeluarController extends Controller
         // 1. Ambil data produk untuk mendapatkan nama dan harga jual
         //    Asumsi: Field harga jual di model Product adalah 'harga_jual'.
         //    Anda harus memastikan nama field yang benar di model Product Anda.
-        $product = Product::select('nama', 'harga_jual')->find($request->product_id);
+        //$product = Product::select('nama', 'harga_jual')->find($request->product_id);
         
-        $hargaJual = $product->harga_jual ?? 0; // Pastikan menggunakan nama field yang benar
-        $totalHarga = $request->jumlah_pack * $hargaJual;
+        //$hargaJual = $product->harga_jual ?? 0; // Pastikan menggunakan nama field yang benar
+        //$totalHarga = $request->jumlah_pack * $hargaJual;
         
         // 2. Catat data barang keluar
-        StockOut::create($request->all());
+        //StockOut::create($request->all());
         
         // 3. Catat data ke pembukuan transaksi sebagai Pemasukan
         //FinancialTransaction::create([
